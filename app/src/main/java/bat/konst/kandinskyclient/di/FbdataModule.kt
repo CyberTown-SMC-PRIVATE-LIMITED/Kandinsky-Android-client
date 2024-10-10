@@ -6,11 +6,14 @@ import bat.konst.kandinskyclient.data.room.FbdataDao
 import bat.konst.kandinskyclient.data.room.FbdataDatabase
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 // di (dependency injection) for room database
 @Module
+@InstallIn(SingletonComponent::class)
 object FbdataModule {
     @Provides
     @Singleton
