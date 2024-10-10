@@ -21,7 +21,7 @@ interface FbdataDao {
     @Query("SELECT * FROM requests")
     fun getAllRequests(): List<Request>
 
-    @Query("SELECT * FROM requests WHERE md5 = :md5")
+    @Query("SELECT * FROM requests WHERE md5 = :md5 ORDER BY date_update DESC")
     fun getRequest(md5: String): Request
 
 }
