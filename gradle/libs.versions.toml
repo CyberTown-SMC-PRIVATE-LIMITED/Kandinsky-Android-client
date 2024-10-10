@@ -14,6 +14,9 @@ navigation = "2.8.2"
 # retrofit
 retrofit = "2.11.0"
 okhttp = "4.12.0"
+# room
+room = "2.6.1"
+ksp = "2.0.20-1.0.24"
 
 
 [libraries]
@@ -38,12 +41,16 @@ androidx-navigation-compose = { module = "androidx.navigation:navigation-compose
 retrofit = { group = "com.squareup.retrofit2", name="retrofit", version.ref = "retrofit" }
 retrofit-converterJson = { group = "com.squareup.retrofit2", name="converter-gson", version.ref = "retrofit" }
 okhttp = { group = "com.squareup.okhttp3", name="okhttp", version.ref = "okhttp" }
-
+# room
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [bundles]
 retrofit = [

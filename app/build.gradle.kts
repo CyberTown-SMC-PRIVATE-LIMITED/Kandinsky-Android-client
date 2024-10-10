@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     kotlin("plugin.serialization")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -73,4 +74,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     // retrofit
     implementation(libs.bundles.retrofit)
+    // room
+    implementation(libs.room.ktx)
+    implementation(libs.room.runtime)
+    ksp(libs.androidx.room.compiler)
 }
