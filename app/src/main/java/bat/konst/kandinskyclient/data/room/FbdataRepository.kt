@@ -6,11 +6,12 @@ import bat.konst.kandinskyclient.data.room.entity.StatusTypes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.math.BigInteger
 import java.security.MessageDigest
+import javax.inject.Inject
 
-class FbdataRepository(private val fbdataDao: FbdataDao)    {
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
 
     private suspend fun getMd5Hash(prompt: String, negativePrompt: String, style: String): String {
         // https://stackoverflow.com/questions/64171624/how-to-generate-an-md5-hash-in-kotlin
@@ -19,11 +20,11 @@ class FbdataRepository(private val fbdataDao: FbdataDao)    {
         return BigInteger(1, md.digest(stringKey.toByteArray())).toString(16).padStart(32, '0')
     }
 
-    suspend fun addRequest(prompt: String, negativePrompt: String, style: String, onSuccess: () -> Unit) {
+    suspend fun addRequest(prompt: String, negativePrompt: String, style: String, onSuccess: () -> Unit = {}) {
         // добавляет запрос. Если он есть -- обновляет его дату.
         // добавляет Image в очередь на обработку к FussionBrain.
 
-        coroutineScope.launch(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             val currentDate: Long = System.currentTimeMillis()
 
             // 1. Calculate md5 hash by prompt+negativePrompt+style
@@ -44,13 +45,7 @@ class FbdataRepository(private val fbdataDao: FbdataDao)    {
             // 5. add new image (to fussion brain queeue)
             val image = Image(md5 = md5, kandinskyId = "", status = StatusTypes.NEW.value, dateCreated = currentDate, imageBase64 = "")
             fbdataDao.addImage(image)
-
-            coroutineScope.launch(Dispatchers.Main) {
-                onSuccess()
-            }
         }
+        onSuccess()
     }
-
-
-
 }

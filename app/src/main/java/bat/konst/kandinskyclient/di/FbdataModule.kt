@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import bat.konst.kandinskyclient.data.room.FbdataDao
 import bat.konst.kandinskyclient.data.room.FbdataDatabase
+import bat.konst.kandinskyclient.data.room.FbdataRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,5 +31,11 @@ object FbdataModule {
     @Singleton
     fun provideFbdataDao(fbdataDatabase: FbdataDatabase): FbdataDao {
         return fbdataDatabase.getFbdataDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFbdataRepository(fbdataDao: FbdataDao): FbdataRepository {
+        return FbdataRepository(fbdataDao)
     }
 }

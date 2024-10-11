@@ -54,7 +54,7 @@ fun NewRequestScreen(
 fun NewRequestView(
     onNavigateTo: (Route) -> Unit = {},
     state: NewRequestScreenState = NewRequestScreenState(),
-    onEvent: (NewRequestScreenEvent) -> Unit = {}
+    onEvent: (NewRequestScreenEvent, onSuccess: () -> Unit) -> Unit = { _, _ -> }
 ) {
     // columnn with scrolling
     Column(
@@ -74,7 +74,7 @@ fun NewRequestView(
             maxLines = 5,
             minLines = 5,
             value = state.prompt,
-            onValueChange = { onEvent(NewRequestScreenEvent.PromptUpdate(it)) },
+            onValueChange = { onEvent(NewRequestScreenEvent.PromptUpdate(it)){} },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
@@ -119,7 +119,7 @@ fun NewRequestView(
                     DropdownMenuItem(
                         text = { Text(option, style = MaterialTheme.typography.bodyLarge) },
                         onClick = {
-                            onEvent(NewRequestScreenEvent.StyleUpdate(option))
+                            onEvent(NewRequestScreenEvent.StyleUpdate(option)){}
                             expanded = false
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
@@ -140,7 +140,7 @@ fun NewRequestView(
             maxLines = 5,
             minLines = 5,
             value = state.prompt,
-            onValueChange = { onEvent(NewRequestScreenEvent.PromptUpdate(it)) },
+            onValueChange = { onEvent(NewRequestScreenEvent.PromptUpdate(it)){} },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
@@ -150,7 +150,9 @@ fun NewRequestView(
         // кнопка - выполнить
         Button(
             onClick = {
-                // TODO:
+                onEvent(NewRequestScreenEvent.AddRequest(prompt = state.prompt, negativePrompt = state.negativePrompt, style = state.style)){
+                    onNavigateTo(Route.Main)
+                }
             }
         ) {
             Icon(
