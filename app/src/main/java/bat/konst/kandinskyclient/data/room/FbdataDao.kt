@@ -5,10 +5,12 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.data.room.entity.Request
 
 @Dao
 interface FbdataDao {
+    // request
     @Insert
     fun addRequest(request: Request)
 
@@ -22,6 +24,10 @@ interface FbdataDao {
     fun getAllRequests(): List<Request>
 
     @Query("SELECT * FROM requests WHERE md5 = :md5 ORDER BY date_update DESC")
-    fun getRequest(md5: String): Request
+    fun getRequest(md5: String): Request?
+
+    // image
+    @Insert
+    fun addImage(image: Image)
 
 }
