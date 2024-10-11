@@ -140,8 +140,8 @@ fun NewRequestView(
         TextField(
             maxLines = 5,
             minLines = 5,
-            value = state.prompt,
-            onValueChange = { onEvent(NewRequestScreenEvent.PromptUpdate(it)){} },
+            value = state.negativePrompt,
+            onValueChange = { onEvent(NewRequestScreenEvent.NegativePromptUpdate(it)){} },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
