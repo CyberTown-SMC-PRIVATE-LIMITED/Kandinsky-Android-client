@@ -31,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import bat.konst.kandinskyclient.ui.navigation.Route
 import bat.konst.kandinskyclient.R
@@ -40,7 +41,7 @@ import bat.konst.kandinskyclient.R
 fun NewRequestScreen(
     onNavigateTo: (Route) -> Unit = {},
 ) {
-    val viewModel: NewRequestScreenViewModel = viewModel()
+    val viewModel: NewRequestScreenViewModel = hiltViewModel()
     NewRequestView (
         onNavigateTo = onNavigateTo,
         state = viewModel.state,
