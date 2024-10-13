@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NewRequestScreenViewModel @Inject constructor(private val fbdataRepository: FbdataRepository) : ViewModel() {
+class NewRequestScreenViewModel @Inject constructor(private val fbdataRepository: FbdataRepository): ViewModel() {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     var state by mutableStateOf(NewRequestScreenState())
@@ -25,7 +25,7 @@ class NewRequestScreenViewModel @Inject constructor(private val fbdataRepository
             is NewRequestScreenEvent.NegativePromptUpdate -> this.state = state.copy(negativePrompt = event.newNegativePrompt)
             is NewRequestScreenEvent.AddRequest -> {
                 coroutineScope.launch(Dispatchers.Main) {
-                    fbdataRepository.addRequest(state.prompt, state.negativePrompt, state.style) {
+                    fbdataRepository.addRequest(state.prompt, state.negativePrompt, state.style, 1) {
                         onSuccess()
                     }
                 }

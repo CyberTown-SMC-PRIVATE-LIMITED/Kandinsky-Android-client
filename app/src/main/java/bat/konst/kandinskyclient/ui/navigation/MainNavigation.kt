@@ -27,7 +27,7 @@ fun MainNavigation(
     NavHost(
         modifier = modifier,
         navController = navHostController,
-        startDestination = Route.NewRequest
+        startDestination = Route.Main
     ) {
         val navigateAction: (Route) -> Unit = { navigateTo ->
             when (navigateTo) {

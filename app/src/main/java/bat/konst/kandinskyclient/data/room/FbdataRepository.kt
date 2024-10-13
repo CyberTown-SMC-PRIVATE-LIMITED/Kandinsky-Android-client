@@ -20,7 +20,7 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
         return BigInteger(1, md.digest(stringKey.toByteArray())).toString(16).padStart(32, '0')
     }
 
-    suspend fun addRequest(prompt: String, negativePrompt: String, style: String, onSuccess: () -> Unit = {}) {
+    suspend fun addRequest(prompt: String, negativePrompt: String, style: String, qw: Int, onSuccess: () -> Unit = {}) {
         // добавляет запрос. Если он есть -- обновляет его дату.
         // добавляет Image в очередь на обработку к FussionBrain.
 
@@ -42,10 +42,26 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
                 fbdataDao.updateRequest(request)
             }
 
-            // 5. add new image (to fussion brain queeue)
-            val image = Image(md5 = md5, kandinskyId = "", status = StatusTypes.NEW.value, dateCreated = currentDate, imageBase64 = "")
-            fbdataDao.addImage(image)
+            // 5. add new image (to fussion brain queeue) QW times
+            repeat(qw) {
+                val image = Image(
+                    md5 = md5,
+                    kandinskyId = "",
+                    status = StatusTypes.NEW.value,
+                    dateCreated = currentDate,
+                    imageBase64 = ""
+                )
+                fbdataDao.addImage(image)
+            }
         }
         onSuccess()
+    }
+
+    suspend fun getAllRequests(): List<Request> {
+        val reqs: List<Request>
+        withContext(Dispatchers.IO) {
+             reqs = fbdataDao.getAllRequests()
+        }
+        return reqs
     }
 }

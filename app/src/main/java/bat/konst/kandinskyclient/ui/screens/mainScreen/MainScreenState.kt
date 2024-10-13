@@ -1,13 +1,11 @@
 package bat.konst.kandinskyclient.ui.screens.mainScreen
 
+import bat.konst.kandinskyclient.data.room.entity.Request
+
 sealed class MainScreenEvent {
-    // примеры events
-    data class EmailUpdate(val newEmail: String): MainScreenEvent()
-    data class PasswordUpdate(val newPassword: String): MainScreenEvent()
+    data object ScreenUpdate: MainScreenEvent()
 }
 
 data class MainScreenState(
-    // примеры состояний
-    val email: String = "",
-    val password: String = ""
+    val requests: List<Request> = emptyList<Request>()
 )
