@@ -6,9 +6,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import bat.konst.kandinskyclient.ui.screens.configScreen.ConfigScreen
 import bat.konst.kandinskyclient.ui.screens.newRequestScreen.NewRequestScreen
 import bat.konst.kandinskyclient.ui.screens.mainScreen.MainScreen
+import bat.konst.kandinskyclient.ui.screens.requestScreen.RequestScreen
 import kotlinx.serialization.Serializable
 
 sealed class Route {
@@ -16,7 +18,7 @@ sealed class Route {
     @Serializable data object Main: Route()
     @Serializable data object NewRequest: Route()
     @Serializable data object Config: Route()
-    // @Serializable data class ShowImage(val id: Int): Route()
+    @Serializable data class Request(val md5: String): Route()
 }
 
 @ExperimentalMaterial3Api
@@ -50,8 +52,9 @@ fun MainNavigation(
             ConfigScreen(onNavigateTo = navigateAction)
         }
 
-//        composable<Route.ShowImage> { backStackEntry ->
-//            // ShowImageScreen(onNavigateTo = navigateAction, colors = backStackEntry.toRoute())
-//        }
+        composable<Route.Request> { backStackEntry ->
+            RequestScreen(onNavigateTo = navigateAction, route = backStackEntry.toRoute())
+        }
+
     }
 }

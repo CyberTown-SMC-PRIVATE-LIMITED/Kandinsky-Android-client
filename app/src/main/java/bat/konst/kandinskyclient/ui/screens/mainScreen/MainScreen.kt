@@ -88,7 +88,7 @@ fun MainView(
         // Список запросов
         LazyColumn {
             items(state.requests) { request ->
-                RequestCard(request)
+                RequestCard(request, onNavigateTo)
             }
         }
 
@@ -96,8 +96,12 @@ fun MainView(
 }
 
 @Composable
-fun RequestCard(request: Request) {
+fun RequestCard(
+    request: Request,
+    onNavigateTo: (Route) -> Unit = {},
+) {
     Card(
+        onClick = { onNavigateTo(Route.Request(request.md5)) },
         modifier= Modifier
             .fillMaxWidth()
             .padding(vertical = 5.dp)

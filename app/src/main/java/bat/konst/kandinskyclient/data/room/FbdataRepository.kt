@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
 
-    // request
+    // ------------------ request
     private suspend fun getMd5Hash(prompt: String, negativePrompt: String, style: String): String {
         // https://stackoverflow.com/questions/64171624/how-to-generate-an-md5-hash-in-kotlin
         val stringKey = "$prompt+$negativePrompt+$style"
@@ -58,6 +58,17 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
         onSuccess()
     }
 
+    suspend fun getRequest(md5: String): Request {
+        var request: Request?
+        withContext(Dispatchers.IO) {
+            request = fbdataDao.getRequest(md5)
+        }
+        if (request == null) {
+            return Request(md5 = "", prompt = "", negativePrompt = "", style = "", dateCreate = 0, dateUpdate = 0)
+        }
+        return request!!
+    }
+
     suspend fun getAllRequests(): List<Request> {
         val reqs: List<Request>
         withContext(Dispatchers.IO) {
@@ -66,7 +77,16 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
         return reqs
     }
 
-    // config
+    // ------------------ image
+    suspend fun getImages(md5: String): List<Image> {
+        val images: List<Image>
+        withContext(Dispatchers.IO) {
+            images = fbdataDao.getImages(md5)
+        }
+        return images
+    }
+
+    // ------------------ config
     suspend fun getConfigByName(name: String): String {
         // получаем параметр конфигурации по заданному имени
         var config: Config?
