@@ -16,10 +16,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import bat.konst.kandinskyclient.R
 import bat.konst.kandinskyclient.ui.navigation.Route
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.data.room.entity.Request
+import bat.konst.kandinskyclient.ui.screens.configScreen.ConfigScreenEvent
 
 @Composable
 fun MainScreen(
@@ -46,6 +51,11 @@ fun MainView(
     ) {
         Row {
 
+            // Событие на вход в экран
+            LaunchedEffect(key1 = state.openKey) {
+                onEvent(MainScreenEvent.ScreenUpdate)
+            }
+
             // кнопка "Обновить"
             Button(
                 onClick = { onEvent(MainScreenEvent.ScreenUpdate) },
@@ -60,6 +70,17 @@ fun MainView(
                 modifier = Modifier
             ) {
                 Text(text = stringResource(id = R.string.ms_add))
+            }
+
+            // Кнопка "Настройки"
+            Button(
+                onClick = { onNavigateTo(Route.Config) },
+                modifier = Modifier
+            ) {
+                Icon(
+                    imageVector = androidx.compose.material.icons.Icons.Filled.Settings,
+                    contentDescription = stringResource(id = R.string.ms_settings)
+                )
             }
 
         }

@@ -7,5 +7,6 @@ sealed class MainScreenEvent {
 }
 
 data class MainScreenState(
-    val requests: List<Request> = emptyList<Request>()
+    val requests: List<Request> = emptyList<Request>(),
+    val openKey: Long = 0 // ключ для запуска события открытия экрана
 )

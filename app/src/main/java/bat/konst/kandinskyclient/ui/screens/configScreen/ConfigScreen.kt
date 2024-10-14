@@ -5,6 +5,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,7 +20,7 @@ fun ConfigScreen(
     ConfigView(
         onNavigateTo = onNavigateTo,
         state = viewModel.state,
-        onEvent = viewModel::onEvent
+        onEvent = viewModel::onEvent,
     )
 }
 
@@ -27,15 +28,13 @@ fun ConfigScreen(
 fun ConfigView(
     onNavigateTo: (Route) -> Unit = {},
     state: ConfigScreenState = ConfigScreenState(),
-    onEvent: (ConfigScreenEvent) -> Unit = {}
+    onEvent: (ConfigScreenEvent) -> Unit = {},
 ) {
     Column() {
 
-        // Кнопка прочитать конфигурацию
-        Button(
-            onClick = { onEvent(ConfigScreenEvent.LoadConfig) },
-        ) {
-            Text(text = stringResource(id = R.string.cs_load_config))
+        // Событие на вход в экран
+        LaunchedEffect(key1 = state.openKey) {
+            onEvent(ConfigScreenEvent.LoadConfig)
         }
 
         // поле - ключ
@@ -54,7 +53,10 @@ fun ConfigView(
 
         // Кнопка сохранить конфигурацию
         Button(
-            onClick = { onEvent(ConfigScreenEvent.SaveConfig) },
+            onClick = {
+                onEvent(ConfigScreenEvent.SaveConfig)
+                onNavigateTo(Route.GoBack)
+            },
         ) {
             Text(text = stringResource(id = R.string.cs_save_config))
         }

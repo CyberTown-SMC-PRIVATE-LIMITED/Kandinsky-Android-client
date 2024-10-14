@@ -8,8 +8,8 @@
 
     <string name="ms_refresh">Обновить</string>
     <string name="ms_add">Добавить</string>
+    <string name="ms_settings">Настройки</string>
 
-    <string name="cs_load_config">Загрузить конфигурацию</string>
     <string name="cs_save_config">Сохранить конфигурацию</string>
     <string name="cs_key">Ключ</string>
     <string name="cs_secret">Секрет</string>

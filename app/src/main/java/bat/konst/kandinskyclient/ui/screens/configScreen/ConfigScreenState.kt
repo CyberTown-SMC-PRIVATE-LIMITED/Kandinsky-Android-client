@@ -9,5 +9,6 @@ sealed class ConfigScreenEvent {
 
 data class ConfigScreenState(
     val key: String = "",
-    val secret: String = ""
+    val secret: String = "",
+    val openKey: Long = 0 // ключ для запуска события открытия экрана
 )

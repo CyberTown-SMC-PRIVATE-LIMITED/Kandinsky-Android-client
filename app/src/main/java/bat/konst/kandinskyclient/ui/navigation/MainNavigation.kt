@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import bat.konst.kandinskyclient.ui.screens.configScreen.ConfigScreen
 import bat.konst.kandinskyclient.ui.screens.newRequestScreen.NewRequestScreen
 import bat.konst.kandinskyclient.ui.screens.mainScreen.MainScreen
 import kotlinx.serialization.Serializable
@@ -14,6 +15,7 @@ sealed class Route {
     @Serializable data object GoBack: Route()  // роут для возврата к предыдущему экрану
     @Serializable data object Main: Route()
     @Serializable data object NewRequest: Route()
+    @Serializable data object Config: Route()
     // @Serializable data class ShowImage(val id: Int): Route()
 }
 
@@ -44,6 +46,9 @@ fun MainNavigation(
             NewRequestScreen(onNavigateTo = navigateAction)
         }
 
+        composable<Route.Config> {
+            ConfigScreen(onNavigateTo = navigateAction)
+        }
 
 //        composable<Route.ShowImage> { backStackEntry ->
 //            // ShowImageScreen(onNavigateTo = navigateAction, colors = backStackEntry.toRoute())
