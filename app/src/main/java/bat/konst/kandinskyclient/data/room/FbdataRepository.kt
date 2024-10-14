@@ -1,11 +1,11 @@
 package bat.konst.kandinskyclient.data.room
 
+import bat.konst.kandinskyclient.app.CONFIG_DEFAULT_VALUE
+import bat.konst.kandinskyclient.data.room.entity.Config
 import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.data.room.entity.Request
 import bat.konst.kandinskyclient.data.room.entity.StatusTypes
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigInteger
 import java.security.MessageDigest
@@ -13,6 +13,7 @@ import javax.inject.Inject
 
 class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
 
+    // request
     private suspend fun getMd5Hash(prompt: String, negativePrompt: String, style: String): String {
         // https://stackoverflow.com/questions/64171624/how-to-generate-an-md5-hash-in-kotlin
         val stringKey = "$prompt+$negativePrompt+$style"
@@ -63,5 +64,25 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
              reqs = fbdataDao.getAllRequests()
         }
         return reqs
+    }
+
+    // config
+    suspend fun getConfigByName(name: String): String {
+        // получаем параметр конфигурации по заданному имени
+        var config: Config?
+        withContext(Dispatchers.IO) {
+            config = fbdataDao.getConfigByName(name)
+        }
+        if (config != null) {
+            return config!!.value
+        }
+        return CONFIG_DEFAULT_VALUE
+    }
+
+    suspend fun setConfig(name: String, value: String) {
+        withContext(Dispatchers.IO) {
+            val config = Config(name = name, value = value)
+            fbdataDao.setConfig(config)
+        }
     }
 }

@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import bat.konst.kandinskyclient.data.room.entity.Config
 import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.data.room.entity.Request
 
@@ -29,5 +30,12 @@ interface FbdataDao {
     // image
     @Insert
     fun addImage(image: Image)
+
+    // config
+    @Query("SELECT * FROM config WHERE name = :name")
+    fun getConfigByName(name: String): Config?
+
+    @Insert (onConflict = androidx.room.OnConflictStrategy.REPLACE)
+    fun setConfig(config: Config)
 
 }
