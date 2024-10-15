@@ -1,5 +1,6 @@
 package bat.konst.kandinskyclient.ui.screens.mainScreen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.data.room.entity.Request
 import bat.konst.kandinskyclient.ui.screens.configScreen.ConfigScreenEvent
+import kotlin.system.exitProcess
 
 @Composable
 fun MainScreen(
@@ -49,12 +51,18 @@ fun MainView(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row {
 
-            // Событие на вход в экран
-            LaunchedEffect(key1 = state.openKey) {
-                onEvent(MainScreenEvent.ScreenUpdate)
-            }
+        // Событие на вход в экран
+        LaunchedEffect(key1 = state.openKey) {
+            onEvent(MainScreenEvent.ScreenUpdate)
+        }
+
+        // По нажатию системной кнопки "назад" выходим из приложения
+        BackHandler {
+            exitProcess(-1)
+        }
+
+        Row {
 
             // кнопка "Обновить"
             Button(
