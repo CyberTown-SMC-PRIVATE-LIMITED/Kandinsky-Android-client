@@ -1,10 +1,12 @@
-    package bat.konst.kandinskyclient.ui.screens.newRequestScreen
+package bat.konst.kandinskyclient.ui.screens.newRequestScreen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -20,6 +22,7 @@ import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,8 +38,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import bat.konst.kandinskyclient.ui.navigation.Route
 import bat.konst.kandinskyclient.R
+import bat.konst.kandinskyclient.ui.screens.mainScreen.MainScreenEvent
+import coil.compose.rememberAsyncImagePainter
 
-@ExperimentalMaterial3Api
+    @ExperimentalMaterial3Api
 @Composable
 fun NewRequestScreen(
     onNavigateTo: (Route) -> Unit = {},
@@ -57,7 +62,11 @@ fun NewRequestView(
     state: NewRequestScreenState = NewRequestScreenState(),
     onEvent: (NewRequestScreenEvent, onSuccess: () -> Unit) -> Unit = { _, _ -> }
 ) {
-    // columnn with scrolling
+    // Событие на вход в экран
+    LaunchedEffect(key1 = state.openKey) {
+        onEvent(NewRequestScreenEvent.ScreenUpdate){}
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -90,8 +99,6 @@ fun NewRequestView(
                 .padding(top = 20.dp, bottom = 10.dp)
                 .align(Alignment.Start)
         )
-        // TODO: Сделать нормальный список стилей
-        val styleList = listOf("DEFAULT", "UHD", "ANIME", "KANDINSKY")
         var expanded by remember { mutableStateOf(false) }
         ExposedDropdownMenuBox(
             expanded = expanded,
@@ -116,17 +123,27 @@ fun NewRequestView(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
             ) {
-                styleList.forEach { option ->
+                state.stylesList.forEach { style ->
                     DropdownMenuItem(
-                        text = { Text(option, style = MaterialTheme.typography.bodyLarge) },
+                        text = { Text(style.name, style = MaterialTheme.typography.bodyLarge) },
                         onClick = {
-                            onEvent(NewRequestScreenEvent.StyleUpdate(option)){}
+                            onEvent(NewRequestScreenEvent.StyleUpdate(style.name)){}
                             expanded = false
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                     )
                 }
             }
+        }
+
+        // Картинка стиля
+        if (state.styleImageURL != "") {
+            Image(
+                painter = rememberAsyncImagePainter(state.styleImageURL),
+                contentDescription = "Style ${state.style} Image",
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
         }
 
         // Негативный промпт

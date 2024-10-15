@@ -5,6 +5,7 @@ import androidx.room.Room
 import bat.konst.kandinskyclient.data.room.FbdataDao
 import bat.konst.kandinskyclient.data.room.FbdataDatabase
 import bat.konst.kandinskyclient.data.room.FbdataRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

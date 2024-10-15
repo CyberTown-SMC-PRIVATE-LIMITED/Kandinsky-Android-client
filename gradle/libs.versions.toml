@@ -20,6 +20,8 @@ ksp = "2.0.20-1.0.24"
 # hilt
 hilt = "2.51.1"
 hiltNavigationCompose = "1.2.0"
+# coil
+coil = "2.7.0"
 
 
 [libraries]
@@ -52,6 +54,8 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+# coil
+coil = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

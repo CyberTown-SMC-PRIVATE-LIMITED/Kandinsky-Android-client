@@ -5,8 +5,6 @@ import retrofit2.Response
 import retrofit2.http.GET
 
 interface KandinskyApiService {
-    // запросы к API
-
     // получение списка стилей
     @GET("https://cdn.fusionbrain.ai/static/styles/key")
     suspend fun getStyles(): Response<Styles>
