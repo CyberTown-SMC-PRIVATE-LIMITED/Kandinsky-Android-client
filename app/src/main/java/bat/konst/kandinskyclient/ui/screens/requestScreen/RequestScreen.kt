@@ -1,11 +1,9 @@
 package bat.konst.kandinskyclient.ui.screens.requestScreen
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
@@ -17,9 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.ui.navigation.Route
-import bat.konst.kandinskyclient.ui.screens.configScreen.ConfigScreenEvent
-import bat.konst.kandinskyclient.ui.screens.configScreen.ConfigScreenState
-import bat.konst.kandinskyclient.ui.screens.mainScreen.RequestCard
 
 @Composable
 fun RequestScreen(
@@ -50,7 +45,11 @@ fun RequestView(
     Column {
 
         // промпты
-        Card {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 5.dp)
+        ) {
             Column {
                 Text(text = state.prompt)
                 Text(text = state.negativePrompt)
@@ -61,7 +60,18 @@ fun RequestView(
         // images
         LazyColumn {
             items(state.images) { image ->
-                Text(text = "image id = ${image.id}")
+                Card (
+                    onClick = { onNavigateTo(Route.Image(id=image.id)) },
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 1.dp)
+                ) {
+                    Text(
+                        text = "image id = ${image.id}",
+                        modifier = Modifier
+                            .padding(vertical = 5.dp, horizontal = 10.dp)
+                    )
+                }
             }
         }
 

@@ -31,6 +31,9 @@ interface FbdataDao {
     @Insert
     fun addImage(image: Image)
 
+    @Query("SELECT * FROM images WHERE id = :id")
+    fun getImage(id: Long): Image?
+
     @Query("SELECT * FROM images WHERE md5 = :md5")
     fun getImages(md5: String): List<Image>
 

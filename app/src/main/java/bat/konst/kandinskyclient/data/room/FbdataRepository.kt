@@ -86,6 +86,17 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
         return images
     }
 
+    suspend fun getImage(id: Long): Image {
+        var image: Image?
+        withContext(Dispatchers.IO) {
+            image = fbdataDao.getImage(id)
+        }
+        if (image == null) {
+            return Image(id = 0, md5 = "", kandinskyId = "", status = 0, dateCreated = 0, imageBase64 = "")
+        }
+        return image!!
+    }
+
     // ------------------ config
     suspend fun getConfigByName(name: String): String {
         // получаем параметр конфигурации по заданному имени
