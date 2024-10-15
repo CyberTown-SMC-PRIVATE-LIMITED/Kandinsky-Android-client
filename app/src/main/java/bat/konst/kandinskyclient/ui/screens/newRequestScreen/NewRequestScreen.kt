@@ -46,12 +46,14 @@ import coil.compose.rememberAsyncImagePainter
 @Composable
 fun NewRequestScreen(
     onNavigateTo: (Route) -> Unit = {},
+    route: Route.NewRequest = Route.NewRequest(md5="")
 ) {
     val viewModel: NewRequestScreenViewModel = hiltViewModel()
     NewRequestView (
         onNavigateTo = onNavigateTo,
         state = viewModel.state,
-        onEvent = viewModel::onEvent
+        onEvent = viewModel::onEvent,
+        route = route
     )
 }
 
@@ -61,11 +63,12 @@ fun NewRequestScreen(
 fun NewRequestView(
     onNavigateTo: (Route) -> Unit = {},
     state: NewRequestScreenState = NewRequestScreenState(),
-    onEvent: (NewRequestScreenEvent, onSuccess: () -> Unit) -> Unit = { _, _ -> }
+    onEvent: (NewRequestScreenEvent, onSuccess: () -> Unit) -> Unit = { _, _ -> },
+    route: Route.NewRequest = Route.NewRequest(md5="")
 ) {
     // Событие на вход в экран
     LaunchedEffect(key1 = state.openKey) {
-        onEvent(NewRequestScreenEvent.ScreenUpdate){}
+        onEvent(NewRequestScreenEvent.ScreenUpdate(route.md5)){}
     }
 
     Column(
@@ -169,7 +172,7 @@ fun NewRequestView(
 
         // кнопки - выполнить
         Row {
-            for (i in 1..4) {
+            for (i in 1..5) {
                 Button(
                     onClick = {
                         onEvent(

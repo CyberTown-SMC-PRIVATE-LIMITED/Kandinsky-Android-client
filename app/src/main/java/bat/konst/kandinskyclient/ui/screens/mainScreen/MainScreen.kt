@@ -74,7 +74,7 @@ fun MainView(
 
             // Кнопка "Добавить"
             Button(
-                onClick = { onNavigateTo(Route.NewRequest) },
+                onClick = { onNavigateTo(Route.NewRequest()) },
                 modifier = Modifier
             ) {
                 Text(text = stringResource(id = R.string.ms_add))

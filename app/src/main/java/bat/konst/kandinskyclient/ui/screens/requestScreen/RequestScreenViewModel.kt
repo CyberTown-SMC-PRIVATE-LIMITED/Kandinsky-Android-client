@@ -27,6 +27,7 @@ class RequestScreenViewModel @Inject constructor(private val fbdataRepository: F
                     val request = fbdataRepository.getRequest(event.md5)
                     val images = fbdataRepository.getImages(event.md5)
                     state = state.copy(
+                        md5 = request.md5,
                         prompt = request.prompt,
                         negativePrompt = request.negativePrompt,
                         style = request.style,

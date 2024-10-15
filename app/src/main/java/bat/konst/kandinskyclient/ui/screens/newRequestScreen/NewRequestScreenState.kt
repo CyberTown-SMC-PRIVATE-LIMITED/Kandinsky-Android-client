@@ -8,7 +8,7 @@ sealed class NewRequestScreenEvent {
     data class PromptUpdate(val newPrompt: String): NewRequestScreenEvent()
     data class NegativePromptUpdate(val newNegativePrompt: String): NewRequestScreenEvent()
     data class AddRequest(val prompt: String, val negativePrompt: String, val style: String, val qw: Int): NewRequestScreenEvent()
-    data object ScreenUpdate: NewRequestScreenEvent()
+    data class ScreenUpdate(val md5: String): NewRequestScreenEvent()
 }
 
 data class NewRequestScreenState(

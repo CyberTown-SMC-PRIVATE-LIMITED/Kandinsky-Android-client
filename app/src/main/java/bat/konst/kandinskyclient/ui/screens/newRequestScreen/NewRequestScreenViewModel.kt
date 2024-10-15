@@ -47,11 +47,18 @@ class NewRequestScreenViewModel @Inject constructor(
             }
 
             is NewRequestScreenEvent.ScreenUpdate -> {
-                // обновление StylesList
                 coroutineScope.launch(Dispatchers.Main) {
+                    // Получение данных по запросу если ключ (md5) задан
+                    val request = fbdataRepository.getRequest(event.md5)
+                    // обновление StylesList
                     val styleList = kandinskyApiRepository.getStyles()
-                    val style = if (styleList.isEmpty()) "" else styleList[0].name
+                    var style = request.style
+                    if (style == "") { // это новый запрос -- поэтому стиль первый из списка всех доступных
+                        style = if (styleList.isEmpty()) "" else styleList[0].name
+                    }
                     state = state.copy(
+                        prompt = request.prompt,
+                        negativePrompt = request.negativePrompt,
                         stylesList = styleList,
                         style = style,
                         styleImageURL = getStyleURL(style, styleList)

@@ -14,4 +14,6 @@
     <string name="cs_key">Ключ</string>
     <string name="cs_secret">Секрет</string>
 
+    <string name="rs_repeat">Повторить</string>
+
 </resources>

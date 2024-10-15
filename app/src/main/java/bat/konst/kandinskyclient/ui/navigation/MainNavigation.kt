@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 sealed class Route {
     @Serializable data object GoBack: Route()  // роут для возврата к предыдущему экрану
     @Serializable data object Main: Route()
-    @Serializable data object NewRequest: Route()
+    @Serializable data class NewRequest(val md5: String = ""): Route()
     @Serializable data object Config: Route()
     @Serializable data class Request(val md5: String): Route()
     @Serializable data class Image(val id: Long): Route()
@@ -46,8 +46,8 @@ fun MainNavigation(
             MainScreen(onNavigateTo = navigateAction)
         }
 
-        composable<Route.NewRequest> {
-            NewRequestScreen(onNavigateTo = navigateAction)
+        composable<Route.NewRequest> { backStackEntry ->
+            NewRequestScreen(onNavigateTo = navigateAction, route = backStackEntry.toRoute())
         }
 
         composable<Route.Config> {
