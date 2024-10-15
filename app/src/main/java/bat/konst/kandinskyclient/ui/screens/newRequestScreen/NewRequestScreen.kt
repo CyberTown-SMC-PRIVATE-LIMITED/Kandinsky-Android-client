@@ -2,6 +2,7 @@ package bat.konst.kandinskyclient.ui.screens.newRequestScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -120,6 +121,7 @@ fun NewRequestView(
                 colors = ExposedDropdownMenuDefaults.textFieldColors(),
             )
             ExposedDropdownMenu(
+                modifier = Modifier.fillMaxWidth(),
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
             ) {
@@ -165,18 +167,32 @@ fun NewRequestView(
                 .verticalScroll(rememberScrollState()),
         )
 
-        // кнопка - выполнить
-        Button(
-            onClick = {
-                onEvent(NewRequestScreenEvent.AddRequest(prompt = state.prompt, negativePrompt = state.negativePrompt, style = state.style)){
-                    onNavigateTo(Route.Main)
+        // кнопки - выполнить
+        Row {
+            for (i in 1..4) {
+                Button(
+                    onClick = {
+                        onEvent(
+                            NewRequestScreenEvent.AddRequest(
+                                prompt = state.prompt,
+                                negativePrompt = state.negativePrompt,
+                                style = state.style,
+                                qw = i
+                            )
+                        ) {
+                            onNavigateTo(Route.Main)
+                        }
+                    }
+                ) {
+                    Row {
+                        Icon(
+                            painter = rememberVectorPainter(image = Icons.Outlined.PlayArrow),
+                            contentDescription = null
+                        )
+                        Text(text = i.toString())
+                    }
                 }
             }
-        ) {
-            Icon(
-                painter = rememberVectorPainter(image = Icons.Outlined.PlayArrow),
-                contentDescription = null
-            )
         }
 
     }

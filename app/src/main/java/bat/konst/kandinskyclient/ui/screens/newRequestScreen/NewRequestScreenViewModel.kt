@@ -40,7 +40,7 @@ class NewRequestScreenViewModel @Inject constructor(
 
             is NewRequestScreenEvent.AddRequest -> {
                 coroutineScope.launch(Dispatchers.Main) {
-                    fbdataRepository.addRequest(state.prompt, state.negativePrompt, state.style, 1) {
+                    fbdataRepository.addRequest(event.prompt, event.negativePrompt, event.style, event.qw) {
                         onSuccess()
                     }
                 }
