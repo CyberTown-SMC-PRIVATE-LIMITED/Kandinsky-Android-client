@@ -44,4 +44,7 @@ data class Image (
     @ColumnInfo(name = "image_base64")
     val imageBase64: String,
 
+    @ColumnInfo(name = "image_thumbnail_base64")
+    val imageThumbnailBase64: String
+
 )

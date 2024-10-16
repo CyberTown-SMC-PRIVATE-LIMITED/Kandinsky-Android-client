@@ -103,7 +103,8 @@ fun RequestScreenPreview() {
                     kandinskyId = "knd_sky_id",
                     status = 0,
                     dateCreated = 0,
-                    imageBase64 = ""
+                    imageBase64 = "",
+                    imageThumbnailBase64 = ""
                 ),
                 Image(
                     id=2,
@@ -111,7 +112,8 @@ fun RequestScreenPreview() {
                     kandinskyId = "knd_sky_id2",
                     status = 0,
                     dateCreated = 0,
-                    imageBase64 = ""
+                    imageBase64 = "",
+                    imageThumbnailBase64 = ""
                 )
             )
         )

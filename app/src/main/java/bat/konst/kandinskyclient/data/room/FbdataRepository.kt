@@ -50,7 +50,8 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
                     kandinskyId = "",
                     status = StatusTypes.NEW.value,
                     dateCreated = currentDate,
-                    imageBase64 = ""
+                    imageBase64 = "",
+                    imageThumbnailBase64 = ""
                 )
                 fbdataDao.addImage(image)
             }
@@ -92,7 +93,7 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
             image = fbdataDao.getImage(id)
         }
         if (image == null) {
-            return Image(id = 0, md5 = "", kandinskyId = "", status = 0, dateCreated = 0, imageBase64 = "")
+            return Image(id = 0, md5 = "", kandinskyId = "", status = 0, dateCreated = 0, imageBase64 = "", imageThumbnailBase64 = "")
         }
         return image!!
     }
