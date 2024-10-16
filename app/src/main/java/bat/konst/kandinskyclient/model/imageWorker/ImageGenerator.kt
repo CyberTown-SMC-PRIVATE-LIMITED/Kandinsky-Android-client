@@ -106,7 +106,7 @@ class GenerateImages {
                 Image(
                     id = image.id,
                     md5 = image.md5,
-                    kandinskyId = image.kandinskyId,
+                    kandinskyId = imageResult.uuid,
                     status = StatusTypes.PROCESSING.value,
                     dateCreated = image.dateCreated,
                     imageBase64 = "",

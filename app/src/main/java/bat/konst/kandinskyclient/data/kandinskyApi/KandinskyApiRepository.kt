@@ -9,6 +9,11 @@ import bat.konst.kandinskyclient.data.kandinskyApi.models.Style
 import bat.konst.kandinskyclient.data.kandinskyApi.models.Styles
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
 class KandinskyApiRepository @Inject constructor(private val apiService: KandinskyApiService) {
@@ -44,22 +49,25 @@ class KandinskyApiRepository @Inject constructor(private val apiService: Kandins
         var generateResult: GenerateResult? = null
         withContext(Dispatchers.IO) {
             try {
+                val params = GenerateRequest(
+                    generateParams = GenerateParams(
+                        query = prompt,
+                    ),
+                    negativePromptUnclip = negativePrompt,
+                    style = style
+                )
+                val paramsJson = Json.encodeToString(params)
                 apiService.sendGgenerateImageRequest(
                     key = key,
                     secret = secret,
-                    modelId = modelId,
-                    params = GenerateRequest(
-                        generateParams = GenerateParams(
-                            query = prompt,
-                        ),
-                        negativePromptUnclip = negativePrompt,
-                        style = style
-                    )
+                    modelId = modelId.toRequestBody(),
+                    params = paramsJson.toRequestBody(contentType = "application/json".toMediaType())
                 ).let {
                     if (it.isSuccessful) {
                         generateResult = it.body()
                     } else {
                         Log.d("KandinskyApiRepository", it.errorBody().toString())
+                        Log.d("KandinskyApiRepository", it.code().toString())
                     }
                 }
             } catch (e: Exception) {
