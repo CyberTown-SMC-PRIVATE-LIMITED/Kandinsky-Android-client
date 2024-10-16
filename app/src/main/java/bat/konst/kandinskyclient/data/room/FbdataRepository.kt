@@ -87,6 +87,22 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
         return images
     }
 
+    suspend fun getImagesByStatus(status: Int): List<Image> {
+        val images: List<Image>
+        withContext(Dispatchers.IO) {
+            images = fbdataDao.getImagesByStatus(status)
+        }
+        return images
+    }
+
+    suspend fun getFirstImageByStatus(status: Int): Image? {
+        var image: Image? = null
+        withContext(Dispatchers.IO) {
+            image = fbdataDao.getFirstImageByStatus(status)
+        }
+        return image
+    }
+
     suspend fun getImage(id: Long): Image {
         var image: Image?
         withContext(Dispatchers.IO) {
@@ -96,6 +112,12 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
             return Image(id = 0, md5 = "", kandinskyId = "", status = 0, dateCreated = 0, imageBase64 = "", imageThumbnailBase64 = "")
         }
         return image!!
+    }
+
+    suspend fun updateImage(image: Image) {
+        withContext(Dispatchers.IO) {
+            fbdataDao.updateImage(image)
+        }
     }
 
     // ------------------ config

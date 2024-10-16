@@ -20,7 +20,8 @@ enum class StatusTypes(val value: Int) {
     indices = [
         Index(value = ["md5"]),
         Index(value = ["kandinsky_id"]),
-        Index(value = ["status", "date_created"]),
+        Index(value = ["status"]),
+        Index(value = ["date_created"]),
     ]
 )
 data class Image (

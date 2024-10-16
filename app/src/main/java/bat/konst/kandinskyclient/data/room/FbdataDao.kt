@@ -34,8 +34,17 @@ interface FbdataDao {
     @Query("SELECT * FROM images WHERE id = :id")
     fun getImage(id: Long): Image?
 
-    @Query("SELECT * FROM images WHERE md5 = :md5")
+    @Query("SELECT * FROM images WHERE status = :status ORDER BY date_created LIMIT 1")
+    fun getFirstImageByStatus(status: Int): Image?
+
+    @Update
+    fun updateImage(image: Image)
+
+    @Query("SELECT * FROM images WHERE md5 = :md5 ORDER BY date_created DESC")
     fun getImages(md5: String): List<Image>
+
+    @Query("SELECT * FROM images WHERE status = :status")
+    fun getImagesByStatus(status: Int): List<Image>
 
     // config
     @Query("SELECT * FROM config WHERE name = :name")
