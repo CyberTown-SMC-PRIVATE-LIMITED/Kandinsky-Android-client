@@ -38,6 +38,8 @@ fun ImageView(
     Column {
 
         Text(text = "image id = ${state.id}")
+        Text(text = "image status = ${state.status}")
+        Text(text = "imageBase64  = ${state.imageBase64}")
 
     }
 }

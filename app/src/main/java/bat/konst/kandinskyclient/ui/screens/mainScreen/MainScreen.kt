@@ -17,15 +17,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import bat.konst.kandinskyclient.R
 import bat.konst.kandinskyclient.ui.navigation.Route
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.data.room.entity.Request
-import bat.konst.kandinskyclient.ui.screens.configScreen.ConfigScreenEvent
 import kotlin.system.exitProcess
 
 @Composable
@@ -78,6 +77,17 @@ fun MainView(
                 modifier = Modifier
             ) {
                 Text(text = stringResource(id = R.string.ms_add))
+            }
+
+            // Кнопка "Test Worker"
+            Button(
+                onClick = { onEvent(MainScreenEvent.TestWorker) },
+                modifier = Modifier
+            ) {
+                Icon(
+                    imageVector = androidx.compose.material.icons.Icons.Filled.Call,
+                    contentDescription = stringResource(id = R.string.ms_settings)
+                )
             }
 
             // Кнопка "Настройки"

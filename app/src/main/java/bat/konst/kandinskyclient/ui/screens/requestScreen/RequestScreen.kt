@@ -76,11 +76,25 @@ fun RequestView(
                         .fillMaxWidth()
                         .padding(vertical = 1.dp)
                 ) {
-                    Text(
-                        text = "image id = ${image.id}",
-                        modifier = Modifier
-                            .padding(vertical = 5.dp, horizontal = 10.dp)
-                    )
+
+                    Column {
+                        Text(
+                            text = "image id = ${image.id}",
+                            modifier = Modifier
+                                .padding(vertical = 5.dp, horizontal = 10.dp)
+                        )
+                        Text(
+                            text = "image status = ${image.status}",
+                            modifier = Modifier
+                                .padding(vertical = 5.dp, horizontal = 10.dp)
+                        )
+                        Text(
+                            text = "imageBase64 = ${image.imageBase64}",
+                            modifier = Modifier
+                                .padding(vertical = 5.dp, horizontal = 10.dp)
+                        )
+
+                    }
                 }
             }
         }

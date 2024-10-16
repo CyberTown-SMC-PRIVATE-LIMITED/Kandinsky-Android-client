@@ -4,6 +4,7 @@ import bat.konst.kandinskyclient.data.room.entity.Request
 
 sealed class MainScreenEvent {
     data object ScreenUpdate: MainScreenEvent()
+    data object TestWorker: MainScreenEvent()
 }
 
 data class MainScreenState(
