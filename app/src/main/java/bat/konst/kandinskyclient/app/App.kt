@@ -7,6 +7,7 @@ import dagger.hilt.android.HiltAndroidApp
 class App : Application() {
 
     override fun onCreate() {
+        FILE_STORAGE_PATH = filesDir.absolutePath
         super.onCreate()
     }
 

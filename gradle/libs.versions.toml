@@ -22,7 +22,8 @@ hilt = "2.51.1"
 hiltNavigationCompose = "1.2.0"
 # coil
 coil = "2.7.0"
-
+# apache codecs (base64)
+apache-codec = "1.17.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -56,6 +57,8 @@ hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 # coil
 coil = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+# apache codecs (base64)
+apache-codec = { group = "commons-codec", name="commons-codec", version.ref = "apache-codec" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

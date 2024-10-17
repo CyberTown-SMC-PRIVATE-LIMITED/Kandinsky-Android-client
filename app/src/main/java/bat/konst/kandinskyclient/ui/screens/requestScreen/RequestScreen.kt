@@ -18,6 +18,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.R
 import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.ui.navigation.Route
+import coil.compose.AsyncImage
+import java.io.File
 
 @Composable
 fun RequestScreen(
@@ -93,7 +95,10 @@ fun RequestView(
                             modifier = Modifier
                                 .padding(vertical = 5.dp, horizontal = 10.dp)
                         )
-
+                        AsyncImage(
+                            model = File(image.imageThumbnailBase64),
+                            contentDescription = "generated image"
+                        )
                     }
                 }
             }

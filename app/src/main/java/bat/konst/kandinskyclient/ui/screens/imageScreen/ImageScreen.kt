@@ -1,5 +1,6 @@
 package bat.konst.kandinskyclient.ui.screens.imageScreen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -7,6 +8,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.ui.navigation.Route
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import java.io.File
 
 @Composable
 fun ImageScreen(
@@ -40,6 +44,13 @@ fun ImageView(
         Text(text = "image id = ${state.id}")
         Text(text = "image status = ${state.status}")
         Text(text = "imageBase64  = ${state.imageBase64}")
+        Text(text = "OK")
+        AsyncImage(
+            model = File(state.imageBase64),
+            contentDescription = "generated image"
+        )
+        Text(text = "OK")
+
 
     }
 }

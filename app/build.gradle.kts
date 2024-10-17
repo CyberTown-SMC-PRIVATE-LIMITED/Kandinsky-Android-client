@@ -85,4 +85,6 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     // coil
     implementation(libs.coil)
+    // apache codecs (base64)
+    implementation(libs.apache.codec)
 }

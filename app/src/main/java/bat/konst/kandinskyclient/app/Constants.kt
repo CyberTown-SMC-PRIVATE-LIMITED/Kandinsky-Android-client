@@ -11,6 +11,8 @@ const val KANDINSKY_GENERATE_RESULT_FAIL = "FAIL"
 const val KANDINSKY_GENERATE_RESULT_DONE = "DONE"
 const val KANDINSKY_GENERATE_RESULT_INITIAL = "INITIAL"
 
-data class AppValues(
-    var internalStorageDir : String = ""
-)
+// file storage
+const val FILE_IMAGE_THUMB_HEIGHT = 250
+const val FILE_IMAGE_THUMB_WIDTH = 250
+
+lateinit var FILE_STORAGE_PATH: String // путь к папке с изображениями

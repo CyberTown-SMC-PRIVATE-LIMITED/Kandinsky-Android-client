@@ -7,6 +7,8 @@ import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_DONE
 import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_FAIL
 import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_INITIAL
 import bat.konst.kandinskyclient.app.KANDINSKY_MODEL_ID
+import bat.konst.kandinskyclient.data.fileStorage.SaveImageFile
+import bat.konst.kandinskyclient.data.fileStorage.SaveImageThumbinal
 import bat.konst.kandinskyclient.data.kandinskyApi.KandinskyApiRepository
 import bat.konst.kandinskyclient.data.room.FbdataRepository
 import bat.konst.kandinskyclient.data.room.entity.Image
@@ -48,6 +50,8 @@ class GenerateImages {
 
             if (imageResult.status == KANDINSKY_GENERATE_RESULT_DONE) {
                 // изображение уже готово - сохраняем
+                val imageFile = SaveImageFile(imageResult.images[0], image.id)
+                val thumbFile = SaveImageThumbinal(image.id)
                 fbdataRepository.updateImage(
                     Image(
                         id = image.id,
@@ -55,8 +59,8 @@ class GenerateImages {
                         kandinskyId = image.kandinskyId,
                         status = StatusTypes.DONE.value,
                         dateCreated = image.dateCreated,
-                        imageBase64 = imageResult.images[0],
-                        imageThumbnailBase64 = imageResult.images[0] // TODO: add Thumb creation
+                        imageBase64 = imageFile,
+                        imageThumbnailBase64 = thumbFile
                     )
                 )
                 continue
