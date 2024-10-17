@@ -1,28 +1,19 @@
 package bat.konst.kandinskyclient.ui.screens.requestScreen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.Button
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -83,58 +74,27 @@ fun RequestView(
             Text(text = stringResource(id = R.string.rs_repeat))
         }
 
-        // images
-        LazyColumn {
-            items(state.images) { image ->
-                Card (
-                    onClick = { onNavigateTo(Route.Image(id=image.id)) },
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 1.dp)
-                ) {
-
-                    Column {
-                        Text(
-                            text = "image id = ${image.id}",
-                            modifier = Modifier
-                                .padding(vertical = 5.dp, horizontal = 10.dp)
-                        )
-                        Text(
-                            text = "image status = ${image.status}",
-                            modifier = Modifier
-                                .padding(vertical = 5.dp, horizontal = 10.dp)
-                        )
-                        Text(
-                            text = "imageBase64 = ${image.imageBase64}",
-                            modifier = Modifier
-                                .padding(vertical = 5.dp, horizontal = 10.dp)
-                        )
-                        Thumbinal(image)
-                    }
-                }
-            }
-        }
+        // images grid
         LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 200.dp),
+            columns = GridCells.Fixed(3)
         ) {
             items(state.images) { image ->
                 Thumbinal(
-                    image
+                    image,
+                    onNavigateTo
                 )
             }
         }
-
 
     }
 }
 
 @Composable
-fun Thumbinal(image: Image) {
+fun Thumbinal(image: Image, onNavigateTo: (Route) -> Unit) {
     if (image.status == StatusTypes.NEW.value) {
         Image(
             painterResource(id = R.drawable.status_0),
             contentDescription = "new image",
-
         )
         return
     }
@@ -173,7 +133,8 @@ fun Thumbinal(image: Image) {
         }
         AsyncImage(
             model = File(image.imageThumbnailBase64),
-            contentDescription = "generated image"
+            contentDescription = "generated image",
+            modifier = Modifier.clickable(onClick = { onNavigateTo(Route.Image(id=image.id)) })
         )
         return
     }
