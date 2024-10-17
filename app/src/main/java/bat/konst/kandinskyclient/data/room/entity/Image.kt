@@ -9,7 +9,8 @@ enum class StatusTypes(val value: Int) {
     NEW(0),
     PROCESSING(1),
     DONE(2),
-    ERROR(3);
+    ERROR(3),
+    CENCORED(4);
     companion object {
         fun fromInt(value: Int) = entries.first { it.value == value }
     }
