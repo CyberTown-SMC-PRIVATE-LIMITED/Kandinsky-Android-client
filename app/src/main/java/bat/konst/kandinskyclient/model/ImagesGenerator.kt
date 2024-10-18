@@ -1,4 +1,4 @@
-package bat.konst.kandinskyclient.model.imageService
+package bat.konst.kandinskyclient.model
 
 import bat.konst.kandinskyclient.app.CONFIG_XKEY
 import bat.konst.kandinskyclient.app.CONFIG_XSECRET

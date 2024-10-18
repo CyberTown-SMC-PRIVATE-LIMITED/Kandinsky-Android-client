@@ -1,4 +1,4 @@
-package bat.konst.kandinskyclient.model.imageService
+package bat.konst.kandinskyclient.model
 
 import android.app.Service
 import android.content.Intent
@@ -20,6 +20,7 @@ class ImagesGeneratorService: Service() {
     // https://www.geeksforgeeks.org/services-in-android-using-jetpack-compose/
     // в Манифест добавить <service android:name=".model.imageService.ImageService" />
     // сервис - раз в 10 секунд обрабатывает запросы к KandiskyApi
+    // запускается : startService(Intent(this, ImagesGeneratorService::class.java))
     @Inject lateinit var kandinskyApiRepository: KandinskyApiRepository
     @Inject lateinit var fbdataRepository: FbdataRepository
     private var job: Job? = null  // корутина для работы с KandiskyApi

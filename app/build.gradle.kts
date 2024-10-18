@@ -87,4 +87,8 @@ dependencies {
     implementation(libs.coil)
     // apache codecs (base64)
     implementation(libs.apache.codec)
+    // workers
+    implementation(libs.workers)
+
+
 }
