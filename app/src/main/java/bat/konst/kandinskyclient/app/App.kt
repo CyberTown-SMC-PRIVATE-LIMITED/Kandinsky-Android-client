@@ -2,8 +2,7 @@ package bat.konst.kandinskyclient.app
 
 import android.app.Application
 import android.content.Intent
-import androidx.compose.ui.platform.LocalContext
-import bat.konst.kandinskyclient.model.imageService.ImageService
+import bat.konst.kandinskyclient.model.imageService.ImagesGeneratorService
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -14,7 +13,7 @@ class App : Application() {
         super.onCreate()
 
         // start Kandinsky Update Service
-        startService(Intent(this, ImageService::class.java))
+        startService(Intent(this, ImagesGeneratorService::class.java))
     }
 
 }

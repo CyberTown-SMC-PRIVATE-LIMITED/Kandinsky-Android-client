@@ -1,5 +1,6 @@
 package bat.konst.kandinskyclient.ui.screens.mainScreen
 
+import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import bat.konst.kandinskyclient.R
 import bat.konst.kandinskyclient.ui.navigation.Route
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -25,7 +25,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.data.room.entity.Request
-import kotlin.system.exitProcess
+import androidx.core.content.ContextCompat.startActivity
+import androidx.compose.ui.platform.LocalContext
+
 
 @Composable
 fun MainScreen(
@@ -56,9 +58,12 @@ fun MainView(
             onEvent(MainScreenEvent.ScreenUpdate)
         }
 
-        // По нажатию системной кнопки "назад" выходим из приложения
+        // По нажатию системной кнопки "назад" свернуть приложение
+        val context = LocalContext.current
         BackHandler {
-            exitProcess(-1)
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.addCategory(Intent.CATEGORY_HOME)
+            startActivity(context, intent, null)
         }
 
         Row {
@@ -77,17 +82,6 @@ fun MainView(
                 modifier = Modifier
             ) {
                 Text(text = stringResource(id = R.string.ms_add))
-            }
-
-            // Кнопка "Test Worker"
-            Button(
-                onClick = { onEvent(MainScreenEvent.TestWorker) },
-                modifier = Modifier
-            ) {
-                Icon(
-                    imageVector = androidx.compose.material.icons.Icons.Filled.Call,
-                    contentDescription = stringResource(id = R.string.ms_settings)
-                )
             }
 
             // Кнопка "Настройки"

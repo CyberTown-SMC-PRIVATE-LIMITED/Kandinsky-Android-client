@@ -4,20 +4,29 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
+import bat.konst.kandinskyclient.data.kandinskyApi.KandinskyApiRepository
+import bat.konst.kandinskyclient.data.room.FbdataRepository
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ImageService : Service() {
+@AndroidEntryPoint
+class ImagesGeneratorService: Service() {
     // https://www.geeksforgeeks.org/services-in-android-using-jetpack-compose/
     // в Манифест добавить <service android:name=".model.imageService.ImageService" />
+    // сервис - раз в 10 секунд обрабатывает запросы к KandiskyApi
+    @Inject lateinit var kandinskyApiRepository: KandinskyApiRepository
+    @Inject lateinit var fbdataRepository: FbdataRepository
     private var job: Job? = null  // корутина для работы с KandiskyApi
 
-    private fun doSomething() {
-        Log.d("ImageService", "doSomething")
+    private suspend fun generateImages() {
+        Log.d("ImageService", "generateImages")
+        ImagesGenerator().FusionBrainGo(fbdataRepository, kandinskyApiRepository)
     }
 
 
@@ -25,7 +34,7 @@ class ImageService : Service() {
         Log.d("ImageService", "Service starts")
         job = CoroutineScope(Dispatchers.IO).launch() {
             while (isActive) {
-                doSomething()
+                generateImages()
                 delay(10000) // Задержка на 10 секунд
             }
         }

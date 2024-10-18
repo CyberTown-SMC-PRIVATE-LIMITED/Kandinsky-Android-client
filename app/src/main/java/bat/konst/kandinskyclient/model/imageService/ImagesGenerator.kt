@@ -13,7 +13,7 @@ import bat.konst.kandinskyclient.data.room.FbdataRepository
 import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.data.room.entity.StatusTypes
 
-class GenerateImages {
+class ImagesGenerator {
 
     suspend fun FusionBrainGo(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository) {
         // 1. проверяем готовность изображений
