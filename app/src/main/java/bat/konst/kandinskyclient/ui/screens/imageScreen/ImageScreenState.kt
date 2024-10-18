@@ -10,4 +10,6 @@ data class ImageScreenState(
     val status: Int = 0,
     val dateCreated: Long = 0,
     val imageBase64: String = "",
+    val prevImageId: Long? = null,
+    val nextImageId: Long? = null
 )

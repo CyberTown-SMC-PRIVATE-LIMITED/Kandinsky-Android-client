@@ -120,6 +120,22 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
         }
     }
 
+    suspend fun getNextImageId(md5: String, id: Long): Long? {
+        var nextId: Long? = null
+        withContext(Dispatchers.IO) {
+            nextId = fbdataDao.getNextImage(md5, id, StatusTypes.DONE.value)?.id
+        }
+        return nextId
+    }
+
+    suspend fun getPrevImageId(md5: String, id: Long): Long? {
+        var nextId: Long? = null
+        withContext(Dispatchers.IO) {
+            nextId = fbdataDao.getNextImage(md5, id, StatusTypes.DONE.value)?.id
+        }
+        return nextId
+    }
+
     // ------------------ config
     suspend fun getConfigByName(name: String): String {
         // получаем параметр конфигурации по заданному имени

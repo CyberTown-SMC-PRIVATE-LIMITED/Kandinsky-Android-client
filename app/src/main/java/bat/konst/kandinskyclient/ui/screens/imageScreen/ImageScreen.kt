@@ -5,8 +5,11 @@ import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -65,8 +68,31 @@ fun ImageView(
         )
         Text(text = "OK")
 
-        // Кнопка "Поделиться"
-        Share(filePath = state.imageBase64, context = LocalContext.current)
+        Row {
+            // Кнопка "Назад"
+            if (state.prevImageId != null) {
+                Button(
+                    onClick = { onNavigateTo(Route.Image(state.prevImageId)) },
+                    modifier = Modifier
+                ) {
+                    Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = null)
+                }
+            }
+
+            // Кнопка "Поделиться"
+            Share(filePath = state.imageBase64, context = LocalContext.current)
+
+
+            // Кнопка "Вперед"
+            if (state.nextImageId != null) {
+                Button(
+                    onClick = { onNavigateTo(Route.Image(state.nextImageId)) },
+                    modifier = Modifier
+                ) {
+                    Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null)
+                }
+            }
+        }
 
     }
 }

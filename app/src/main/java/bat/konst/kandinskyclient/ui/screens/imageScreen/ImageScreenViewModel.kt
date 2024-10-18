@@ -28,7 +28,9 @@ class ImageScreenViewModel @Inject constructor(private val fbdataRepository: Fbd
                         id = image.id,
                         status = image.status,
                         dateCreated = image.dateCreated,
-                        imageBase64 = image.imageBase64
+                        imageBase64 = image.imageBase64,
+                        prevImageId = fbdataRepository.getPrevImageId(image.md5, image.id),
+                        nextImageId = fbdataRepository.getNextImageId(image.md5, image.id)
                     )
                 }
             }
