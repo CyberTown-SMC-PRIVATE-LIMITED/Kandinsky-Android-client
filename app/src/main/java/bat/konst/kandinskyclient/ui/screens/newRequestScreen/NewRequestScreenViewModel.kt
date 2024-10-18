@@ -1,5 +1,6 @@
 package bat.konst.kandinskyclient.ui.screens.newRequestScreen
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -7,7 +8,9 @@ import androidx.lifecycle.ViewModel
 import bat.konst.kandinskyclient.data.kandinskyApi.KandinskyApiRepository
 import bat.konst.kandinskyclient.data.kandinskyApi.models.Styles
 import bat.konst.kandinskyclient.data.room.FbdataRepository
+import bat.konst.kandinskyclient.model.startImagesGeneratorWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class NewRequestScreenViewModel @Inject constructor(
     private val fbdataRepository: FbdataRepository,
-    private val kandinskyApiRepository: KandinskyApiRepository
+    private val kandinskyApiRepository: KandinskyApiRepository,
+    @ApplicationContext private val context: Context
 ): ViewModel() {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -41,6 +45,8 @@ class NewRequestScreenViewModel @Inject constructor(
             is NewRequestScreenEvent.AddRequest -> {
                 coroutineScope.launch(Dispatchers.Main) {
                     fbdataRepository.addRequest(event.prompt, event.negativePrompt, event.style, event.qw) {
+                        // Запускаем Worker - поскольку у нас появились задания на генерацию
+                        startImagesGeneratorWorker(context)
                         onSuccess()
                     }
                 }

@@ -1,5 +1,6 @@
 package bat.konst.kandinskyclient.model
 
+import android.util.Log
 import bat.konst.kandinskyclient.app.CONFIG_XKEY
 import bat.konst.kandinskyclient.app.CONFIG_XSECRET
 import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_DONE
@@ -12,21 +13,42 @@ import bat.konst.kandinskyclient.data.kandinskyApi.KandinskyApiRepository
 import bat.konst.kandinskyclient.data.room.FbdataRepository
 import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.data.room.entity.StatusTypes
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.lang.Thread.sleep
 
 class ImagesGenerator {
 
-    suspend fun FusionBrainGo(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository) {
-        // 1. проверяем готовность изображений
-        val isReadyToNewRequest = checkGeneratedImages(fbdataRepository, kandinskyApiRepository)
+    suspend fun fusionBrainGo(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository) {
 
-        // 2. Если очередь пуста, отправляем запрос на новую генерацию
-        if (isReadyToNewRequest) {
-            sendImageToGenerate(fbdataRepository, kandinskyApiRepository)
+        while (hasProcessingImages(fbdataRepository) or hasNewImages(fbdataRepository)) {
+
+            withContext(Dispatchers.IO) {
+                sleep(10000)
+            }
+
+            // 1. проверяем готовность изображений и получаем их
+            recieveGeneratedImages(fbdataRepository, kandinskyApiRepository)
+
+            // 2. Если очередь пуста, отправляем запрос на новую генерацию
+            if (hasNewImages(fbdataRepository)) {
+                sendImageToGenerate(fbdataRepository, kandinskyApiRepository)
+            }
         }
     }
 
     // -------- проверки и изменения статусов
-    private suspend fun checkGeneratedImages(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository): Boolean {
+    private suspend fun hasProcessingImages(fbdataRepository: FbdataRepository): Boolean {
+        //  Проверяем -- осталось ли что-то на генерации
+        return fbdataRepository.getImagesByStatus(StatusTypes.PROCESSING.value).isNotEmpty()
+    }
+
+    private suspend fun hasNewImages(fbdataRepository: FbdataRepository): Boolean {
+        //  Проверяем -- ожидает ли что-то генерации
+        return fbdataRepository.getImagesByStatus(StatusTypes.NEW.value).isNotEmpty()
+    }
+
+    private suspend fun recieveGeneratedImages(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository) {
         /*
             Получает список изображений-заданий из БД, отправляет их на генерацию и сохраняет результирующие изображения
             Возвращает true, если все изображения уже готовы к использованию (очередь ожидания пуста)
@@ -96,8 +118,6 @@ class ImagesGenerator {
             }
         }
 
-        // 3. Проверяем -- осталось ли что-то для генерации
-        return fbdataRepository.getImagesByStatus(StatusTypes.PROCESSING.value).isEmpty()
     }
 
     private suspend fun sendImageToGenerate(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository) {

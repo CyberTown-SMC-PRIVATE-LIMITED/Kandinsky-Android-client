@@ -27,7 +27,7 @@ class ImagesGeneratorService: Service() {
 
     private suspend fun generateImages() {
         Log.d("ImageService", "generateImages")
-        ImagesGenerator().FusionBrainGo(fbdataRepository, kandinskyApiRepository)
+        ImagesGenerator().fusionBrainGo(fbdataRepository, kandinskyApiRepository)
     }
 
 

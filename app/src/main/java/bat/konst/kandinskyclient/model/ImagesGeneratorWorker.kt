@@ -2,32 +2,62 @@ package bat.konst.kandinskyclient.model
 
 import android.content.Context
 import android.util.Log
-import androidx.work.Data
-import androidx.work.Worker
+import androidx.hilt.work.HiltWorker
+import androidx.work.CoroutineWorker
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import bat.konst.kandinskyclient.di.FbdataModule
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 
-// https://www.droidcon.com/2022/06/14/when-jetpacks-glance-met-his-fellow-worker-work-manager/
-class ImagesGeneratorWorker(context: Context, workerParameters: WorkerParameters):
+// https://dev.to/vtsen/simple-example-to-use-workmanager-and-notification-il9
+// https://readmedium.com/android-workmanager-in-clean-architecture-393ce4f27ef5
+// hilt example - https://www.droidcon.com/2022/06/14/when-jetpacks-glance-met-his-fellow-worker-work-manager/
+@HiltWorker
+class ImagesGeneratorWorker @AssistedInject constructor(
+    @Assisted private val context: Context,
+    @Assisted workerParameters: WorkerParameters
+    // private val fbdataRepository: FbdataRepository,
+    // private val kandinskyApiRepository: KandinskyApiRepository
+): CoroutineWorker(context, workerParameters) { // m.b. CoroutineWorker
     /*
         Использование:
-        PeriodicWorkRequestBuilder<NotificationWorker>(1, TimeUnit.MINUTES)
-            .setConstraints(powerConstraints)
-            .setInputData(taskData)
-            .build()
-        worker.enqueueUniquePeriodicWork("kandinsky_worker", ExistingPeriodicWorkPolicy.KEEP, work)
+        startImagesGeneratorWorker(context)
      */
-    Worker(context, workerParameters) {
-    override fun doWork(): Result {
-        doSomething()
-        val outputData = Data.Builder().putString(WORK_RESULT, "Task Finished").build()
-        return Result.success(outputData)
+    //@Inject lateinit var kandinskyApiRepository: KandinskyApiRepository
+    //@Inject lateinit var fbdataRepository: FbdataRepository
+
+    override suspend fun doWork(): Result {
+        doKandinskyRequests()
+        return Result.success()
     }
 
-    companion object {
-        const val WORK_RESULT = "work_result"
-    }
+    private suspend fun doKandinskyRequests() {
 
-    private fun doSomething() {
-        Log.d("KandinskyWorker", "Do something")
+        Log.d("KandinskyWorker", "doKandinskyRequests start")
+
+        // забираем репозитории. Почему-то через Inject падает
+        // TODO: разаобраться почему и переделать
+        val bu = bat.konst.kandinskyclient.di.KandinskyApiModule.baseUrl()
+        val kd = bat.konst.kandinskyclient.di.KandinskyApiModule.provideRetrofit(bu)
+        val kandinskyApiRepository = bat.konst.kandinskyclient.di.KandinskyApiModule.provideKandinskyApiRepository(kd)
+
+        val fdb = FbdataModule.provideFbdataDatabase(context)
+        val fd = FbdataModule.provideFbdataDao(fdb)
+        val fbdataRepository = FbdataModule.provideFbdataRepository(fd)
+
+        ImagesGenerator().fusionBrainGo(fbdataRepository, kandinskyApiRepository)
+        Log.d("KandinskyWorker", "doKandinskyRequests end")
     }
+}
+
+fun startImagesGeneratorWorker(context: Context) {
+    Log.d("KandinskyWorker", "Enqueud s")
+    val immageWorkRequest = OneTimeWorkRequest.Builder(ImagesGeneratorWorker::class.java)
+        .build()
+    // Schedule the WorkRequest with WorkManager
+    WorkManager.getInstance(context).enqueueUniqueWork("KandinskyWorker", ExistingWorkPolicy.KEEP, immageWorkRequest)
+    Log.d("KandinskyWorker", "Enqueud e")
 }
