@@ -7,6 +7,8 @@ import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_DONE
 import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_FAIL
 import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_INITIAL
 import bat.konst.kandinskyclient.app.KANDINSKY_MODEL_ID
+import bat.konst.kandinskyclient.app.KANDINSKY_QUEUE_MAX
+import bat.konst.kandinskyclient.app.KANDINSKY_REQUEST_UNTERVAL_SEC
 import bat.konst.kandinskyclient.data.fileStorage.SaveImageFile
 import bat.konst.kandinskyclient.data.fileStorage.SaveImageThumbinal
 import bat.konst.kandinskyclient.data.kandinskyApi.KandinskyApiRepository
@@ -21,17 +23,18 @@ class ImagesGenerator {
 
     suspend fun fusionBrainGo(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository) {
 
-        while (hasProcessingImages(fbdataRepository) or hasNewImages(fbdataRepository)) {
+        // TODO: проверка -- ключи неверны, сервис лежит - выход из воркера
+        while (hasProcessingImages(fbdataRepository) || hasNewImages(fbdataRepository)) {
 
             withContext(Dispatchers.IO) {
-                sleep(10000)
+                sleep(KANDINSKY_REQUEST_UNTERVAL_SEC * 1000)
             }
 
             // 1. проверяем готовность изображений и получаем их
             recieveGeneratedImages(fbdataRepository, kandinskyApiRepository)
 
             // 2. Если очередь пуста, отправляем запрос на новую генерацию
-            if (hasNewImages(fbdataRepository)) {
+            if (isImagesQueueFree(fbdataRepository)) {
                 sendImageToGenerate(fbdataRepository, kandinskyApiRepository)
             }
         }
@@ -41,6 +44,11 @@ class ImagesGenerator {
     private suspend fun hasProcessingImages(fbdataRepository: FbdataRepository): Boolean {
         //  Проверяем -- осталось ли что-то на генерации
         return fbdataRepository.getImagesByStatus(StatusTypes.PROCESSING.value).isNotEmpty()
+    }
+
+    private suspend fun isImagesQueueFree(fbdataRepository: FbdataRepository): Boolean {
+        //  Проверяем -- можно ли добавлять задания на генерацию
+        return fbdataRepository.getImagesByStatus(StatusTypes.PROCESSING.value).size < KANDINSKY_QUEUE_MAX
     }
 
     private suspend fun hasNewImages(fbdataRepository: FbdataRepository): Boolean {
@@ -130,8 +138,22 @@ class ImagesGenerator {
 
         // 1. Получаем первое изображение из очереди - если таких нет - выход
         val image = fbdataRepository.getFirstImageByStatus(StatusTypes.NEW.value) ?: return
+        // 1.a если для задания нет запроса - изменяем статус на ошибку - и выход
         val request = fbdataRepository.getRequest(image.md5)
-        if (request.md5 == "") return
+        if (request.md5 == "") {
+            fbdataRepository.updateImage(
+                Image(
+                    id = image.id,
+                    md5 = image.md5,
+                    kandinskyId = image.kandinskyId,
+                    status = StatusTypes.ERROR.value,
+                    dateCreated = image.dateCreated,
+                    imageBase64 = "",
+                    imageThumbnailBase64 = ""
+                )
+            )
+            return
+        }
 
         // 2. Отправляем на генерацию
         val imageResult =
@@ -151,5 +173,6 @@ class ImagesGenerator {
                 )
             )
         }
+        // TODO: проверка статусов с ошибками (неверный ключ, данные некорректны, сервис лежит)
     }
 }
