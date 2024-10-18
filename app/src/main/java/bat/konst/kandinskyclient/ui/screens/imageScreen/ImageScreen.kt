@@ -76,10 +76,11 @@ fun ImageView(
         Text(text = "OK")
 
         Row {
-            // Кнопка "Назад"
-            if (state.prevImageId != null) {
+
+            // Кнопка "Вперед"
+            if (state.nextImageId != null) {
                 Button(
-                    onClick = { onNavigateTo(Route.Image(state.prevImageId)) },
+                    onClick = { onNavigateTo(Route.Image(state.nextImageId)) },
                     modifier = Modifier
                 ) {
                     Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = null)
@@ -89,16 +90,16 @@ fun ImageView(
             // Кнопка "Поделиться"
             Share(filePath = state.imageBase64, context = LocalContext.current)
 
-
-            // Кнопка "Вперед"
-            if (state.nextImageId != null) {
+            // Кнопка "Назад"
+            if (state.prevImageId != null) {
                 Button(
-                    onClick = { onNavigateTo(Route.Image(state.nextImageId)) },
+                    onClick = { onNavigateTo(Route.Image(state.prevImageId)) },
                     modifier = Modifier
                 ) {
                     Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null)
                 }
             }
+
         }
 
     }

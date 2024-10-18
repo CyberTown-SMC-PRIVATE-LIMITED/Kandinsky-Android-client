@@ -34,22 +34,22 @@ interface FbdataDao {
     @Query("SELECT * FROM images WHERE id = :id")
     fun getImage(id: Long): Image?
 
-    @Query("SELECT * FROM images WHERE status = :status ORDER BY date_created LIMIT 1")
+    @Query("SELECT * FROM images WHERE status = :status ORDER BY id LIMIT 1")
     fun getFirstImageByStatus(status: Int): Image?
 
     @Update
     fun updateImage(image: Image)
 
-    @Query("SELECT * FROM images WHERE md5 = :md5 ORDER BY date_created DESC")
+    @Query("SELECT * FROM images WHERE md5 = :md5 ORDER BY id DESC")
     fun getImages(md5: String): List<Image>
 
     @Query("SELECT * FROM images WHERE status = :status")
     fun getImagesByStatus(status: Int): List<Image>
 
-    @Query("SELECT * FROM images WHERE md5 = :md5 AND id > :id AND status = :status ORDER BY date_created LIMIT 1")
+    @Query("SELECT * FROM images WHERE md5 = :md5 AND id > :id AND status = :status ORDER BY id LIMIT 1")
     fun getNextImage(md5: String, id: Long, status: Int): Image?
 
-    @Query("SELECT * FROM images WHERE md5 = :md5 AND id < :id AND status = :status ORDER BY date_created DESC LIMIT 1")
+    @Query("SELECT * FROM images WHERE md5 = :md5 AND id < :id AND status = :status ORDER BY id DESC LIMIT 1")
     fun getPrevImage(md5: String, id: Long, status: Int): Image?
 
     // config

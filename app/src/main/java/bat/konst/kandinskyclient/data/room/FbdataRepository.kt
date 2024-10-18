@@ -131,7 +131,7 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
     suspend fun getPrevImageId(md5: String, id: Long): Long? {
         var nextId: Long? = null
         withContext(Dispatchers.IO) {
-            nextId = fbdataDao.getNextImage(md5, id, StatusTypes.DONE.value)?.id
+            nextId = fbdataDao.getPrevImage(md5, id, StatusTypes.DONE.value)?.id
         }
         return nextId
     }
