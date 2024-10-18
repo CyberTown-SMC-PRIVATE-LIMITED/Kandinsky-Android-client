@@ -81,7 +81,9 @@ fun RequestView(
             items(state.images) { image ->
                 Thumbinal(
                     image,
-                    onNavigateTo
+                    onNavigateTo,
+                    Modifier
+                        .padding(3.dp)
                 )
             }
         }
@@ -90,11 +92,12 @@ fun RequestView(
 }
 
 @Composable
-fun Thumbinal(image: Image, onNavigateTo: (Route) -> Unit) {
+fun Thumbinal(image: Image, onNavigateTo: (Route) -> Unit, modifier: Modifier = Modifier) {
     if (image.status == StatusTypes.NEW.value) {
         Image(
             painterResource(id = R.drawable.status_0),
             contentDescription = "new image",
+            modifier = modifier
         )
         return
     }
@@ -102,7 +105,8 @@ fun Thumbinal(image: Image, onNavigateTo: (Route) -> Unit) {
     if (image.status == StatusTypes.PROCESSING.value) {
         Image(
             painterResource(id = R.drawable.status_q),
-            contentDescription = "processing image"
+            contentDescription = "processing image",
+            modifier = modifier
         )
         return
     }
@@ -110,7 +114,8 @@ fun Thumbinal(image: Image, onNavigateTo: (Route) -> Unit) {
     if (image.status == StatusTypes.ERROR.value) {
         Image(
             painterResource(id = R.drawable.status_e),
-            contentDescription = "error generated image"
+            contentDescription = "error generated image",
+            modifier = modifier
         )
         return
     }
@@ -118,7 +123,8 @@ fun Thumbinal(image: Image, onNavigateTo: (Route) -> Unit) {
     if (image.status == StatusTypes.CENCORED.value) {
         Image(
             painterResource(id = R.drawable.status_cencored),
-            contentDescription = "cencored image"
+            contentDescription = "cencored image",
+            modifier = modifier
         )
         return
     }
@@ -127,14 +133,15 @@ fun Thumbinal(image: Image, onNavigateTo: (Route) -> Unit) {
         if (image.imageThumbnailBase64 == "") {
             Image(
                 painterResource(id = R.drawable.status_e),
-                contentDescription = "error image"
+                contentDescription = "error image",
+                modifier = modifier
             )
             return
         }
         AsyncImage(
             model = File(image.imageThumbnailBase64),
             contentDescription = "generated image",
-            modifier = Modifier.clickable(onClick = { onNavigateTo(Route.Image(id=image.id)) })
+            modifier = modifier.clickable(onClick = { onNavigateTo(Route.Image(id=image.id)) })
         )
         return
     }
