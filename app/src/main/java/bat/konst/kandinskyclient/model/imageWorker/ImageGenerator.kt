@@ -48,8 +48,24 @@ class GenerateImages {
                 ?: // изображение сгенерировать не удалось - пропускаем (сетевая ошибка)
                 continue
 
+            // запрос не прошёл цензуру
+            if (imageResult.censored) {
+                fbdataRepository.updateImage(
+                    Image(
+                        id = image.id,
+                        md5 = image.md5,
+                        kandinskyId = image.kandinskyId,
+                        status = StatusTypes.CENCORED.value,
+                        dateCreated = image.dateCreated,
+                        imageBase64 = "",
+                        imageThumbnailBase64 = ""
+                    )
+                )
+                continue
+            }
+
+            // изображение уже готово - сохраняем
             if (imageResult.status == KANDINSKY_GENERATE_RESULT_DONE) {
-                // изображение уже готово - сохраняем
                 val imageFile = SaveImageFile(imageResult.images[0], image.id)
                 val thumbFile = SaveImageThumbinal(image.id)
                 fbdataRepository.updateImage(
@@ -67,7 +83,7 @@ class GenerateImages {
             }
 
             if (imageResult.status == KANDINSKY_GENERATE_RESULT_FAIL) {
-                // изображение сгенерировать не удалось - сохраняем (запрос не прошёл цензуру или 404 или ошибка авторизации)
+                // изображение сгенерировать не удалось - сохраняем (ошибка 404 или ошибка авторизации)
                 fbdataRepository.updateImage(
                     Image(
                         id = image.id,
