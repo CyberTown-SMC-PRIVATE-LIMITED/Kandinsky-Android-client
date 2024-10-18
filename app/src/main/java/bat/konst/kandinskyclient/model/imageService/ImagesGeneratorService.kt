@@ -34,8 +34,8 @@ class ImagesGeneratorService: Service() {
         Log.d("ImageService", "Service starts")
         job = CoroutineScope(Dispatchers.IO).launch() {
             while (isActive) {
-                generateImages()
                 delay(10000) // Задержка на 10 секунд
+                generateImages()
             }
         }
         return START_STICKY
