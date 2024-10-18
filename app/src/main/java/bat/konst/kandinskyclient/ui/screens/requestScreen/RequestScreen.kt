@@ -1,5 +1,6 @@
 package bat.konst.kandinskyclient.ui.screens.requestScreen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.Button
@@ -50,6 +51,11 @@ fun RequestView(
     // Событие на вход в экран
     LaunchedEffect(key1 = state.openKey) {
         onEvent(RequestScreenEvent.ScreenUpdate(route.md5))
+    }
+
+    // По нажатию системной кнопки "назад" переход на главный экран
+    BackHandler {
+        onNavigateTo(Route.Main)
     }
 
     Column {

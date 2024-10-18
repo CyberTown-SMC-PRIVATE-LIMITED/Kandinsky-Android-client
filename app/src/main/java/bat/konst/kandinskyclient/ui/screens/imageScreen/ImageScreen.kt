@@ -3,6 +3,7 @@ package bat.konst.kandinskyclient.ui.screens.imageScreen
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,6 +29,7 @@ import bat.konst.kandinskyclient.ui.navigation.Route
 import coil.compose.AsyncImage
 import bat.konst.kandinskyclient.R
 import java.io.File
+import kotlin.system.exitProcess
 
 @Composable
 fun ImageScreen(
@@ -54,6 +56,11 @@ fun ImageView(
     // Событие на вход в экран
     LaunchedEffect(key1 = state.openKey) {
         onEvent(ImageScreenEvent.ScreenUpdate(route.id))
+    }
+
+    // По нажатию системной кнопки "назад" переход на экран Запроса
+    BackHandler {
+        onNavigateTo(Route.Request(state.md5))
     }
 
     Column {

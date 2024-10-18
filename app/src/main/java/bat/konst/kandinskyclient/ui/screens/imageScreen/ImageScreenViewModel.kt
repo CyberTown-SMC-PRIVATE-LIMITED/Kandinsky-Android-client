@@ -26,6 +26,7 @@ class ImageScreenViewModel @Inject constructor(private val fbdataRepository: Fbd
                     val image = fbdataRepository.getImage(event.id)
                     state = state.copy(
                         id = image.id,
+                        md5 = image.md5,
                         status = image.status,
                         dateCreated = image.dateCreated,
                         imageBase64 = image.imageBase64,

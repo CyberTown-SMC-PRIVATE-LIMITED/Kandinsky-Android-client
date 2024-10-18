@@ -6,6 +6,7 @@ sealed class ImageScreenEvent {
 
 data class ImageScreenState(
     val openKey: Long = 0, // ключ для запуска события открытия экрана
+    val md5: String = "",
     val id: Long = 0,
     val status: Int = 0,
     val dateCreated: Long = 0,
