@@ -36,6 +36,7 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
+        <service android:name=".model.imageService.ImageService" />
     </application>
 
 </manifest>

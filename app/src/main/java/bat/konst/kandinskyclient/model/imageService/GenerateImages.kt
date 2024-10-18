@@ -1,6 +1,5 @@
-package bat.konst.kandinskyclient.model.imageWorker
+package bat.konst.kandinskyclient.model.imageService
 
-import bat.konst.kandinskyclient.app.CONFIG_DEFAULT_VALUE
 import bat.konst.kandinskyclient.app.CONFIG_XKEY
 import bat.konst.kandinskyclient.app.CONFIG_XSECRET
 import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_DONE
@@ -13,8 +12,6 @@ import bat.konst.kandinskyclient.data.kandinskyApi.KandinskyApiRepository
 import bat.konst.kandinskyclient.data.room.FbdataRepository
 import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.data.room.entity.StatusTypes
-import javax.inject.Inject
-import javax.inject.Singleton
 
 class GenerateImages {
 
