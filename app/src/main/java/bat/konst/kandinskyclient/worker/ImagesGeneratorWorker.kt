@@ -1,4 +1,4 @@
-package bat.konst.kandinskyclient.model
+package bat.konst.kandinskyclient.worker
 
 import android.content.Context
 import android.util.Log

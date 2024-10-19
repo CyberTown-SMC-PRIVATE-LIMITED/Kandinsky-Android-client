@@ -1,6 +1,6 @@
-package bat.konst.kandinskyclient.model
+package bat.konst.kandinskyclient.worker
 
-import android.util.Log
+import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.app.CONFIG_XKEY
 import bat.konst.kandinskyclient.app.CONFIG_XSECRET
 import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_DONE
@@ -15,6 +15,7 @@ import bat.konst.kandinskyclient.data.kandinskyApi.KandinskyApiRepository
 import bat.konst.kandinskyclient.data.room.FbdataRepository
 import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.data.room.entity.StatusTypes
+import bat.konst.kandinskyclient.ui.screens.mainScreen.MainScreenViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Thread.sleep

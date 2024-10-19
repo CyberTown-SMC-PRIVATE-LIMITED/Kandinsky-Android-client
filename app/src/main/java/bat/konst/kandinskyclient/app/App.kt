@@ -1,7 +1,7 @@
 package bat.konst.kandinskyclient.app
 
 import android.app.Application
-import bat.konst.kandinskyclient.model.startImagesGeneratorWorker
+import bat.konst.kandinskyclient.worker.startImagesGeneratorWorker
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
