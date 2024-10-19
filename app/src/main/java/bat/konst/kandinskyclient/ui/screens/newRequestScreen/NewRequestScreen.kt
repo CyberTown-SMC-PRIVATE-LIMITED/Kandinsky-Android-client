@@ -183,7 +183,7 @@ fun NewRequestView(
                                 qw = i
                             )
                         ) {
-                            onNavigateTo(Route.Main)
+                            onNavigateTo(Route.GoBack)
                         }
                     }
                 ) {
