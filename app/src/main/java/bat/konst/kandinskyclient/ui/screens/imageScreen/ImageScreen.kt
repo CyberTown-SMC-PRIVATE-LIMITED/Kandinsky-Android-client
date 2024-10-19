@@ -28,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.ui.navigation.Route
 import coil.compose.AsyncImage
 import bat.konst.kandinskyclient.R
+import bat.konst.kandinskyclient.ui.screens.mainScreen.MainScreenEvent
 import java.io.File
 import kotlin.system.exitProcess
 
@@ -58,11 +59,6 @@ fun ImageView(
         onEvent(ImageScreenEvent.ScreenUpdate(route.id))
     }
 
-    // По нажатию системной кнопки "назад" переход на экран Запроса
-    BackHandler {
-        onNavigateTo(Route.Request(state.md5))
-    }
-
     Column {
 
         Text(text = "image id = ${state.id}")
@@ -80,7 +76,7 @@ fun ImageView(
             // Кнопка "Вперед"
             if (state.nextImageId != null) {
                 Button(
-                    onClick = { onNavigateTo(Route.Image(state.nextImageId)) },
+                    onClick = { onEvent(ImageScreenEvent.ScreenUpdate(state.nextImageId)) },
                     modifier = Modifier
                 ) {
                     Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = null)
@@ -93,7 +89,7 @@ fun ImageView(
             // Кнопка "Назад"
             if (state.prevImageId != null) {
                 Button(
-                    onClick = { onNavigateTo(Route.Image(state.prevImageId)) },
+                    onClick = { onEvent(ImageScreenEvent.ScreenUpdate(state.prevImageId)) },
                     modifier = Modifier
                 ) {
                     Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null)

@@ -30,12 +30,13 @@ fun ConfigView(
     state: ConfigScreenState = ConfigScreenState(),
     onEvent: (ConfigScreenEvent) -> Unit = {},
 ) {
-    Column() {
 
-        // Событие на вход в экран
-        LaunchedEffect(key1 = state.openKey) {
-            onEvent(ConfigScreenEvent.LoadConfig)
-        }
+    // Событие на вход в экран
+    LaunchedEffect(key1 = state.openKey) {
+        onEvent(ConfigScreenEvent.LoadConfig)
+    }
+
+    Column() {
 
         // поле - ключ
         TextField(

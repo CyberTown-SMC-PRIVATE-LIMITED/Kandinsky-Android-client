@@ -53,11 +53,6 @@ fun RequestView(
         onEvent(RequestScreenEvent.ScreenUpdate(route.md5))
     }
 
-    // По нажатию системной кнопки "назад" переход на главный экран
-    BackHandler {
-        onNavigateTo(Route.Main)
-    }
-
     Column {
 
         // промпты
