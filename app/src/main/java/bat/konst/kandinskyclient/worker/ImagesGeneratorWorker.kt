@@ -12,6 +12,7 @@ import bat.konst.kandinskyclient.di.FbdataModule
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
+// https://vtsen.hashnode.dev/simple-example-to-use-workmanager-and-notification
 // https://dev.to/vtsen/simple-example-to-use-workmanager-and-notification-il9
 // https://readmedium.com/android-workmanager-in-clean-architecture-393ce4f27ef5
 // hilt example - https://www.droidcon.com/2022/06/14/when-jetpacks-glance-met-his-fellow-worker-work-manager/
