@@ -135,7 +135,7 @@ fun RequestView(
                     lineHeight = 14.sp,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Light,
-                    maxLines = 2,
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
             }
