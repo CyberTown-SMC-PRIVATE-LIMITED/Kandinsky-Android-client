@@ -9,6 +9,7 @@
     <string name="ms_refresh">Обновить</string>
     <string name="ms_add">Добавить</string>
     <string name="ms_settings">Настройки</string>
+    <string name="ms_style">Стиль:</string>
 
     <string name="cs_save_config">Сохранить конфигурацию</string>
     <string name="cs_key">Ключ</string>

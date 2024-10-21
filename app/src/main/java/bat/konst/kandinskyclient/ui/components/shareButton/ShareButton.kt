@@ -43,7 +43,8 @@ fun ShareButton(filePath: String, context: Context) {
             } catch (e: Exception) {
                 Log.d("KandinskyClient", e.toString())
             }
-        }) {
+        }
+    ) {
         Icon(imageVector = Icons.Default.Share, contentDescription = stringResource(id = R.string.ps_share))
     }
 }
