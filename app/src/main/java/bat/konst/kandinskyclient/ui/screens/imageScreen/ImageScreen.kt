@@ -1,58 +1,39 @@
 package bat.konst.kandinskyclient.ui.screens.imageScreen
 
-import android.content.Context
-import android.content.Intent
-import android.util.Log
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.ui.navigation.Route
 import coil.compose.AsyncImage
-import bat.konst.kandinskyclient.R
 import bat.konst.kandinskyclient.ui.components.shareButton.ShareButton
-import bat.konst.kandinskyclient.ui.screens.mainScreen.MainScreenEvent
-import coil.ImageLoader
-import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
-import coil.request.ImageRequest
 import java.io.File
-import kotlin.system.exitProcess
 
 @Composable
 fun ImageScreen(
@@ -69,6 +50,7 @@ fun ImageScreen(
 }
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun ImageView(
     onNavigateTo: (Route) -> Unit = {},
     state: ImageScreenState = ImageScreenState(),
@@ -82,6 +64,13 @@ fun ImageView(
     }
 
     Scaffold(
+        topBar = {
+            TopAppBar(title = {}, modifier = Modifier.height(0.dp))
+        },
+        bottomBar = {
+            BottomAppBar(modifier = Modifier.height(0.dp)) {  }
+        },
+
 
         floatingActionButton = {
             // Кнопка "Поделиться"
@@ -93,7 +82,7 @@ fun ImageView(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                // .padding(innerPadding)
+                .padding(innerPadding)
         ) {
             // фоновое изображение
             AsyncImage(
