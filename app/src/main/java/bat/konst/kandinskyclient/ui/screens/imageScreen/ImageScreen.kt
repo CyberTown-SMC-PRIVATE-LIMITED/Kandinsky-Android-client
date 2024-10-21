@@ -82,7 +82,7 @@ fun ImageView(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                // .padding(innerPadding)
         ) {
             // фоновое изображение
             AsyncImage(
