@@ -45,6 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.ui.navigation.Route
 import coil.compose.AsyncImage
 import bat.konst.kandinskyclient.R
+import bat.konst.kandinskyclient.ui.components.shareButton.ShareButton
 import bat.konst.kandinskyclient.ui.screens.mainScreen.MainScreenEvent
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
@@ -84,7 +85,7 @@ fun ImageView(
 
         floatingActionButton = {
             // Кнопка "Поделиться"
-            Share(filePath = state.imageBase64, context = LocalContext.current)
+            ShareButton(filePath = state.imageBase64, context = LocalContext.current)
         }
 
     ) { innerPadding ->
@@ -113,6 +114,7 @@ fun ImageView(
             )
 
 
+            // кнопки - назад/вперёд
             Row (
                 modifier = Modifier
                     //.align(Alignment.CenterVertically)
@@ -121,7 +123,6 @@ fun ImageView(
             ) {
 
                 // Кнопка "Вперед"
-
                 Button(
                     onClick = { onEvent(ImageScreenEvent.ScreenUpdate(state.nextImageId!!)) },
                     shape = CircleShape,
@@ -157,44 +158,6 @@ fun ImageView(
         }
     }
 }
-
-fun crossfade(b: Boolean) {
-
-}
-
-// Кнопка "Поделиться"
-@Composable
-fun Share(filePath: String, context: Context) {
-    FloatingActionButton(
-        shape = CircleShape,
-        onClick = {
-        // https://readmedium.com/android-kotlin-jetpack-compose-file-sharing-using-fileprovider-and-android-sharesheet-3b8a7b9fb82d
-        // Ко всему этому нужно provider (разрешение) в Manifest
-        // и добавить в res/xml filepaths.xml !!!!
-
-        try {
-            val imageFile = File(filePath)
-            val uri = FileProvider.getUriForFile(
-                context,
-                "bat.konst.kandinskyclient.fileprovider",
-                imageFile
-            )
-            val sendIntent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_STREAM, uri)
-                type = "image/jpeg"
-            }
-            sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            ContextCompat.startActivity(context, shareIntent, null)
-        } catch (e: Exception) {
-            Log.d("KandinskyClient", e.toString())
-        }
-    }) {
-        Icon(imageVector = Icons.Default.Share, contentDescription = stringResource(id = R.string.ps_share))
-    }
-}
-
 
 @Composable
 @Preview(showBackground = true)
