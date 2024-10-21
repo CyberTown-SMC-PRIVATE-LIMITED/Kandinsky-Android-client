@@ -26,7 +26,7 @@ class MainScreenViewModel @Inject constructor(
 
             is MainScreenEvent.ScreenUpdate -> {
                 coroutineScope.launch(Dispatchers.Main) {
-                    state = state.copy(requests = fbdataRepository.getAllRequests())
+                    state = state.copy(requests = fbdataRepository.getAllRequestJoinImages())
                 }
             }
 

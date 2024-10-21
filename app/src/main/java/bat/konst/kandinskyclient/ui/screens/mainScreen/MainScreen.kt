@@ -41,6 +41,7 @@ import bat.konst.kandinskyclient.data.room.entity.Request
 import androidx.core.content.ContextCompat.startActivity
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import bat.konst.kandinskyclient.data.room.entity.RequestJoinImage
 import bat.konst.kandinskyclient.ui.components.requestCard.RequestCard
 
 
@@ -135,21 +136,21 @@ fun MainView(
 fun MainScreenPreview() {
     MainView(state = MainScreenState(
         requests = listOf(
-            Request(
-                md5 = "some_md5",
+            RequestJoinImage(
+                md5 = "",
                 prompt = "Промт запроса",
                 negativePrompt = "Негативный промт",
                 style = "DEFAULT",
-                dateCreate = 0,
-                dateUpdate = 0
+                status = 0,
+                imageThumbnailBase64 = ""
             ),
-            Request(
-                md5 = "some_md5_2",
+            RequestJoinImage(
+                md5 = "",
                 prompt = "Промт запроса 2",
                 negativePrompt = "Негативный промт 2",
                 style = "DEFAULT",
-                dateCreate = 0,
-                dateUpdate = 0
+                status = 0,
+                imageThumbnailBase64 = ""
             )
         )
     )

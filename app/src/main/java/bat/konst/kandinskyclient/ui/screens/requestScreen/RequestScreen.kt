@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.R
 import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.data.room.entity.StatusTypes
+import bat.konst.kandinskyclient.ui.components.thumbinal.Thumbinal
 import bat.konst.kandinskyclient.ui.navigation.Route
 import coil.compose.AsyncImage
 import java.io.File
@@ -81,9 +83,10 @@ fun RequestView(
         ) {
             items(state.images) { image ->
                 Thumbinal(
-                    image,
-                    onNavigateTo,
-                    Modifier
+                    status = image.status,
+                    imageThumbnailBase64 = image.imageThumbnailBase64,
+                    onClick = { onNavigateTo(Route.Image(id = image.id)) },
+                    modifier = Modifier
                         .padding(3.dp)
                 )
             }
@@ -92,61 +95,6 @@ fun RequestView(
     }
 }
 
-@Composable
-fun Thumbinal(image: Image, onNavigateTo: (Route) -> Unit, modifier: Modifier = Modifier) {
-    if (image.status == StatusTypes.NEW.value) {
-        Image(
-            painterResource(id = R.drawable.status_0),
-            contentDescription = "new image",
-            modifier = modifier
-        )
-        return
-    }
-
-    if (image.status == StatusTypes.PROCESSING.value) {
-        Image(
-            painterResource(id = R.drawable.status_q),
-            contentDescription = "processing image",
-            modifier = modifier
-        )
-        return
-    }
-
-    if (image.status == StatusTypes.ERROR.value) {
-        Image(
-            painterResource(id = R.drawable.status_e),
-            contentDescription = "error generated image",
-            modifier = modifier
-        )
-        return
-    }
-
-    if (image.status == StatusTypes.CENCORED.value) {
-        Image(
-            painterResource(id = R.drawable.status_cencored),
-            contentDescription = "cencored image",
-            modifier = modifier
-        )
-        return
-    }
-
-    if (image.status == StatusTypes.DONE.value) {
-        if (image.imageThumbnailBase64 == "") {
-            Image(
-                painterResource(id = R.drawable.status_e),
-                contentDescription = "error image",
-                modifier = modifier
-            )
-            return
-        }
-        AsyncImage(
-            model = File(image.imageThumbnailBase64),
-            contentDescription = "generated image",
-            modifier = modifier.clickable(onClick = { onNavigateTo(Route.Image(id=image.id)) })
-        )
-        return
-    }
-}
 
 @Preview(showBackground = true)
 @Composable

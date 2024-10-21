@@ -25,12 +25,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import bat.konst.kandinskyclient.R
 import bat.konst.kandinskyclient.data.room.entity.Request
+import bat.konst.kandinskyclient.data.room.entity.RequestJoinImage
+import bat.konst.kandinskyclient.ui.components.thumbinal.Thumbinal
 import bat.konst.kandinskyclient.ui.navigation.Route
 
 // Карточка запроса с главного экрана
 @Composable
 fun RequestCard(
-    request: Request,
+    request: RequestJoinImage,
     onNavigateTo: (Route) -> Unit = {},
 ) {
     Box(
@@ -40,15 +42,16 @@ fun RequestCard(
             .clickable { onNavigateTo(Route.Request(request.md5)) }
     ) {
         Row {
-            Image(
-                painterResource(id = R.drawable.status_0),
-                contentDescription = null,
-                contentScale = ContentScale.FillHeight,
+            Thumbinal(
+                status = request.status,
+                imageThumbnailBase64 = request.imageThumbnailBase64,
                 modifier = Modifier
                     .height(70.dp)
                     .padding(horizontal = 10.dp)
                     .clip(RoundedCornerShape(20))                       // clip to the circle shape
-                    .border(1.dp, Color.Gray, RoundedCornerShape(20))
+                    .border(1.dp, Color.Gray, RoundedCornerShape(20)),
+                contentScale = ContentScale.FillHeight,
+                onClick = { onNavigateTo(Route.Request(request.md5)) }
             )
 
             Column (
@@ -103,13 +106,13 @@ fun RequestCard(
 @Preview(showBackground = true)
 fun RequestCardPreview() {
     RequestCard(
-        request = Request(
-            md5 = "some_md5",
+        request = RequestJoinImage(
+            md5 = "",
             prompt = "Промт запроса Промт запроса Промт запроса Промт запроса Промт запроса  Промт запроса Промт запроса Промт запроса Промт запроса Промт запроса Промт запроса ",
             negativePrompt = "Негативный промт Негативный промт Негативный промт Негативный промт Негативный промт Негативный промт Негативный промт Негативный промт Негативный промт Негативный промт",
             style = "DEFAULT",
-            dateCreate = 0,
-            dateUpdate = 0
+            status = 0,
+            imageThumbnailBase64 = ""
         )
     )
 }

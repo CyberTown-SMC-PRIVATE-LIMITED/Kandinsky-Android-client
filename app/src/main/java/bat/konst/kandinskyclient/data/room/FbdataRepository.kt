@@ -4,6 +4,7 @@ import bat.konst.kandinskyclient.app.CONFIG_DEFAULT_VALUE
 import bat.konst.kandinskyclient.data.room.entity.Config
 import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.data.room.entity.Request
+import bat.konst.kandinskyclient.data.room.entity.RequestJoinImage
 import bat.konst.kandinskyclient.data.room.entity.StatusTypes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -74,6 +75,14 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
         val reqs: List<Request>
         withContext(Dispatchers.IO) {
              reqs = fbdataDao.getAllRequests()
+        }
+        return reqs
+    }
+
+    suspend fun getAllRequestJoinImages(): List<RequestJoinImage> {
+        val reqs: List<RequestJoinImage>
+        withContext(Dispatchers.IO) {
+            reqs = fbdataDao.getAllRequestJoinImages()
         }
         return reqs
     }

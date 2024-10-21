@@ -8,6 +8,7 @@ import androidx.room.Update
 import bat.konst.kandinskyclient.data.room.entity.Config
 import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.data.room.entity.Request
+import bat.konst.kandinskyclient.data.room.entity.RequestJoinImage
 
 @Dao
 interface FbdataDao {
@@ -26,6 +27,17 @@ interface FbdataDao {
 
     @Query("SELECT * FROM requests WHERE md5 = :md5")
     fun getRequest(md5: String): Request?
+
+    @Query("SELECT requests.md5, " +
+            "requests.prompt, " +
+            "requests.negative_prompt, " +
+            "requests.style, " +
+            "(SELECT status FROM images WHERE images.md5 = requests.md5 ORDER BY id DESC LIMIT 1) AS status, " +
+            "(SELECT image_thumbnail_base64 FROM images WHERE images.md5 = requests.md5 ORDER BY id DESC LIMIT 1) AS image_thumbnail_base64 " +
+            "FROM requests " +
+            "ORDER BY date_update DESC"
+    )
+    fun getAllRequestJoinImages(): List<RequestJoinImage>
 
     // image
     @Insert
