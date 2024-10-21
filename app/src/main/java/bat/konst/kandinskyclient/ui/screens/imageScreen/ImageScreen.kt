@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
@@ -88,10 +89,10 @@ fun ImageView(
 
     ) { innerPadding ->
         Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
-            contentAlignment = Alignment.Center
+                // .padding(innerPadding)
         ) {
             // фоновое изображение
             AsyncImage(
@@ -101,6 +102,7 @@ fun ImageView(
                 modifier = Modifier
                     .fillMaxSize()
                     .blur(radius = 26.dp)
+                    .alpha(0.7f)
             )
 
             // Изображение
