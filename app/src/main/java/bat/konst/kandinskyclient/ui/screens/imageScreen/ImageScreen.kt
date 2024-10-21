@@ -5,19 +5,35 @@ import android.content.Intent
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +45,10 @@ import bat.konst.kandinskyclient.ui.navigation.Route
 import coil.compose.AsyncImage
 import bat.konst.kandinskyclient.R
 import bat.konst.kandinskyclient.ui.screens.mainScreen.MainScreenEvent
+import coil.ImageLoader
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import java.io.File
 import kotlin.system.exitProcess
 
@@ -59,52 +79,93 @@ fun ImageView(
         onEvent(ImageScreenEvent.ScreenUpdate(route.id))
     }
 
-    Column {
+    Scaffold(
 
-        Text(text = "image id = ${state.id}")
-        Text(text = "image status = ${state.status}")
-        Text(text = "imageBase64  = ${state.imageBase64}")
-        Text(text = "OK")
-        AsyncImage(
-            model = File(state.imageBase64),
-            contentDescription = "generated image"
-        )
-        Text(text = "OK")
-
-        Row {
-
-            // Кнопка "Вперед"
-            if (state.nextImageId != null) {
-                Button(
-                    onClick = { onEvent(ImageScreenEvent.ScreenUpdate(state.nextImageId)) },
-                    modifier = Modifier
-                ) {
-                    Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = null)
-                }
-            }
-
+        floatingActionButton = {
             // Кнопка "Поделиться"
             Share(filePath = state.imageBase64, context = LocalContext.current)
+        }
 
-            // Кнопка "Назад"
-            if (state.prevImageId != null) {
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            contentAlignment = Alignment.Center
+        ) {
+            // фоновое изображение
+            AsyncImage(
+                model = File(state.imageBase64),
+                contentDescription = "generated image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .blur(radius = 26.dp)
+            )
+
+            // Изображение
+            AsyncImage(
+                model = File(state.imageBase64),
+                contentDescription = "generated image",
+                Modifier.fillMaxSize()
+            )
+
+
+            Row (
+                modifier = Modifier
+                    //.align(Alignment.CenterVertically)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+
+                // Кнопка "Вперед"
+
                 Button(
-                    onClick = { onEvent(ImageScreenEvent.ScreenUpdate(state.prevImageId)) },
+                    onClick = { onEvent(ImageScreenEvent.ScreenUpdate(state.nextImageId!!)) },
+                    shape = CircleShape,
+                    enabled = state.nextImageId != null,
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Gray.copy(alpha = 0.5f)),
                     modifier = Modifier
+                        .padding(8.dp)
                 ) {
-                    Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowLeft,
+                        contentDescription = null
+                    )
                 }
+
+
+                // Кнопка "Назад"
+                Button(
+                    onClick = { onEvent(ImageScreenEvent.ScreenUpdate(state.prevImageId!!)) },
+                    shape = CircleShape,
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Gray.copy(alpha = 0.7f)),
+                    enabled = state.prevImageId != null,
+                    modifier = Modifier
+                        .padding(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowRight,
+                        contentDescription = null
+                    )
+                }
+
             }
 
         }
-
     }
+}
+
+fun crossfade(b: Boolean) {
+
 }
 
 // Кнопка "Поделиться"
 @Composable
 fun Share(filePath: String, context: Context) {
-    Button(onClick = {
+    FloatingActionButton(
+        shape = CircleShape,
+        onClick = {
         // https://readmedium.com/android-kotlin-jetpack-compose-file-sharing-using-fileprovider-and-android-sharesheet-3b8a7b9fb82d
         // Ко всему этому нужно provider (разрешение) в Manifest
         // и добавить в res/xml filepaths.xml !!!!
@@ -128,8 +189,7 @@ fun Share(filePath: String, context: Context) {
             Log.d("KandinskyClient", e.toString())
         }
     }) {
-        Icon(imageVector = Icons.Default.Share, contentDescription = null)
-        Text(text = stringResource(id = R.string.ps_share), modifier = Modifier.padding(start = 8.dp))
+        Icon(imageVector = Icons.Default.Share, contentDescription = stringResource(id = R.string.ps_share))
     }
 }
 
