@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -128,7 +129,7 @@ fun ConfigView(
 
         // Кнопка - где взять?
         val url = stringResource(id = R.string.cs_kandinsky_url)
-        Button(
+        OutlinedButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)

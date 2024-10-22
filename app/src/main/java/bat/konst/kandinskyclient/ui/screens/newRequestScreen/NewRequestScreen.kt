@@ -1,8 +1,14 @@
 package bat.konst.kandinskyclient.ui.screens.newRequestScreen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,8 +37,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -78,91 +86,125 @@ fun NewRequestView(
 
     Column(
         modifier = Modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp, 16.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        Text(
+            text = stringResource(id = R.string.nrs_add_request),
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.displaySmall
+        )
+
+        Spacer(modifier = Modifier.padding(8.dp))
+
+
         // Промпт
         Text(
             text = stringResource(id = R.string.nrs_prompt),
-            fontSize = 24.sp,
-            modifier = Modifier
-                .padding(top = 20.dp, bottom = 10.dp)
-                .align(Alignment.Start)
+            style = MaterialTheme.typography.bodyLarge
         )
         TextField(
-            maxLines = 5,
-            minLines = 5,
+            maxLines = 4,
+            minLines = 4,
             value = state.prompt,
             onValueChange = { onEvent(NewRequestScreenEvent.PromptUpdate(it)){} },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
+                .height(120.dp)
                 .verticalScroll(rememberScrollState()),
         )
+
+        Spacer(modifier = Modifier.padding(8.dp))
 
         // Стиль
         Text(
             text = stringResource(id = R.string.nrs_style),
-            fontSize = 24.sp,
-            modifier = Modifier
-                .padding(top = 20.dp, bottom = 10.dp)
-                .align(Alignment.Start)
+            style = MaterialTheme.typography.bodyLarge
         )
-        var expanded by remember { mutableStateOf(false) }
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = it },
-            modifier =Modifier
-                .fillMaxWidth()
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top
         ) {
-            TextField(
-                // The `menuAnchor` modifier must be passed to the text field to handle
-                // expanding/collapsing the menu on click. A read-only text field has
-                // the anchor type `PrimaryNotEditable`.
-                modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
-                value = state.style,
-                onValueChange = {},
-                readOnly = true,
-                singleLine = true,
-                label = { Text(stringResource(id = R.string.nrs_style)) },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            )
-            ExposedDropdownMenu(
-                modifier = Modifier.fillMaxWidth(),
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
+
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 3.dp)
             ) {
-                state.stylesList.forEach { style ->
-                    DropdownMenuItem(
-                        text = { Text(style.name, style = MaterialTheme.typography.bodyLarge) },
-                        onClick = {
-                            onEvent(NewRequestScreenEvent.StyleUpdate(style.name)){}
-                            expanded = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                var expanded by remember { mutableStateOf(false) }
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    TextField(
+                        // The `menuAnchor` modifier must be passed to the text field to handle
+                        // expanding/collapsing the menu on click. A read-only text field has
+                        // the anchor type `PrimaryNotEditable`.
+                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                        value = state.style,
+                        onValueChange = {},
+                        readOnly = true,
+                        singleLine = true,
+                        // label = { Text(stringResource(id = R.string.nrs_style)) },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                    )
+                    ExposedDropdownMenu(
+                        modifier = Modifier.fillMaxWidth(),
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                    ) {
+                        state.stylesList.forEach { style ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        style.name,
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                },
+                                onClick = {
+                                    onEvent(NewRequestScreenEvent.StyleUpdate(style.name)) {}
+                                    expanded = false
+                                },
+                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Картинка стиля
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(50.dp)
+                    .padding(start = 3.dp)
+            ) {
+                if (state.styleImageURL != "") {
+                    Image(
+                        painter = rememberAsyncImagePainter(state.styleImageURL),
+                        contentDescription = "Style ${state.style} Image",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .align(Alignment.Center)
                     )
                 }
             }
+
         }
 
-        // Картинка стиля
-        if (state.styleImageURL != "") {
-            Image(
-                painter = rememberAsyncImagePainter(state.styleImageURL),
-                contentDescription = "Style ${state.style} Image",
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-        }
+
+        Spacer(modifier = Modifier.padding(8.dp))
 
         // Негативный промпт
         Text(
             text = stringResource(id = R.string.nrs_negativeprompt),
-            fontSize = 24.sp,
-            modifier = Modifier
-                .padding(top = 20.dp, bottom = 10.dp)
-                .align(Alignment.Start)
+            style = MaterialTheme.typography.bodyLarge
         )
         TextField(
             maxLines = 5,
@@ -171,12 +213,18 @@ fun NewRequestView(
             onValueChange = { onEvent(NewRequestScreenEvent.NegativePromptUpdate(it)){} },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
+                .height(120.dp)
                 .verticalScroll(rememberScrollState()),
         )
 
+        Spacer(modifier = Modifier.padding(8.dp))
+
         // кнопки - выполнить
-        Row {
+        Row (
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             for (i in 1..5) {
                 Button(
                     onClick = {
@@ -192,13 +240,7 @@ fun NewRequestView(
                         }
                     }
                 ) {
-                    Row {
-                        Icon(
-                            painter = rememberVectorPainter(image = Icons.Outlined.PlayArrow),
-                            contentDescription = null
-                        )
-                        Text(text = i.toString())
-                    }
+                        Text(text = "+$i")
                 }
             }
         }

@@ -114,7 +114,6 @@ fun ImageView(
             // кнопки - назад/вперёд
             Row (
                 modifier = Modifier
-                    //.align(Alignment.CenterVertically)
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
