@@ -20,6 +20,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -59,8 +63,12 @@ fun ImageView(
 ) {
 
     // Событие на вход в экран
-    LaunchedEffect(key1 = state.openKey) {
-        onEvent(ImageScreenEvent.ScreenUpdate(route.id))
+    var initialApiCalled by rememberSaveable { mutableStateOf(false) }
+    if (!initialApiCalled) {
+        LaunchedEffect(Unit) {
+            initialApiCalled = true
+            onEvent(ImageScreenEvent.ScreenUpdate(route.id))
+        }
     }
 
     Scaffold(

@@ -27,6 +27,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,8 +68,12 @@ fun NewRequestView(
     route: Route.NewRequest = Route.NewRequest(md5="")
 ) {
     // Событие на вход в экран
-    LaunchedEffect(key1 = state.openKey) {
-        onEvent(NewRequestScreenEvent.ScreenUpdate(route.md5)){}
+    var initialApiCalled by rememberSaveable { mutableStateOf(false) }
+    if (!initialApiCalled) {
+        LaunchedEffect(Unit) {
+            initialApiCalled = true
+            onEvent(NewRequestScreenEvent.ScreenUpdate(route.md5)){}
+        }
     }
 
     Column(

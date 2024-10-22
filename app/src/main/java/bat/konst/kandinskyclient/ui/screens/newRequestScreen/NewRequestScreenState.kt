@@ -17,5 +17,4 @@ data class NewRequestScreenState(
     val negativePrompt: String = "",
     val stylesList: Styles = Styles(), // список стилей
     val styleImageURL: String = "", // URL картинки стиля
-    val openKey: Long = 0 // ключ для запуска события открытия экрана
 )
