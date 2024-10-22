@@ -14,6 +14,12 @@
     <string name="cs_save_config">Сохранить конфигурацию</string>
     <string name="cs_key">Ключ</string>
     <string name="cs_secret">Секрет</string>
+    <string name="cs_key_like">из личного кабинета Kandinsky</string>
+    <string name="cs_secret_like">из личного кабинета Kandinsky</string>
+    <string name="cs_kandinsky_keys">Ключи доступа</string>
+    <string name="cs_kandinsky_keys_where">Где взять ключи?</string>
+    <string name="cs_kandinsky_url">https://fusionbrain.ai/docs/doc/poshagovaya-instrukciya-po-upravleniu-api-kluchami/</string>
+
 
     <string name="rs_repeat">Повторить</string>
 
