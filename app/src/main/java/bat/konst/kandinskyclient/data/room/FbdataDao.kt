@@ -28,14 +28,24 @@ interface FbdataDao {
     @Query("SELECT * FROM requests WHERE md5 = :md5")
     fun getRequest(md5: String): Request?
 
-    @Query("SELECT requests.md5, " +
-            "requests.prompt, " +
-            "requests.negative_prompt, " +
-            "requests.style, " +
-            "(SELECT status FROM images WHERE images.md5 = requests.md5 ORDER BY id DESC LIMIT 1) AS status, " +
-            "(SELECT image_thumbnail_base64 FROM images WHERE images.md5 = requests.md5 ORDER BY id DESC LIMIT 1) AS image_thumbnail_base64 " +
-            "FROM requests " +
-            "ORDER BY date_update DESC"
+    @Query("SELECT " +
+            "    r.md5, " +
+            "    r.prompt, " +
+            "    r.negative_prompt, " +
+            "    r.style, " +
+            "    i.status, " +
+            "    i.image_thumbnail_base64 " +
+            "FROM requests r " +
+            "LEFT JOIN ( " +
+            "    SELECT md5, status, image_thumbnail_base64 " +
+            "    FROM images i " +
+            "    WHERE id = ( " +
+            "        SELECT MAX(id) " +
+            "        FROM images " +
+            "        WHERE images.md5 = i.md5 " +
+            "    ) " +
+            ") i ON i.md5 = r.md5 " +
+            "ORDER BY r.date_update DESC;"
     )
     fun getAllRequestJoinImages(): List<RequestJoinImage>
 
