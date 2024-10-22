@@ -131,7 +131,7 @@ fun ImageView(
                 Button(
                     onClick = { onEvent(ImageScreenEvent.ScreenUpdate(state.prevImageId!!)) },
                     shape = CircleShape,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Gray.copy(alpha = 0.7f)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Gray.copy(alpha = 0.5f)),
                     enabled = state.prevImageId != null,
                     modifier = Modifier
                         .padding(8.dp)
