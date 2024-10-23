@@ -4,19 +4,25 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
@@ -195,8 +201,8 @@ fun NewRequestView(
             style = MaterialTheme.typography.bodyLarge
         )
         TextField(
-            maxLines = 5,
-            minLines = 5,
+            maxLines = 4,
+            minLines = 4,
             value = state.negativePrompt,
             onValueChange = { onEvent(NewRequestScreenEvent.NegativePromptUpdate(it)){} },
             modifier = Modifier
@@ -208,13 +214,28 @@ fun NewRequestView(
         Spacer(modifier = Modifier.padding(8.dp))
 
         // кнопки - выполнить
+        Text(
+            text = stringResource(id = R.string.nrs_qw),
+            style = MaterialTheme.typography.bodyLarge
+        )
         Row (
             modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .align(Alignment.Start)
+            // horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            for (i in 1..5) {
+            val istart = 1
+            val iend = 5
+            val istartShape = RoundedCornerShape(30, 5, 5, 30)
+            val iendShape = RoundedCornerShape(5, 30, 30, 5)
+            val icenterShape = RoundedCornerShape(5, 5, 5, 5)
+            for (i in istart..iend) {
                 Button(
+                    contentPadding = PaddingValues(0.dp),
+                    shape = when (i) {
+                        istart -> istartShape
+                        iend -> iendShape
+                        else -> icenterShape
+                    },
                     onClick = {
                         onEvent(
                             NewRequestScreenEvent.AddRequest(
@@ -228,7 +249,14 @@ fun NewRequestView(
                         }
                     }
                 ) {
-                        Text(text = "+$i")
+                        Row {
+                            Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null)
+                            Text(text = i.toString())
+                        }
+                }
+
+                if (i != iend) {
+                    Spacer(modifier = Modifier.width(0.3.dp))
                 }
             }
         }

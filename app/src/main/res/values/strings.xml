@@ -6,6 +6,7 @@
     <string name="nrs_style">Стиль изображения:</string>
     <string name="nrs_generate">Выполнить:</string>
     <string name="nrs_add_request">Добавить запрос</string>
+    <string name="nrs_qw">Количество изображений:</string>
 
     <string name="ms_refresh">Обновить</string>
     <string name="ms_add">Добавить</string>
