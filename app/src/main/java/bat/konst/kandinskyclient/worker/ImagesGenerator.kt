@@ -1,5 +1,8 @@
 package bat.konst.kandinskyclient.worker
 
+import android.content.Context
+import android.content.Intent
+import android.util.Log
 import bat.konst.kandinskyclient.app.CONFIG_XKEY
 import bat.konst.kandinskyclient.app.CONFIG_XSECRET
 import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_DONE
@@ -20,24 +23,42 @@ import java.lang.Thread.sleep
 
 class ImagesGenerator {
 
-    suspend fun fusionBrainGo(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository) {
+    suspend fun fusionBrainGo(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository, context: Context) {
 
         // TODO: проверка -- ключи неверны, сервис лежит - выход из воркера
         while (hasProcessingImages(fbdataRepository) || hasNewImages(fbdataRepository)) {
 
+            // 0. Подождем интервал между запросами
             withContext(Dispatchers.IO) {
                 sleep(KANDINSKY_REQUEST_UNTERVAL_SEC * 1000)
             }
 
             // 1. проверяем готовность изображений и получаем их
-            recieveGeneratedImages(fbdataRepository, kandinskyApiRepository)
+            var isDataChanged = recieveGeneratedImages(fbdataRepository, kandinskyApiRepository)
 
             // 2. Если очередь пуста, отправляем запрос на новую генерацию
             if (isImagesQueueFree(fbdataRepository)) {
-                sendImageToGenerate(fbdataRepository, kandinskyApiRepository)
+                isDataChanged = isDataChanged ||  sendImageToGenerate(fbdataRepository, kandinskyApiRepository)
+            }
+
+            // 3. Если были изменения данных - посылаем широковещательное уведомление
+            if (isDataChanged) {
+                sendBroadcastOnDataChange(context)
             }
         }
     }
+
+
+    // -------- Отправка широковещательного запроса об измении данных в БД
+    private fun sendBroadcastOnDataChange(context: Context) {
+        // val intent = Intent()
+        // intent.action = WORKER_BROADCAST_ON_DATA_CHANGED
+        // intent.putExtra("bat.konst.kandinskyclient.broadcast.on.data.Message", "Data Changed")
+        // intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+        // context.sendBroadcast(intent)
+        Log.d("KandinskyBroadcaster", "sendBroadcastOnDataChange end")
+    }
+
 
     // -------- проверки и изменения статусов
     private suspend fun hasProcessingImages(fbdataRepository: FbdataRepository): Boolean {
@@ -55,14 +76,15 @@ class ImagesGenerator {
         return fbdataRepository.getImagesByStatus(StatusTypes.NEW.value).isNotEmpty()
     }
 
-    private suspend fun recieveGeneratedImages(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository) {
+    private suspend fun recieveGeneratedImages(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository): Boolean {
         /*
             Получает список изображений-заданий из БД, отправляет их на генерацию и сохраняет результирующие изображения
-            Возвращает true, если все изображения уже готовы к использованию (очередь ожидания пуста)
+            Возвращает true, если были изменения данных
         */
         // 0. Key и Secret
         val key = "Key " + fbdataRepository.getConfigByName(CONFIG_XKEY)
         val secret = "Secret " + fbdataRepository.getConfigByName(CONFIG_XSECRET)
+        var isDataChanged = false
 
         // 1. Получаем список уже отправленных на генерацию изображений
         val imagesForGeneration = fbdataRepository.getImagesByStatus(StatusTypes.PROCESSING.value)
@@ -87,6 +109,7 @@ class ImagesGenerator {
                         imageThumbnailBase64 = ""
                     )
                 )
+                isDataChanged = true
                 continue
             }
 
@@ -105,6 +128,7 @@ class ImagesGenerator {
                         imageThumbnailBase64 = thumbFile
                     )
                 )
+                isDataChanged = true
                 continue
             }
 
@@ -121,22 +145,28 @@ class ImagesGenerator {
                         imageThumbnailBase64 = ""
                     )
                 )
+                isDataChanged = true
                 continue
             }
         }
 
+        return isDataChanged
+
     }
 
-    private suspend fun sendImageToGenerate(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository) {
+    private suspend fun sendImageToGenerate(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository): Boolean {
         /*
             Отправляет первое изображение из очереди на генерацию
+            Возвращает true, если были изменения данных
         */
+
         // 0. Key и Secret
         val key = "Key " + fbdataRepository.getConfigByName(CONFIG_XKEY)
         val secret = "Secret " + fbdataRepository.getConfigByName(CONFIG_XSECRET)
 
+
         // 1. Получаем первое изображение из очереди - если таких нет - выход
-        val image = fbdataRepository.getFirstImageByStatus(StatusTypes.NEW.value) ?: return
+        val image = fbdataRepository.getFirstImageByStatus(StatusTypes.NEW.value) ?: return false
         // 1.a если для задания нет запроса - изменяем статус на ошибку - и выход
         val request = fbdataRepository.getRequest(image.md5)
         if (request.md5 == "") {
@@ -151,7 +181,7 @@ class ImagesGenerator {
                     imageThumbnailBase64 = ""
                 )
             )
-            return
+            return true
         }
 
         // 2. Отправляем на генерацию
@@ -171,7 +201,10 @@ class ImagesGenerator {
                     imageThumbnailBase64 = ""
                 )
             )
+            return true
         }
         // TODO: проверка статусов с ошибками (неверный ключ, данные некорректны, сервис лежит)
+
+        return false
     }
 }

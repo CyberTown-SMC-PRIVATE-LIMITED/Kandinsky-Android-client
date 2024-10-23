@@ -49,7 +49,7 @@ class ImagesGeneratorWorker @AssistedInject constructor(
         val fd = FbdataModule.provideFbdataDao(fdb)
         val fbdataRepository = FbdataModule.provideFbdataRepository(fd)
 
-        ImagesGenerator().fusionBrainGo(fbdataRepository, kandinskyApiRepository)
+        ImagesGenerator().fusionBrainGo(fbdataRepository, kandinskyApiRepository, context)
         Log.d("KandinskyWorker", "doKandinskyRequests end")
     }
 }
