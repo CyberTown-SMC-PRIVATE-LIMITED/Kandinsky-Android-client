@@ -1,4 +1,4 @@
-package bat.konst.kandinskyclient.ui.screens.configScreen
+package bat.konst.kandinskyclient.ui.screens.config
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

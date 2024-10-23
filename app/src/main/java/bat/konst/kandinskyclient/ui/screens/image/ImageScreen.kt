@@ -1,4 +1,4 @@
-package bat.konst.kandinskyclient.ui.screens.imageScreen
+package bat.konst.kandinskyclient.ui.screens.image
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.ui.navigation.Route
 import coil.compose.AsyncImage
-import bat.konst.kandinskyclient.ui.components.shareButton.ShareButton
+import bat.konst.kandinskyclient.ui.components.sharebutton.ShareButton
 import java.io.File
 
 @Composable

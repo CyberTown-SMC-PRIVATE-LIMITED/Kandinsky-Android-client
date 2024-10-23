@@ -7,11 +7,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import bat.konst.kandinskyclient.ui.screens.configScreen.ConfigScreen
-import bat.konst.kandinskyclient.ui.screens.imageScreen.ImageScreen
-import bat.konst.kandinskyclient.ui.screens.newRequestScreen.NewRequestScreen
-import bat.konst.kandinskyclient.ui.screens.mainScreen.MainScreen
-import bat.konst.kandinskyclient.ui.screens.requestScreen.RequestScreen
+import bat.konst.kandinskyclient.ui.screens.config.ConfigScreen
+import bat.konst.kandinskyclient.ui.screens.image.ImageScreen
+import bat.konst.kandinskyclient.ui.screens.newrequest.NewRequestScreen
+import bat.konst.kandinskyclient.ui.screens.main.MainScreen
+import bat.konst.kandinskyclient.ui.screens.request.RequestScreen
 import kotlinx.serialization.Serializable
 
 sealed class Route {

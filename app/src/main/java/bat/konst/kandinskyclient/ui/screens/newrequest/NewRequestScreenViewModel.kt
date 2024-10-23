@@ -1,4 +1,4 @@
-package bat.konst.kandinskyclient.ui.screens.newRequestScreen
+package bat.konst.kandinskyclient.ui.screens.newrequest
 
 import android.content.Context
 import androidx.compose.runtime.getValue

@@ -1,4 +1,4 @@
-package bat.konst.kandinskyclient.ui.screens.requestScreen
+package bat.konst.kandinskyclient.ui.screens.request
 
 import bat.konst.kandinskyclient.data.room.entity.Image
 

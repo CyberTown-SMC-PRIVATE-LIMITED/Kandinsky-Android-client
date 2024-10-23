@@ -1,6 +1,5 @@
-package bat.konst.kandinskyclient.ui.screens.mainScreen
+package bat.konst.kandinskyclient.ui.screens.main
 
-import bat.konst.kandinskyclient.data.room.entity.Request
 import bat.konst.kandinskyclient.data.room.entity.RequestJoinImage
 
 sealed class MainScreenEvent {

@@ -11,26 +11,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-/*
-Использование:
-        CoroutineScope(Dispatchers.IO).launch {
-            KandinskyApiClient.apiService.getSomething()
-                .onSuccess {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        val something = it
-                        // обработка результата
-                    }
-                }
-                .onFailure {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        val error = it
-                        // обработка ошибки
-                    }
-                }
-        }
-
-*/
-
 @Module
 @InstallIn(SingletonComponent::class)
 object KandinskyApiModule {

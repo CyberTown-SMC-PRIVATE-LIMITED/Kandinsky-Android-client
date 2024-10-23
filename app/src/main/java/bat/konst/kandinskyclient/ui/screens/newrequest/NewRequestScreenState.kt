@@ -1,7 +1,6 @@
-package bat.konst.kandinskyclient.ui.screens.newRequestScreen
+package bat.konst.kandinskyclient.ui.screens.newrequest
 
 import bat.konst.kandinskyclient.data.kandinskyApi.models.Styles
-import bat.konst.kandinskyclient.ui.screens.mainScreen.MainScreenEvent
 
 sealed class NewRequestScreenEvent {
     data class StyleUpdate(val newStyle: String): NewRequestScreenEvent()

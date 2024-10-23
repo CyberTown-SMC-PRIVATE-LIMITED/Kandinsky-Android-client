@@ -1,4 +1,4 @@
-package bat.konst.kandinskyclient.ui.screens.configScreen
+package bat.konst.kandinskyclient.ui.screens.config
 
 sealed class ConfigScreenEvent {
     data class KeyUpdate(val newKey: String): ConfigScreenEvent()

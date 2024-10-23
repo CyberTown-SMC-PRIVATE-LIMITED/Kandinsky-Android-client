@@ -1,4 +1,4 @@
-package bat.konst.kandinskyclient.ui.components.shareButton
+package bat.konst.kandinskyclient.ui.components.sharebutton
 
 import android.content.Context
 import android.content.Intent

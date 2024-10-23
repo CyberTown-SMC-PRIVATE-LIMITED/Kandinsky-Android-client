@@ -1,4 +1,4 @@
-package bat.konst.kandinskyclient.ui.screens.imageScreen
+package bat.konst.kandinskyclient.ui.screens.image
 
 sealed class ImageScreenEvent {
     data class ScreenUpdate(val id: Long): ImageScreenEvent()
