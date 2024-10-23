@@ -8,5 +8,4 @@ sealed class MainScreenEvent {
 
 data class MainScreenState(
     val requests: List<RequestJoinImage> = emptyList<RequestJoinImage>(),
-    val openKey: Long = 0 // ключ для запуска события открытия экрана
 )

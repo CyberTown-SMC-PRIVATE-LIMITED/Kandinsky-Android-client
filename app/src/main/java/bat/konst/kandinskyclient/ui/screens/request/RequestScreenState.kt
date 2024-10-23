@@ -7,7 +7,6 @@ sealed class RequestScreenEvent {
 }
 
 data class RequestScreenState(
-    val openKey: Long = 0, // ключ для запуска события открытия экрана
     val md5: String = "",
     val prompt: String = "",
     val negativePrompt: String = "",

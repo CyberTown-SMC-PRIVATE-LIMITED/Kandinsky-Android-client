@@ -29,10 +29,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.core.content.ContextCompat.startActivity
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import bat.konst.kandinskyclient.app.RoomDataChaged
 import bat.konst.kandinskyclient.data.room.entity.RequestJoinImage
 import bat.konst.kandinskyclient.ui.components.requestcard.RequestCard
 
@@ -57,8 +59,8 @@ fun MainView(
     onEvent: (MainScreenEvent) -> Unit = {}
 ) {
 
-    // Событие на вход в экран
-    LaunchedEffect(key1 = state.openKey) {
+    // Событие на вход в экран и изменение в БД
+    LaunchedEffect(key1 = RoomDataChaged.collectAsState().value) {
         onEvent(MainScreenEvent.ScreenUpdate)
     }
 

@@ -1,8 +1,6 @@
 package bat.konst.kandinskyclient.worker
 
 import android.content.Context
-import android.content.Intent
-import android.util.Log
 import bat.konst.kandinskyclient.app.CONFIG_XKEY
 import bat.konst.kandinskyclient.app.CONFIG_XSECRET
 import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_DONE
@@ -11,6 +9,7 @@ import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_INITIAL
 import bat.konst.kandinskyclient.app.KANDINSKY_MODEL_ID
 import bat.konst.kandinskyclient.app.KANDINSKY_QUEUE_MAX
 import bat.konst.kandinskyclient.app.KANDINSKY_REQUEST_UNTERVAL_SEC
+import bat.konst.kandinskyclient.app.RoomDataChaged
 import bat.konst.kandinskyclient.data.fileStorage.SaveImageFile
 import bat.konst.kandinskyclient.data.fileStorage.SaveImageThumbinal
 import bat.konst.kandinskyclient.data.kandinskyApi.KandinskyApiRepository
@@ -41,22 +40,17 @@ class ImagesGenerator {
                 isDataChanged = isDataChanged ||  sendImageToGenerate(fbdataRepository, kandinskyApiRepository)
             }
 
-            // 3. Если были изменения данных - посылаем широковещательное уведомление
+            // 3. Если были изменения данных - посылаем уведомление
             if (isDataChanged) {
-                sendBroadcastOnDataChange(context)
+                sendSygnalOnDataChange(context)
             }
         }
     }
 
 
-    // -------- Отправка широковещательного запроса об измении данных в БД
-    private fun sendBroadcastOnDataChange(context: Context) {
-        // val intent = Intent()
-        // intent.action = WORKER_BROADCAST_ON_DATA_CHANGED
-        // intent.putExtra("bat.konst.kandinskyclient.broadcast.on.data.Message", "Data Changed")
-        // intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-        // context.sendBroadcast(intent)
-        Log.d("KandinskyBroadcaster", "sendBroadcastOnDataChange end")
+    // -------- Отправка оповещения об измении данных в БД
+    private fun sendSygnalOnDataChange(context: Context) {
+        RoomDataChaged.value += 1
     }
 
 

@@ -1,7 +1,6 @@
 package bat.konst.kandinskyclient.worker
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
@@ -36,9 +35,6 @@ class ImagesGeneratorWorker @AssistedInject constructor(
     }
 
     private suspend fun doKandinskyRequests() {
-
-        Log.d("KandinskyWorker", "doKandinskyRequests start")
-
         // забираем репозитории. Почему-то через Inject падает
         // TODO: разаобраться почему и переделать
         val bu = bat.konst.kandinskyclient.di.KandinskyApiModule.baseUrl()
@@ -50,15 +46,12 @@ class ImagesGeneratorWorker @AssistedInject constructor(
         val fbdataRepository = FbdataModule.provideFbdataRepository(fd)
 
         ImagesGenerator().fusionBrainGo(fbdataRepository, kandinskyApiRepository, context)
-        Log.d("KandinskyWorker", "doKandinskyRequests end")
     }
 }
 
 fun startImagesGeneratorWorker(context: Context) {
-    Log.d("KandinskyWorker", "Enqueud s")
     val immageWorkRequest = OneTimeWorkRequest.Builder(ImagesGeneratorWorker::class.java)
         .build()
     // Schedule the WorkRequest with WorkManager
     WorkManager.getInstance(context).enqueueUniqueWork("KandinskyWorker", ExistingWorkPolicy.KEEP, immageWorkRequest)
-    Log.d("KandinskyWorker", "Enqueud e")
 }
