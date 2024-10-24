@@ -1,6 +1,7 @@
 package bat.konst.kandinskyclient.worker
 
 import android.content.Context
+import bat.konst.kandinskyclient.app.AppState
 import bat.konst.kandinskyclient.app.CONFIG_XKEY
 import bat.konst.kandinskyclient.app.CONFIG_XSECRET
 import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_DONE
@@ -9,7 +10,6 @@ import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_INITIAL
 import bat.konst.kandinskyclient.app.KANDINSKY_MODEL_ID
 import bat.konst.kandinskyclient.app.KANDINSKY_QUEUE_MAX
 import bat.konst.kandinskyclient.app.KANDINSKY_REQUEST_UNTERVAL_SEC
-import bat.konst.kandinskyclient.app.RoomDataChaged
 import bat.konst.kandinskyclient.data.fileStorage.SaveImageFile
 import bat.konst.kandinskyclient.data.fileStorage.SaveImageThumbinal
 import bat.konst.kandinskyclient.data.kandinskyApi.KandinskyApiRepository
@@ -50,7 +50,7 @@ class ImagesGenerator {
 
     // -------- Отправка оповещения об измении данных в БД
     private fun sendSygnalOnDataChange(context: Context) {
-        RoomDataChaged.value += 1
+        AppState.RoomDataChaged.value += 1
     }
 
 

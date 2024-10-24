@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.R
-import bat.konst.kandinskyclient.app.RoomDataChaged
+import bat.konst.kandinskyclient.app.AppState
 import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.ui.components.thumbinal.Thumbinal
 import bat.konst.kandinskyclient.ui.navigation.Route
@@ -58,7 +58,7 @@ fun RequestView(
     route: Route.Request = Route.Request(md5="")
 ) {
     // Событие на вход в экран и изменение в БД
-    LaunchedEffect(key1 = RoomDataChaged.collectAsState().value) {
+    LaunchedEffect(key1 = AppState.RoomDataChaged.collectAsState().value) {
         onEvent(RequestScreenEvent.ScreenUpdate(route.md5))
     }
 

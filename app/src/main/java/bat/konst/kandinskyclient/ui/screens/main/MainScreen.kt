@@ -34,7 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.core.content.ContextCompat.startActivity
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import bat.konst.kandinskyclient.app.RoomDataChaged
+import bat.konst.kandinskyclient.app.AppState
 import bat.konst.kandinskyclient.data.room.entity.RequestJoinImage
 import bat.konst.kandinskyclient.ui.components.requestcard.RequestCard
 
@@ -60,7 +60,7 @@ fun MainView(
 ) {
 
     // Событие на вход в экран и изменение в БД
-    LaunchedEffect(key1 = RoomDataChaged.collectAsState().value) {
+    LaunchedEffect(key1 = AppState.RoomDataChaged.collectAsState().value) {
         onEvent(MainScreenEvent.ScreenUpdate)
     }
 
