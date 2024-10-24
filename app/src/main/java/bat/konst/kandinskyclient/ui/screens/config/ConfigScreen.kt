@@ -120,10 +120,10 @@ fun ConfigView(
             Text(text = stringResource(id = R.string.cs_save_config))
         }
 
-        Spacer(modifier = Modifier.padding(16.dp))
+        Spacer(modifier = Modifier.padding(26.dp))
 
         // Кнопка - где взять?
-        val url = stringResource(id = R.string.cs_kandinsky_url)
+        val url = stringResource(id = R.string.cs_kandinsky_keys_where_url)
         OutlinedButton(
             modifier = Modifier
                 .fillMaxWidth()
@@ -141,6 +141,28 @@ fun ConfigView(
                 text = stringResource(id = R.string.cs_kandinsky_keys_where)
             )
         }
+
+        // Кнопка - как взять?
+        val urlHow = stringResource(id = R.string.cs_kandinsky_keys_how_url)
+        OutlinedButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .align(Alignment.CenterHorizontally),
+            onClick = {
+                val urlIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(urlHow)
+                )
+                ContextCompat.startActivity(context, urlIntent, null)
+            }
+        ) {
+            Text(
+                text = stringResource(id = R.string.cs_kandinsky_keys_how)
+            )
+        }
+
+
 
     }
 }
