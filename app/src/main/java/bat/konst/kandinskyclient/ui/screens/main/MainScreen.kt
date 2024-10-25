@@ -2,6 +2,7 @@ package bat.konst.kandinskyclient.ui.screens.main
 
 import android.content.Intent
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import bat.konst.kandinskyclient.R
 import bat.konst.kandinskyclient.ui.navigation.Route
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -37,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import bat.konst.kandinskyclient.app.AppState
 import bat.konst.kandinskyclient.data.room.entity.RequestJoinImage
 import bat.konst.kandinskyclient.ui.components.requestcard.RequestCard
+import bat.konst.kandinskyclient.ui.components.swipeaction.SwipeToDismissListItem
 
 
 @Composable
@@ -52,7 +55,7 @@ fun MainScreen(
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 fun MainView(
     onNavigateTo: (Route) -> Unit = {},
     state: MainScreenState = MainScreenState(),
@@ -116,8 +119,21 @@ fun MainView(
         LazyColumn(
             modifier = Modifier.padding(innerPadding)
         ) {
-            items(state.requests) { request ->
-                RequestCard(request, onNavigateTo)
+            itemsIndexed(
+                key = { index, _ -> index },
+                items = state.requests
+            ) { index, request ->
+                SwipeToDismissListItem(
+                    modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
+                    onEndToStart = {
+                        // delete item example
+                        // val mutableList = state.requests.toMutableList()
+                        // mutableList.removeAt(index)
+                        // state.requests = mutableList.toList()
+                    },
+                ) {
+                    RequestCard(request, onNavigateTo)
+                }
             }
         }
 
