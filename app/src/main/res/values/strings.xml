@@ -12,6 +12,7 @@
     <string name="ms_add">Добавить</string>
     <string name="ms_settings">Настройки</string>
     <string name="ms_style">Стиль:</string>
+    <string name="ms_confirm_delete">Подтвердите удаление</string>
 
     <string name="cs_save_config">Сохранить конфигурацию</string>
     <string name="cs_key">Ключ</string>
@@ -24,9 +25,11 @@
     <string name="cs_kandinsky_keys_how">Как взять ключи?</string>
     <string name="cs_kandinsky_keys_how_url">https://fusionbrain.ai/docs/doc/poshagovaya-instrukciya-po-upravleniu-api-kluchami/</string>
 
-
     <string name="rs_repeat">Повторить</string>
 
     <string name="ps_share">Поделиться</string>
+
+    <string name="cd_yes">Да</string>
+    <string name="cd_no">Нет</string>
 
 </resources>

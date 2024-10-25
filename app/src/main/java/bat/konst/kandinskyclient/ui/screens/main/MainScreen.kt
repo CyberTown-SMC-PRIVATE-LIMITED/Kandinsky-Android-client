@@ -32,12 +32,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.core.content.ContextCompat.startActivity
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import bat.konst.kandinskyclient.app.AppState
 import bat.konst.kandinskyclient.data.room.entity.RequestJoinImage
+import bat.konst.kandinskyclient.ui.components.confirmdialog.ConfirmDialog
 import bat.konst.kandinskyclient.ui.components.requestcard.RequestCard
 import bat.konst.kandinskyclient.ui.components.swipeaction.SwipeToDismissListItem
 
@@ -116,6 +121,8 @@ fun MainView(
     ) { innerPadding ->
 
         // Список запросов
+        var md5DeleteConfirm by remember { mutableStateOf("") } // md5 запроса на удаление
+        var promptDeleteConfirm by remember { mutableStateOf("") } // промт запроса на удаление
         LazyColumn(
             modifier = Modifier.padding(innerPadding)
         ) {
@@ -126,12 +133,32 @@ fun MainView(
                         onNavigateTo(Route.NewRequest(request.md5))
                     },
                     onEndToStart = {
-                        onEvent(MainScreenEvent.RequestDelete(request.md5))
+                        // Передать параетр в окно подтверждения
+                        md5DeleteConfirm = request.md5
+                        promptDeleteConfirm = request.prompt
                     },
                 ) {
                     RequestCard(request, onNavigateTo)
                 }
             }
+        }
+
+
+        // диалог подтверждения удаления
+        if (md5DeleteConfirm != "") {
+            ConfirmDialog(
+                title = stringResource(id = R.string.ms_confirm_delete),
+                content = promptDeleteConfirm,
+                onDismiss = {
+                    md5DeleteConfirm = ""
+                    promptDeleteConfirm = ""
+                },
+                onConfirm = {
+                    onEvent(MainScreenEvent.RequestDelete(md5DeleteConfirm))
+                    md5DeleteConfirm = ""
+                    promptDeleteConfirm = ""
+                }
+            )
         }
 
     }
