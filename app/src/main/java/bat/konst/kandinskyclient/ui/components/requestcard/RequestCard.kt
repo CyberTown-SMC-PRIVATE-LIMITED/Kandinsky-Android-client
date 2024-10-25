@@ -1,5 +1,6 @@
 package bat.konst.kandinskyclient.ui.components.requestcard
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -34,11 +36,15 @@ fun RequestCard(
 ) {
     Box(
         modifier= Modifier
+            .background(MaterialTheme.colorScheme.background)
             .fillMaxWidth()
-            .padding(vertical = 10.dp, horizontal = 4.dp)
             .clickable { onNavigateTo(Route.Request(request.md5)) }
     ) {
-        Row {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp, horizontal = 4.dp)
+        ) {
             Thumbinal(
                 status = request.status,
                 imageThumbnailBase64 = request.imageThumbnailBase64,

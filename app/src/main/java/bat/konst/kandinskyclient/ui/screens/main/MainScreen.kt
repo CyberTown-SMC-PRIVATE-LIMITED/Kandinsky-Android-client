@@ -119,12 +119,12 @@ fun MainView(
         LazyColumn(
             modifier = Modifier.padding(innerPadding)
         ) {
-            itemsIndexed(
-                key = { index, _ -> index },
-                items = state.requests
-            ) { index, request ->
+            items(state.requests) { request ->
                 SwipeToDismissListItem(
-                    modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
+                    onStartToEnd = {
+                        // Запрос на добавление картинок
+                        onNavigateTo(Route.NewRequest(request.md5))
+                    },
                     onEndToStart = {
                         // delete item example
                         // val mutableList = state.requests.toMutableList()
