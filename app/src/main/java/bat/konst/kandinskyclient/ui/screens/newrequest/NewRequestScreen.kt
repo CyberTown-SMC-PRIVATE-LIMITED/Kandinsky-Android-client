@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.ui.navigation.Route
 import bat.konst.kandinskyclient.R
+import bat.konst.kandinskyclient.app.REQUEST_MIN_LENGTH
 import coil.compose.rememberAsyncImagePainter
 
     @ExperimentalMaterial3Api
@@ -236,6 +237,7 @@ fun NewRequestView(
                         iend -> iendShape
                         else -> icenterShape
                     },
+                    enabled = state.prompt.trim().length >= REQUEST_MIN_LENGTH,
                     onClick = {
                         onEvent(
                             NewRequestScreenEvent.AddRequest(

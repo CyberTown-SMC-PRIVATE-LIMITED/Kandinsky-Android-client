@@ -18,3 +18,6 @@ const val FILE_IMAGE_THUMB_HEIGHT = 250
 const val FILE_IMAGE_THUMB_WIDTH = 250
 
 lateinit var FILE_STORAGE_PATH: String // путь к папке с изображениями
+
+// request rules
+const val REQUEST_MIN_LENGTH = 4
