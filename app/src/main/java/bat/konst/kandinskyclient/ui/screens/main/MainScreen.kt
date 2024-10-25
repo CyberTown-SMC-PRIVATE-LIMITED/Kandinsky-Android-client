@@ -126,10 +126,7 @@ fun MainView(
                         onNavigateTo(Route.NewRequest(request.md5))
                     },
                     onEndToStart = {
-                        // delete item example
-                        // val mutableList = state.requests.toMutableList()
-                        // mutableList.removeAt(index)
-                        // state.requests = mutableList.toList()
+                        onNavigateTo(Route.Request(request.md5))
                     },
                 ) {
                     RequestCard(request, onNavigateTo)
@@ -163,6 +160,5 @@ fun MainScreenPreview() {
                 imageThumbnailBase64 = ""
             )
         )
-    )
-    )
+    ))
 }

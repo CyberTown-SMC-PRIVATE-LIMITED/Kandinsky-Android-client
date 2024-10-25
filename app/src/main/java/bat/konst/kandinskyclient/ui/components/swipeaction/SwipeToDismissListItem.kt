@@ -5,12 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxDefaults
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
@@ -23,31 +23,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun SwipeToDismissListItem(
     modifier: Modifier = Modifier,
-    onEndToStart: () -> Unit = {},
-    onStartToEnd: () -> Unit = {},
+    onEndToStart: (() -> Unit)? = null,
+    onStartToEnd: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
 
     // 1. State is hoisted here
     val dismissState = rememberSwipeToDismissBoxState(
         // confirmValueChange = { false },
-        positionalThreshold =  { it* 0.50f } // 50% от общей ширины
+        positionalThreshold =  { it * 0.50f } // 50% от общей ширины
     )
 
-    // haptic эффект
+    // haptic effect
     var willDismissValue: SwipeToDismissBoxValue? by remember {
         mutableStateOf(null)
     }
     val haptic = LocalHapticFeedback.current
     LaunchedEffect(key1 = willDismissValue, block = {
-        if (willDismissValue != null) {
+        if (willDismissValue != null && willDismissValue != SwipeToDismissBoxValue.Settled) {
             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
         }
     })
@@ -55,6 +54,8 @@ fun SwipeToDismissListItem(
 
     SwipeToDismissBox(
         modifier = modifier,
+        enableDismissFromStartToEnd = onStartToEnd != null,
+        enableDismissFromEndToStart = onEndToStart != null,
         state = dismissState,
         backgroundContent = {
 
@@ -81,7 +82,8 @@ fun SwipeToDismissListItem(
                     SwipeToDismissBoxValue.StartToEnd -> {
                         Icon(
                             modifier = Modifier
-                                .align(androidx.compose.ui.Alignment.CenterStart)
+                                .size(40.dp)
+                                .align(Alignment.CenterStart)
                                 .padding(start = 16.dp),
                             imageVector = androidx.compose.material.icons.Icons.Default.Edit,
                             contentDescription = "edit"
@@ -91,7 +93,8 @@ fun SwipeToDismissListItem(
                     SwipeToDismissBoxValue.EndToStart -> {
                         Icon(
                             modifier = Modifier
-                                .align(androidx.compose.ui.Alignment.CenterEnd)
+                                .size(40.dp)
+                                .align(Alignment.CenterEnd)
                                 .padding(end = 16.dp),
                             imageVector = androidx.compose.material.icons.Icons.Default.Delete,
                             contentDescription = "delete"
@@ -99,7 +102,24 @@ fun SwipeToDismissListItem(
                     }
 
                     SwipeToDismissBoxValue.Settled -> {
-                        // Nothing to do
+                        Icon(
+                            modifier = Modifier
+                                .size(38.dp)
+                                .align(Alignment.CenterStart)
+                                .padding(start = 16.dp),
+                            imageVector = androidx.compose.material.icons.Icons.Default.Edit,
+                            contentDescription = null,
+                            tint = Color.Gray
+                        )
+                        Icon(
+                            modifier = Modifier
+                                .size(38.dp)
+                                .align(Alignment.CenterEnd)
+                                .padding(end = 16.dp),
+                            imageVector = androidx.compose.material.icons.Icons.Default.Delete,
+                            contentDescription = null,
+                            tint = Color.Gray
+                        )
                     }
                 }
 
@@ -113,8 +133,9 @@ fun SwipeToDismissListItem(
     when (dismissState.currentValue) {
         SwipeToDismissBoxValue.EndToStart -> {
             LaunchedEffect(dismissState.currentValue) {
-                onEndToStart()
-
+                if (onEndToStart != null) {
+                    onEndToStart()
+                }
                 // 6. Don't forget to reset the state value
                 dismissState.snapTo(SwipeToDismissBoxValue.Settled) // or dismissState.reset()
             }
@@ -123,7 +144,9 @@ fun SwipeToDismissListItem(
 
         SwipeToDismissBoxValue.StartToEnd -> {
             LaunchedEffect(dismissState.currentValue) {
-                onStartToEnd()
+                if (onStartToEnd != null) {
+                    onStartToEnd()
+                }
                 dismissState.snapTo(SwipeToDismissBoxValue.Settled) // or dismissState.reset()
             }
         }
