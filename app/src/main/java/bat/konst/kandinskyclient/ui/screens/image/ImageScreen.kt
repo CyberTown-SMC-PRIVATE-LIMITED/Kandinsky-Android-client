@@ -37,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.ui.navigation.Route
 import coil.compose.AsyncImage
 import bat.konst.kandinskyclient.ui.components.sharebutton.ShareButton
+import bat.konst.kandinskyclient.ui.components.swipeaction.SwipeToDismissListItem
 import java.io.File
 
 @Composable
@@ -103,12 +104,27 @@ fun ImageView(
                     .alpha(0.7f)
             )
 
-            // Изображение
-            AsyncImage(
-                model = File(state.imageBase64),
-                contentDescription = "generated image",
-                Modifier.fillMaxSize()
-            )
+            // Изображение с перемоткой свайпом
+            SwipeToDismissListItem(
+                backgroundColorSettled = Color.Transparent,
+                backgroundColorStartToEnd = Color.Transparent,
+                backgroundColorEndToStart = Color.Transparent,
+                relativeThreshold = 0.3f,
+                iconStartToEnd = null,
+                iconEndToStart = null,
+                onStartToEnd = if (state.nextImageId != null) {
+                    { onEvent(ImageScreenEvent.ScreenUpdate(state.nextImageId)) } }
+                    else { null },
+                onEndToStart = if (state.prevImageId != null) {
+                    { onEvent(ImageScreenEvent.ScreenUpdate(state.prevImageId)) } }
+                    else { null },
+            ) {
+                AsyncImage(
+                    model = File(state.imageBase64),
+                    contentDescription = "generated image",
+                    Modifier.fillMaxSize()
+                )
+            }
 
 
             // кнопки - назад/вперёд

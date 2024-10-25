@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
@@ -31,12 +32,18 @@ fun SwipeToDismissListItem(
     modifier: Modifier = Modifier,
     onEndToStart: (() -> Unit)? = null,
     onStartToEnd: (() -> Unit)? = null,
+    relativeThreshold: Float = 0.50f, // перемещение для срабатывания = 50% от общей ширины
+    backgroundColorSettled: Color = MaterialTheme.colorScheme.surfaceVariant,  // цвет под карточкой
+    backgroundColorStartToEnd: Color = MaterialTheme.colorScheme.primaryContainer,  // цвет под карточкой при движении к концу
+    backgroundColorEndToStart: Color = MaterialTheme.colorScheme.errorContainer, // цвет под карточкой при движении к началу
+    iconStartToEnd: ImageVector? = androidx.compose.material.icons.Icons.Default.Edit,
+    iconEndToStart: ImageVector? = androidx.compose.material.icons.Icons.Default.Delete,
     content: @Composable () -> Unit
 ) {
 
     // 1. State is hoisted here
     val dismissState = rememberSwipeToDismissBoxState(
-        positionalThreshold =  { it * 0.50f } // 50% от общей ширины
+        positionalThreshold =  { it * relativeThreshold } // 50% от общей ширины
     )
 
     // haptic effect
@@ -61,9 +68,9 @@ fun SwipeToDismissListItem(
             // 2. Animate the swipe by changing the color
             val color by animateColorAsState(
                 targetValue = when (dismissState.targetValue) {
-                    SwipeToDismissBoxValue.Settled -> MaterialTheme.colorScheme.surfaceVariant
-                    SwipeToDismissBoxValue.StartToEnd -> MaterialTheme.colorScheme.primaryContainer
-                    SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.errorContainer
+                    SwipeToDismissBoxValue.Settled -> backgroundColorSettled
+                    SwipeToDismissBoxValue.StartToEnd -> backgroundColorStartToEnd
+                    SwipeToDismissBoxValue.EndToStart -> backgroundColorEndToStart
                 },
                 label = "swipe"
             )
@@ -79,46 +86,54 @@ fun SwipeToDismissListItem(
                 // 4. Show the correct icon
                 when (dismissState.targetValue) {
                     SwipeToDismissBoxValue.StartToEnd -> {
-                        Icon(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .align(Alignment.CenterStart)
-                                .padding(start = 16.dp),
-                            imageVector = androidx.compose.material.icons.Icons.Default.Edit,
-                            contentDescription = "edit"
-                        )
+                        if (iconStartToEnd != null) {
+                            Icon(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .align(Alignment.CenterStart)
+                                    .padding(start = 16.dp),
+                                imageVector = iconStartToEnd,
+                                contentDescription = "edit"
+                            )
+                        }
                     }
 
                     SwipeToDismissBoxValue.EndToStart -> {
-                        Icon(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .align(Alignment.CenterEnd)
-                                .padding(end = 16.dp),
-                            imageVector = androidx.compose.material.icons.Icons.Default.Delete,
-                            contentDescription = "delete"
-                        )
+                        if (iconEndToStart != null) {
+                            Icon(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .align(Alignment.CenterEnd)
+                                    .padding(end = 16.dp),
+                                imageVector = iconEndToStart,
+                                contentDescription = "delete"
+                            )
+                        }
                     }
 
                     SwipeToDismissBoxValue.Settled -> {
-                        Icon(
-                            modifier = Modifier
-                                .size(38.dp)
-                                .align(Alignment.CenterStart)
-                                .padding(start = 16.dp),
-                            imageVector = androidx.compose.material.icons.Icons.Default.Edit,
-                            contentDescription = null,
-                            tint = Color.Gray
-                        )
-                        Icon(
-                            modifier = Modifier
-                                .size(38.dp)
-                                .align(Alignment.CenterEnd)
-                                .padding(end = 16.dp),
-                            imageVector = androidx.compose.material.icons.Icons.Default.Delete,
-                            contentDescription = null,
-                            tint = Color.Gray
-                        )
+                        if (iconStartToEnd != null) {
+                            Icon(
+                                modifier = Modifier
+                                    .size(38.dp)
+                                    .align(Alignment.CenterStart)
+                                    .padding(start = 16.dp),
+                                imageVector = iconStartToEnd,
+                                contentDescription = null,
+                                tint = Color.Gray
+                            )
+                        }
+                        if (iconEndToStart != null) {
+                            Icon(
+                                modifier = Modifier
+                                    .size(38.dp)
+                                    .align(Alignment.CenterEnd)
+                                    .padding(end = 16.dp),
+                                imageVector = iconEndToStart,
+                                contentDescription = null,
+                                tint = Color.Gray
+                            )
+                        }
                     }
                 }
 
