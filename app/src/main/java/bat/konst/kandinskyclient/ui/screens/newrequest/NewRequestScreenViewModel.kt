@@ -31,7 +31,6 @@ class NewRequestScreenViewModel @Inject constructor(
         when (event) {
 
             is NewRequestScreenEvent.StyleUpdate -> {
-                var imageURL = ""
                 this.state = state.copy(
                     style = event.newStyle,
                     styleImageURL = getStyleURL(event.newStyle, state.stylesList)
@@ -76,7 +75,7 @@ class NewRequestScreenViewModel @Inject constructor(
     }
 
     // --------------------
-    fun getStyleURL(styleName: String, styleList: Styles): String {
+    private fun getStyleURL(styleName: String, styleList: Styles): String {
         // получает URL картинки по имени стиля
         var imageURL = ""
         for (style in styleList) {

@@ -2,6 +2,7 @@ package bat.konst.kandinskyclient.ui.screens.config
 
 import android.content.Intent
 import android.net.Uri
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,9 +30,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.ui.navigation.Route
 import bat.konst.kandinskyclient.R
+import bat.konst.kandinskyclient.ui.screens.newrequest.NewRequestScreenEvent
 
 @Composable
 fun ConfigScreen(
@@ -49,7 +52,7 @@ fun ConfigScreen(
 fun ConfigView(
     onNavigateTo: (Route) -> Unit = {},
     state: ConfigScreenState = ConfigScreenState(),
-    onEvent: (ConfigScreenEvent) -> Unit = {},
+    onEvent: (ConfigScreenEvent, onSuccess: () -> Unit) -> Unit = { _, _ -> },
 ) {
     val context = LocalContext.current
 
@@ -58,7 +61,7 @@ fun ConfigView(
     if (!initialApiCalled) {
         LaunchedEffect(Unit) {
             initialApiCalled = true
-            onEvent(ConfigScreenEvent.LoadConfig)
+            onEvent(ConfigScreenEvent.LoadConfig){}
         }
     }
 
@@ -86,7 +89,7 @@ fun ConfigView(
         TextField(
             modifier = Modifier.fillMaxWidth(),
             value = state.key,
-            onValueChange = { onEvent(ConfigScreenEvent.KeyUpdate(it)) },
+            onValueChange = { onEvent(ConfigScreenEvent.KeyUpdate(it)){} },
             placeholder = { Text(text = stringResource(id = R.string.cs_key_like)) },
         )
 
@@ -100,7 +103,7 @@ fun ConfigView(
         TextField(
             modifier = Modifier.fillMaxWidth(),
             value = state.secret,
-            onValueChange = { onEvent(ConfigScreenEvent.SecretUpdate(it)) },
+            onValueChange = { onEvent(ConfigScreenEvent.SecretUpdate(it)){} },
             placeholder = { Text(text = stringResource(id = R.string.cs_secret_like)) },
         )
 
@@ -112,9 +115,11 @@ fun ConfigView(
                 .fillMaxWidth()
                 .height(56.dp)
                 .align(Alignment.CenterHorizontally),
+            enabled = state.secret.trim() != "" && state.key.trim() != "",
             onClick = {
-                onEvent(ConfigScreenEvent.SaveConfig)
-                onNavigateTo(Route.GoBack)
+                onEvent(ConfigScreenEvent.SaveConfig) {
+                    onNavigateTo(Route.GoBack)
+                }
             },
         ) {
             Text(text = stringResource(id = R.string.cs_save_config))

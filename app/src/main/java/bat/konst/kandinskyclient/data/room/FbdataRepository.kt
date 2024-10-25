@@ -176,10 +176,11 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
         return CONFIG_DEFAULT_VALUE
     }
 
-    suspend fun setConfig(name: String, value: String) {
+    suspend fun setConfig(name: String, value: String, onSuccess: () -> Unit = {}) {
         withContext(Dispatchers.IO) {
             val config = Config(name = name, value = value)
             fbdataDao.setConfig(config)
         }
+        onSuccess()
     }
 }

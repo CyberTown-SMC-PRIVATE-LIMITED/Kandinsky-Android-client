@@ -1,6 +1,7 @@
 package bat.konst.kandinskyclient.ui.screens.main
 
 import android.content.Intent
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -41,6 +42,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import bat.konst.kandinskyclient.app.AppState
+import bat.konst.kandinskyclient.app.CONFIG_DEFAULT_VALUE
 import bat.konst.kandinskyclient.data.room.entity.RequestJoinImage
 import bat.konst.kandinskyclient.ui.components.confirmdialog.ConfirmDialog
 import bat.konst.kandinskyclient.ui.components.requestcard.RequestCard
@@ -70,6 +72,15 @@ fun MainView(
     // Событие на вход в экран и изменение в БД
     LaunchedEffect(key1 = AppState.RoomDataChaged.collectAsState().value) {
         onEvent(MainScreenEvent.ScreenUpdate)
+    }
+
+    // Если ключи доступа к KandinskyAPI пустые -- переход на экран конфигурации
+    // делается это один раз
+    if (AppState.needCheckConfig) {
+        if (state.key == CONFIG_DEFAULT_VALUE || state.secret == CONFIG_DEFAULT_VALUE) {
+            AppState.needCheckConfig = false
+            onNavigateTo(Route.Config)
+        }
     }
 
     // По нажатию системной кнопки "назад" свернуть приложение
