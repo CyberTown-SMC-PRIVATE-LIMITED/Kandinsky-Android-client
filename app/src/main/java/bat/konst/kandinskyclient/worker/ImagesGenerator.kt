@@ -10,6 +10,7 @@ import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_INITIAL
 import bat.konst.kandinskyclient.app.KANDINSKY_MODEL_ID
 import bat.konst.kandinskyclient.app.KANDINSKY_QUEUE_MAX
 import bat.konst.kandinskyclient.app.KANDINSKY_REQUEST_UNTERVAL_SEC
+import bat.konst.kandinskyclient.data.fileStorage.DeleteImageAndThumbinal
 import bat.konst.kandinskyclient.data.fileStorage.SaveImageFile
 import bat.konst.kandinskyclient.data.fileStorage.SaveImageThumbinal
 import bat.konst.kandinskyclient.data.kandinskyApi.KandinskyApiRepository
@@ -32,15 +33,18 @@ class ImagesGenerator {
                 sleep(KANDINSKY_REQUEST_UNTERVAL_SEC * 1000)
             }
 
-            // 1. проверяем готовность изображений и получаем их
+            // 1. удаление помеченных requests
+            deleteMarkerRequests(fbdataRepository)
+
+            // 2. проверяем готовность изображений и получаем их
             var isDataChanged = recieveGeneratedImages(fbdataRepository, kandinskyApiRepository)
 
-            // 2. Если очередь пуста, отправляем запрос на новую генерацию
+            // 3. Если очередь пуста, отправляем запрос на новую генерацию
             if (isImagesQueueFree(fbdataRepository)) {
                 isDataChanged = isDataChanged ||  sendImageToGenerate(fbdataRepository, kandinskyApiRepository)
             }
 
-            // 3. Если были изменения данных - посылаем уведомление
+            // 4. Если были изменения данных - посылаем уведомление
             if (isDataChanged) {
                 sendSygnalOnDataChange(context)
             }
@@ -200,5 +204,20 @@ class ImagesGenerator {
         // TODO: проверка статусов с ошибками (неверный ключ, данные некорректны, сервис лежит)
 
         return false
+    }
+
+
+    private suspend fun deleteMarkerRequests(fbdataRepository: FbdataRepository) {
+        // удаляем помеченные запросы
+        // 1. список запросов помеченных к удалению
+        val requestsToDelete = fbdataRepository.getAllMarketToDeleteRequests()
+        for (request in requestsToDelete) {
+            val imagesToDelete = fbdataRepository.getImages(request.md5)
+            for (image in imagesToDelete) {
+                DeleteImageAndThumbinal(image.id)
+                fbdataRepository.deleteImage(image)
+            }
+            fbdataRepository.deleteRequest(request)
+        }
     }
 }

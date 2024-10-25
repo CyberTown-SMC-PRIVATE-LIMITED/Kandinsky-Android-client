@@ -71,20 +71,32 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
         return request!!
     }
 
-    suspend fun getAllRequests(): List<Request> {
-        val reqs: List<Request>
-        withContext(Dispatchers.IO) {
-             reqs = fbdataDao.getAllRequests()
-        }
-        return reqs
-    }
-
     suspend fun getAllRequestJoinImages(): List<RequestJoinImage> {
         val reqs: List<RequestJoinImage>
         withContext(Dispatchers.IO) {
             reqs = fbdataDao.getAllRequestJoinImages()
         }
         return reqs
+    }
+
+    suspend fun markDeletedRequest(md5: String) {
+        withContext(Dispatchers.IO) {
+            fbdataDao.markDeletedRequest(md5)
+        }
+    }
+
+    suspend fun getAllMarketToDeleteRequests(): List<Request> {
+        val rqs: List<Request>
+        withContext(Dispatchers.IO) {
+            rqs = fbdataDao.getAllMarketToDeleteRequests()
+        }
+        return rqs
+    }
+
+    suspend fun deleteRequest(request: Request) {
+        withContext(Dispatchers.IO) {
+            fbdataDao.deleteRequest(request)
+        }
     }
 
     // ------------------ image
@@ -143,6 +155,12 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
             nextId = fbdataDao.getPrevImage(md5, id, StatusTypes.DONE.value)?.id
         }
         return nextId
+    }
+
+    suspend fun deleteImage(image: Image) {
+        withContext(Dispatchers.IO) {
+            fbdataDao.deleteImage(image)
+        }
     }
 
     // ------------------ config

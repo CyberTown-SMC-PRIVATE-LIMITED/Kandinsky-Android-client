@@ -126,7 +126,7 @@ fun MainView(
                         onNavigateTo(Route.NewRequest(request.md5))
                     },
                     onEndToStart = {
-                        onNavigateTo(Route.Request(request.md5))
+                        onEvent(MainScreenEvent.RequestDelete(request.md5))
                     },
                 ) {
                     RequestCard(request, onNavigateTo)

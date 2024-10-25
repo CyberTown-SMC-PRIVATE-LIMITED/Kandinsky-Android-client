@@ -31,6 +31,24 @@ fun SaveImageThumbinal(id: Long): String {
     return ""
 }
 
+fun DeleteImageAndThumbinal(id: Long) {
+    fun deleteFile(filePath: String) {
+        // удаляет файл по имени
+        val file = File(filePath)
+        if (file.exists()) {
+            try {
+                file.delete()
+            } catch (e: Exception) {
+                return
+            }
+        }
+    }
+    // удаляем изображения и thumb для указанного id изображения
+    deleteFile(getImageNameById(id))
+    deleteFile(getThumbinalNameById(id))
+}
+
+
 // ------
 internal fun getImageNameById(id: Long): String {
     return File(FILE_STORAGE_PATH).resolve("$id.jpg").toString()

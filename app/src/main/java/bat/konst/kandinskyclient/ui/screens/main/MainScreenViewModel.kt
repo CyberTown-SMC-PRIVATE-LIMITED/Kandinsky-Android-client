@@ -30,6 +30,13 @@ class MainScreenViewModel @Inject constructor(
                 }
             }
 
+            is MainScreenEvent.RequestDelete -> {
+                coroutineScope.launch(Dispatchers.Main) {
+                    fbdataRepository.markDeletedRequest(event.md5)
+                    state = state.copy(requests = fbdataRepository.getAllRequestJoinImages())
+                }
+            }
+
         }
     }
 }

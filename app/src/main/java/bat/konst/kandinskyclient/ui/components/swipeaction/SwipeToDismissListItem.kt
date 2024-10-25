@@ -36,7 +36,6 @@ fun SwipeToDismissListItem(
 
     // 1. State is hoisted here
     val dismissState = rememberSwipeToDismissBoxState(
-        // confirmValueChange = { false },
         positionalThreshold =  { it * 0.50f } // 50% от общей ширины
     )
 

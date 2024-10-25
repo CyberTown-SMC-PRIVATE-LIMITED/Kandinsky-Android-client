@@ -4,6 +4,7 @@ import bat.konst.kandinskyclient.data.room.entity.RequestJoinImage
 
 sealed class MainScreenEvent {
     data object ScreenUpdate: MainScreenEvent()
+    data class RequestDelete(val md5: String): MainScreenEvent()
 }
 
 data class MainScreenState(

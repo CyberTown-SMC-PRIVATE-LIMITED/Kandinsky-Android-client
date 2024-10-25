@@ -26,4 +26,6 @@ data class Request(
     @ColumnInfo(name = "date_update")
     val dateUpdate: Long,
 
+    @ColumnInfo(name = "deleted")
+    val deleted: Boolean = false
 )

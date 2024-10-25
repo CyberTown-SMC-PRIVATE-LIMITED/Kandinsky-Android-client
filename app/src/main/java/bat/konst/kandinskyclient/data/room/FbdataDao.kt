@@ -28,6 +28,7 @@ interface FbdataDao {
     @Query("SELECT * FROM requests WHERE md5 = :md5")
     fun getRequest(md5: String): Request?
 
+    // используется на главном экране
     @Query("SELECT " +
             "    r.md5, " +
             "    r.prompt, " +
@@ -45,13 +46,26 @@ interface FbdataDao {
             "        WHERE images.md5 = i.md5 " +
             "    ) " +
             ") i ON i.md5 = r.md5 " +
-            "ORDER BY r.date_update DESC;"
+            "WHERE r.deleted=0 " +
+            "ORDER BY r.date_update DESC "
+
     )
     fun getAllRequestJoinImages(): List<RequestJoinImage>
+
+    @Query("UPDATE requests SET deleted=1 WHERE md5 = :md5")
+    fun markDeletedRequest(md5: String)
+
+    @Query("SELECT * FROM requests WHERE deleted = 1")
+    fun getAllMarketToDeleteRequests(): List<Request>
+
+
 
     // image
     @Insert
     fun addImage(image: Image)
+
+    @Delete
+    fun deleteImage(image: Image)
 
     @Query("SELECT * FROM images WHERE id = :id")
     fun getImage(id: Long): Image?
