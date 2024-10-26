@@ -1,7 +1,6 @@
 package bat.konst.kandinskyclient.ui.screens.main
 
 import android.content.Intent
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -20,7 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import bat.konst.kandinskyclient.R
 import bat.konst.kandinskyclient.ui.navigation.Route
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -46,7 +44,7 @@ import bat.konst.kandinskyclient.app.CONFIG_DEFAULT_VALUE
 import bat.konst.kandinskyclient.data.room.entity.RequestJoinImage
 import bat.konst.kandinskyclient.ui.components.confirmdialog.ConfirmDialog
 import bat.konst.kandinskyclient.ui.components.requestcard.RequestCard
-import bat.konst.kandinskyclient.ui.components.swipeaction.SwipeToDismissListItem
+import bat.konst.kandinskyclient.ui.components.swipeaction.SwipeAction
 
 
 @Composable
@@ -138,7 +136,7 @@ fun MainView(
             modifier = Modifier.padding(innerPadding)
         ) {
             items(state.requests) { request ->
-                SwipeToDismissListItem(
+                SwipeAction(
                     onStartToEnd = {
                         // Запрос на добавление картинок
                         onNavigateTo(Route.NewRequest(request.md5))

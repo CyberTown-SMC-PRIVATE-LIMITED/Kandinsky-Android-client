@@ -37,7 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.ui.navigation.Route
 import coil.compose.AsyncImage
 import bat.konst.kandinskyclient.ui.components.sharebutton.ShareButton
-import bat.konst.kandinskyclient.ui.components.swipeaction.SwipeToDismissListItem
+import bat.konst.kandinskyclient.ui.components.swipeaction.SwipeAction
 import java.io.File
 
 @Composable
@@ -105,7 +105,7 @@ fun ImageView(
             )
 
             // Изображение с перемоткой свайпом
-            SwipeToDismissListItem(
+            SwipeAction(
                 backgroundColorSettled = Color.Transparent,
                 backgroundColorStartToEnd = Color.Transparent,
                 backgroundColorEndToStart = Color.Transparent,

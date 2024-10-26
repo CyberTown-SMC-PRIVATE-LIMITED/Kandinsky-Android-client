@@ -28,7 +28,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SwipeToDismissListItem(
+fun SwipeAction(
     modifier: Modifier = Modifier,
     onEndToStart: (() -> Unit)? = null,
     onStartToEnd: (() -> Unit)? = null,
