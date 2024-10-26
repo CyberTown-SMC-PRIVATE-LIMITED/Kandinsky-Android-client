@@ -1,4 +1,4 @@
-package bat.konst.kandinskyclient.ui.styles.textfield
+package bat.konst.kandinskyclient.ui.styles.textfields
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth

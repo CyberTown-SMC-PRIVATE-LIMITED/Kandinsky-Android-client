@@ -1,6 +1,7 @@
 package bat.konst.kandinskyclient.ui.screens.newrequest
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,14 +44,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.ui.navigation.Route
 import bat.konst.kandinskyclient.R
 import bat.konst.kandinskyclient.app.REQUEST_MIN_LENGTH
-import bat.konst.kandinskyclient.ui.styles.textfield.TextFieldDropBox
-import bat.konst.kandinskyclient.ui.styles.textfield.TextFieldPrompt
+import bat.konst.kandinskyclient.ui.styles.textfields.TextFieldDropBox
+import bat.konst.kandinskyclient.ui.styles.textfields.TextFieldPrompt
 import bat.konst.kandinskyclient.ui.styles.text.TextDropBox
 import bat.konst.kandinskyclient.ui.styles.text.TextH1
 import bat.konst.kandinskyclient.ui.styles.text.TextH2
 import coil.compose.rememberAsyncImagePainter
 
-    @ExperimentalMaterial3Api
+@ExperimentalMaterial3Api
 @Composable
 fun NewRequestScreen(
     onNavigateTo: (Route) -> Unit = {},
@@ -96,7 +98,19 @@ fun NewRequestView(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             // horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextH1(text = stringResource(id = R.string.nrs_add_request))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                TextH1(text = stringResource(id = R.string.nrs_add_request))
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .clickable { onEvent(NewRequestScreenEvent.RollRequest){} }
+                )
+            }
 
             Spacer(modifier = Modifier.padding(8.dp))
 

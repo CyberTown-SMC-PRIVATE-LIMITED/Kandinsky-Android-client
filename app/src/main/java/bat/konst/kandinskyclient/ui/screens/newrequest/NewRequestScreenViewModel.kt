@@ -71,6 +71,17 @@ class NewRequestScreenViewModel @Inject constructor(
                 }
             }
 
+            is NewRequestScreenEvent.RollRequest -> {
+                // заполнение полей запроса случайным пропмптом
+                // TODO: добавить запросов
+                state = state.copy(
+                    prompt = "красивый пушистый милый котик в пижаме с принтом авокадо,  пьет капучино, сидит на подоконнике веселый, яркое солнышко, детализация высокая, дымчато-розовые тона, пепел, oil Illustrations, насыщенность, прорисовка деталей",
+                    style = "DEFAULT",
+                    negativePrompt = "тёмные тона"
+                )
+
+            }
+
         }
     }
 
