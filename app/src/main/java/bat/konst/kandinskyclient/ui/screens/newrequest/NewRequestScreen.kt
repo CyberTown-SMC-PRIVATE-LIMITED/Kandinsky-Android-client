@@ -89,10 +89,12 @@ fun NewRequestView(
             .fillMaxWidth()
             .padding(16.dp, 16.dp)
             .verticalScroll(rememberScrollState()),
+        contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
-                .widthIn(max = 500.dp),
+                .widthIn(max = 550.dp)
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             // horizontalAlignment = Alignment.CenterHorizontally
         ) {
