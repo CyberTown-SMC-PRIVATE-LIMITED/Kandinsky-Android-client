@@ -121,81 +121,64 @@ fun NewRequestView(
             style = MaterialTheme.typography.bodyLarge
         )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
-        ) {
 
-            Box(
+        // Выбор стиля
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            var expanded by remember { mutableStateOf(false) }
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = it },
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 3.dp)
+                    .fillMaxWidth()
             ) {
-                var expanded by remember { mutableStateOf(false) }
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = { expanded = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    TextField(
-                        // The `menuAnchor` modifier must be passed to the text field to handle
-                        // expanding/collapsing the menu on click. A read-only text field has
-                        // the anchor type `PrimaryNotEditable`.
-                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
-                        value = state.style,
-                        onValueChange = {},
-                        readOnly = true,
-                        singleLine = true,
-                        // label = { Text(stringResource(id = R.string.nrs_style)) },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                    )
-                    ExposedDropdownMenu(
-                        modifier = Modifier.fillMaxWidth(),
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                    ) {
-                        state.stylesList.forEach { style ->
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        style.name,
-                                        style = MaterialTheme.typography.bodyLarge
-                                    )
-                                },
-                                onClick = {
-                                    onEvent(NewRequestScreenEvent.StyleUpdate(style.name)) {}
-                                    expanded = false
-                                },
-                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                TextField(
+                    // The `menuAnchor` modifier must be passed to the text field to handle
+                    // expanding/collapsing the menu on click. A read-only text field has
+                    // the anchor type `PrimaryNotEditable`.
+                    modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable).fillMaxWidth(),
+                    value = state.style,
+                    onValueChange = {},
+                    readOnly = true,
+                    singleLine = true,
+                    // label = { Text(stringResource(id = R.string.nrs_style)) },
+                    // leadingIcon = { StyleImage(state.styleImageURL) },
+                    trailingIcon = {
+                        Row() {
+                            StyleImage(state.styleImageURL)
+                            ExposedDropdownMenuDefaults.TrailingIcon(
+                                modifier = Modifier.padding(top = 10.dp, start = 5.dp),
+                                expanded = expanded
                             )
                         }
+
+                                   },
+                    colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                )
+                ExposedDropdownMenu(
+                    modifier = Modifier.fillMaxWidth(),
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                ) {
+                    state.stylesList.forEach { style ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    style.name,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                            },
+                            onClick = {
+                                onEvent(NewRequestScreenEvent.StyleUpdate(style.name)) {}
+                                expanded = false
+                            },
+                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                        )
                     }
                 }
             }
-
-            // Картинка стиля
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(50.dp)
-                    .padding(start = 3.dp)
-            ) {
-                if (state.styleImageURL != "") {
-                    Image(
-                        painter = rememberAsyncImagePainter(state.styleImageURL),
-                        contentDescription = "Style ${state.style} Image",
-                        modifier = Modifier
-                            //.fillMaxSize()
-                            .align(Alignment.Center)
-                            .clip(RoundedCornerShape(20))
-                            .border(1.dp, Color.Gray, RoundedCornerShape(20)),
-                    )
-                }
-            }
-
         }
 
 
@@ -271,6 +254,19 @@ fun NewRequestView(
     }
 }
 
+@Composable
+fun StyleImage(imageUrl: String) {
+    // картинка стиля
+    if (imageUrl != "") {
+        Image(
+            painter = rememberAsyncImagePainter(imageUrl),
+            contentDescription = null,
+            modifier = Modifier
+                .height(43.dp)
+                .clip(RoundedCornerShape(20)),
+        )
+    }
+}
 
 @ExperimentalMaterial3Api
 @Composable
