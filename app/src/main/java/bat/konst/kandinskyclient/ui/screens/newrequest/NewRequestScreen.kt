@@ -1,6 +1,7 @@
 package bat.konst.kandinskyclient.ui.screens.newrequest
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -82,175 +84,183 @@ fun NewRequestView(
         }
     }
 
-    Column(
+    Box( // Box вокруг column -- чтобы работал scroll даже вне формы
         modifier = Modifier
+            .fillMaxWidth()
             .padding(16.dp, 16.dp)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            text = stringResource(id = R.string.nrs_add_request),
-            fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.displaySmall
-        )
-
-        Spacer(modifier = Modifier.padding(8.dp))
-
-
-        // Промпт
-        Text(
-            text = stringResource(id = R.string.nrs_prompt),
-            style = MaterialTheme.typography.bodyLarge
-        )
-        TextField(
-            maxLines = 4,
-            minLines = 4,
-            value = state.prompt,
-            onValueChange = { onEvent(NewRequestScreenEvent.PromptUpdate(it)){} },
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp)
-                .verticalScroll(rememberScrollState()),
-        )
-
-        Spacer(modifier = Modifier.padding(8.dp))
-
-        // Стиль
-        Text(
-            text = stringResource(id = R.string.nrs_style),
-            style = MaterialTheme.typography.bodyLarge
-        )
-
-
-        // Выбор стиля
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
+                .widthIn(max = 500.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            // horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            var expanded by remember { mutableStateOf(false) }
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = it },
+            Text(
+                text = stringResource(id = R.string.nrs_add_request),
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.displaySmall
+            )
+
+            Spacer(modifier = Modifier.padding(8.dp))
+
+
+            // Промпт
+            Text(
+                text = stringResource(id = R.string.nrs_prompt),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            TextField(
+                maxLines = 4,
+                minLines = 4,
+                value = state.prompt,
+                onValueChange = { onEvent(NewRequestScreenEvent.PromptUpdate(it)) {} },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
+                    .verticalScroll(rememberScrollState()),
+            )
+
+            Spacer(modifier = Modifier.padding(8.dp))
+
+            // Стиль
+            Text(
+                text = stringResource(id = R.string.nrs_style),
+                style = MaterialTheme.typography.bodyLarge
+            )
+
+
+            // Выбор стиля
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                TextField(
-                    // The `menuAnchor` modifier must be passed to the text field to handle
-                    // expanding/collapsing the menu on click. A read-only text field has
-                    // the anchor type `PrimaryNotEditable`.
-                    modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable).fillMaxWidth(),
-                    value = state.style,
-                    onValueChange = {},
-                    readOnly = true,
-                    singleLine = true,
-                    // label = { Text(stringResource(id = R.string.nrs_style)) },
-                    // leadingIcon = { StyleImage(state.styleImageURL) },
-                    trailingIcon = {
-                        Row() {
-                            StyleImage(state.styleImageURL)
-                            ExposedDropdownMenuDefaults.TrailingIcon(
-                                modifier = Modifier.padding(top = 10.dp, start = 5.dp),
-                                expanded = expanded
+                var expanded by remember { mutableStateOf(false) }
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    TextField(
+                        // The `menuAnchor` modifier must be passed to the text field to handle
+                        // expanding/collapsing the menu on click. A read-only text field has
+                        // the anchor type `PrimaryNotEditable`.
+                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                            .fillMaxWidth(),
+                        value = state.style,
+                        onValueChange = {},
+                        readOnly = true,
+                        singleLine = true,
+                        // label = { Text(stringResource(id = R.string.nrs_style)) },
+                        // leadingIcon = { StyleImage(state.styleImageURL) },
+                        trailingIcon = {
+                            Row() {
+                                StyleImage(state.styleImageURL)
+                                ExposedDropdownMenuDefaults.TrailingIcon(
+                                    modifier = Modifier.padding(top = 10.dp, start = 5.dp),
+                                    expanded = expanded
+                                )
+                            }
+
+                        },
+                        colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                    )
+                    ExposedDropdownMenu(
+                        modifier = Modifier.fillMaxWidth(),
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                    ) {
+                        state.stylesList.forEach { style ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        style.name,
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                },
+                                onClick = {
+                                    onEvent(NewRequestScreenEvent.StyleUpdate(style.name)) {}
+                                    expanded = false
+                                },
+                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                             )
                         }
-
-                                   },
-                    colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                )
-                ExposedDropdownMenu(
-                    modifier = Modifier.fillMaxWidth(),
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                ) {
-                    state.stylesList.forEach { style ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    style.name,
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
-                            },
-                            onClick = {
-                                onEvent(NewRequestScreenEvent.StyleUpdate(style.name)) {}
-                                expanded = false
-                            },
-                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                        )
                     }
                 }
             }
-        }
 
 
-        Spacer(modifier = Modifier.padding(8.dp))
+            Spacer(modifier = Modifier.padding(8.dp))
 
-        // Негативный промпт
-        Text(
-            text = stringResource(id = R.string.nrs_negativeprompt),
-            style = MaterialTheme.typography.bodyLarge
-        )
-        TextField(
-            maxLines = 4,
-            minLines = 4,
-            value = state.negativePrompt,
-            onValueChange = { onEvent(NewRequestScreenEvent.NegativePromptUpdate(it)){} },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp)
-                .verticalScroll(rememberScrollState()),
-        )
+            // Негативный промпт
+            Text(
+                text = stringResource(id = R.string.nrs_negativeprompt),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            TextField(
+                maxLines = 4,
+                minLines = 4,
+                value = state.negativePrompt,
+                onValueChange = { onEvent(NewRequestScreenEvent.NegativePromptUpdate(it)) {} },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
+                    .verticalScroll(rememberScrollState()),
+            )
 
-        Spacer(modifier = Modifier.padding(8.dp))
+            Spacer(modifier = Modifier.padding(8.dp))
 
-        // кнопки - выполнить
-        Text(
-            text = stringResource(id = R.string.nrs_qw),
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Row (
-            modifier = Modifier
-                .align(Alignment.Start)
-            // horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            val istart = 1
-            val iend = 5
-            val istartShape = RoundedCornerShape(30, 5, 5, 30)
-            val iendShape = RoundedCornerShape(5, 30, 30, 5)
-            val icenterShape = RoundedCornerShape(5, 5, 5, 5)
-            for (i in istart..iend) {
-                Button(
-                    contentPadding = PaddingValues(0.dp),
-                    shape = when (i) {
-                        istart -> istartShape
-                        iend -> iendShape
-                        else -> icenterShape
-                    },
-                    enabled = state.prompt.trim().length >= REQUEST_MIN_LENGTH,
-                    onClick = {
-                        onEvent(
-                            NewRequestScreenEvent.AddRequest(
-                                prompt = state.prompt,
-                                negativePrompt = state.negativePrompt,
-                                style = state.style,
-                                qw = i
-                            )
-                        ) {
-                            onNavigateTo(Route.GoBack)
+            // кнопки - выполнить
+            Text(
+                text = stringResource(id = R.string.nrs_qw),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Row(
+                modifier = Modifier
+                    .align(Alignment.Start)
+                // horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                val istart = 1
+                val iend = 5
+                val istartShape = RoundedCornerShape(30, 5, 5, 30)
+                val iendShape = RoundedCornerShape(5, 30, 30, 5)
+                val icenterShape = RoundedCornerShape(5, 5, 5, 5)
+                for (i in istart..iend) {
+                    Button(
+                        contentPadding = PaddingValues(0.dp),
+                        shape = when (i) {
+                            istart -> istartShape
+                            iend -> iendShape
+                            else -> icenterShape
+                        },
+                        enabled = state.prompt.trim().length >= REQUEST_MIN_LENGTH,
+                        onClick = {
+                            onEvent(
+                                NewRequestScreenEvent.AddRequest(
+                                    prompt = state.prompt,
+                                    negativePrompt = state.negativePrompt,
+                                    style = state.style,
+                                    qw = i
+                                )
+                            ) {
+                                onNavigateTo(Route.GoBack)
+                            }
                         }
-                    }
-                ) {
+                    ) {
                         Row {
                             Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null)
                             Text(text = i.toString())
                         }
-                }
+                    }
 
-                if (i != iend) {
-                    Spacer(modifier = Modifier.width(0.3.dp))
+                    if (i != iend) {
+                        Spacer(modifier = Modifier.width(0.3.dp))
+                    }
                 }
             }
-        }
 
+        }
     }
 }
 
