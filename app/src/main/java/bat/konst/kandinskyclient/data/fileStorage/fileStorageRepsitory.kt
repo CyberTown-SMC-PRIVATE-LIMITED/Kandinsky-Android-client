@@ -7,12 +7,11 @@ import bat.konst.kandinskyclient.app.FILE_IMAGE_THUMB_WIDTH
 import bat.konst.kandinskyclient.app.FILE_STORAGE_PATH
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileOutputStream
 import org.apache.commons.codec.binary.Base64 as ApacheBase64
 
 
 // repositoru for storage image files & thumbs
-fun SaveImageFile(base64: String, id: Long): String {
+fun saveImageFile(base64: String, id: Long): String {
     // Сохраняет файл из base64 строки и возвращает путь к нему
     val imageFileName = getImageNameById(id)
     if (base64ToBinaryAndSaveToFile(base64, imageFileName)) {
@@ -21,7 +20,7 @@ fun SaveImageFile(base64: String, id: Long): String {
     return ""
 }
 
-fun SaveImageThumbinal(id: Long): String {
+fun saveImageThumbinal(id: Long): String {
     // из файла изображения с заданным id делает thumb и возвращает путь к нему
     val imageFileName = getImageNameById(id)
     val thumbFileName = getThumbinalNameById(id)
@@ -31,7 +30,7 @@ fun SaveImageThumbinal(id: Long): String {
     return ""
 }
 
-fun DeleteImageAndThumbinal(id: Long) {
+fun deleteImageAndThumbinal(id: Long) {
     fun deleteFile(filePath: String) {
         // удаляет файл по имени
         val file = File(filePath)
@@ -62,7 +61,7 @@ internal fun base64ToBinaryAndSaveToFile(base64String: String, fileName: String)
     // сохраняет файл из base64 строки
     // возвращает true в случае успеха
     try {
-        val base64: ApacheBase64 = ApacheBase64()
+        val base64 = ApacheBase64()
         val decodedBytes = base64.decode(base64String)
 
         File(fileName).writeBytes(decodedBytes)

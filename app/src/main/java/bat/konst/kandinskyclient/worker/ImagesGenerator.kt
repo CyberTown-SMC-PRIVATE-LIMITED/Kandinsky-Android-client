@@ -10,9 +10,9 @@ import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_INITIAL
 import bat.konst.kandinskyclient.app.KANDINSKY_MODEL_ID
 import bat.konst.kandinskyclient.app.KANDINSKY_QUEUE_MAX
 import bat.konst.kandinskyclient.app.KANDINSKY_REQUEST_UNTERVAL_SEC
-import bat.konst.kandinskyclient.data.fileStorage.DeleteImageAndThumbinal
-import bat.konst.kandinskyclient.data.fileStorage.SaveImageFile
-import bat.konst.kandinskyclient.data.fileStorage.SaveImageThumbinal
+import bat.konst.kandinskyclient.data.fileStorage.deleteImageAndThumbinal
+import bat.konst.kandinskyclient.data.fileStorage.saveImageFile
+import bat.konst.kandinskyclient.data.fileStorage.saveImageThumbinal
 import bat.konst.kandinskyclient.data.kandinskyApi.KandinskyApiRepository
 import bat.konst.kandinskyclient.data.room.FbdataRepository
 import bat.konst.kandinskyclient.data.room.entity.Image
@@ -113,8 +113,8 @@ class ImagesGenerator {
 
             // изображение уже готово - сохраняем
             if (imageResult.status == KANDINSKY_GENERATE_RESULT_DONE) {
-                val imageFile = SaveImageFile(imageResult.images[0], image.id)
-                val thumbFile = SaveImageThumbinal(image.id)
+                val imageFile = saveImageFile(imageResult.images[0], image.id)
+                val thumbFile = saveImageThumbinal(image.id)
                 fbdataRepository.updateImage(
                     Image(
                         id = image.id,
@@ -214,7 +214,7 @@ class ImagesGenerator {
         for (request in requestsToDelete) {
             val imagesToDelete = fbdataRepository.getImages(request.md5)
             for (image in imagesToDelete) {
-                DeleteImageAndThumbinal(image.id)
+                deleteImageAndThumbinal(image.id)
                 fbdataRepository.deleteImage(image)
             }
             fbdataRepository.deleteRequest(request)
