@@ -169,7 +169,6 @@ fun NewRequestView(
                         colors = ExposedDropdownMenuDefaults.textFieldColors(),
                     )
                     ExposedDropdownMenu(
-                        modifier = Modifier.fillMaxWidth(),
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
                     ) {
