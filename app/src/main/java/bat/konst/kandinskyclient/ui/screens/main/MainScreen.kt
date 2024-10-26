@@ -119,11 +119,16 @@ fun MainView(
 
         floatingActionButton = {
             // Кнопка "Добавить"
-            FloatingActionButton(
-                shape = CircleShape,
-                onClick = { onNavigateTo(Route.NewRequest()) }
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(id = R.string.ms_add))
+            if (state.key != CONFIG_DEFAULT_VALUE && state.secret != CONFIG_DEFAULT_VALUE) {
+                FloatingActionButton(
+                    shape = CircleShape,
+                    onClick = { onNavigateTo(Route.NewRequest()) },
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(id = R.string.ms_add)
+                    )
+                }
             }
         }
 
