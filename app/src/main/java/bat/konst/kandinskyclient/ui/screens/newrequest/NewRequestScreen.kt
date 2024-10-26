@@ -1,15 +1,12 @@
 package bat.konst.kandinskyclient.ui.screens.newrequest
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,10 +23,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,15 +35,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.ui.navigation.Route
 import bat.konst.kandinskyclient.R
 import bat.konst.kandinskyclient.app.REQUEST_MIN_LENGTH
+import bat.konst.kandinskyclient.ui.styles.textfield.TextFieldDropBox
+import bat.konst.kandinskyclient.ui.styles.textfield.TextFieldPrompt
+import bat.konst.kandinskyclient.ui.styles.text.TextDropBox
+import bat.konst.kandinskyclient.ui.styles.text.TextH1
+import bat.konst.kandinskyclient.ui.styles.text.TextH2
 import coil.compose.rememberAsyncImagePainter
 
     @ExperimentalMaterial3Api
@@ -98,38 +96,22 @@ fun NewRequestView(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             // horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(id = R.string.nrs_add_request),
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.displaySmall
-            )
+            TextH1(text = stringResource(id = R.string.nrs_add_request))
 
             Spacer(modifier = Modifier.padding(8.dp))
 
 
             // Промпт
-            Text(
-                text = stringResource(id = R.string.nrs_prompt),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            TextField(
-                maxLines = 4,
-                minLines = 4,
+            TextH2(text = stringResource(id = R.string.nrs_prompt))
+            TextFieldPrompt(
                 value = state.prompt,
-                onValueChange = { onEvent(NewRequestScreenEvent.PromptUpdate(it)) {} },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-                    .verticalScroll(rememberScrollState()),
+                onValueChange = { onEvent(NewRequestScreenEvent.PromptUpdate(it)) {} }
             )
 
             Spacer(modifier = Modifier.padding(8.dp))
 
             // Стиль
-            Text(
-                text = stringResource(id = R.string.nrs_style),
-                style = MaterialTheme.typography.bodyLarge
-            )
+            TextH2(text = stringResource(id = R.string.nrs_style))
 
 
             // Выбор стиля
@@ -144,29 +126,11 @@ fun NewRequestView(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    TextField(
-                        // The `menuAnchor` modifier must be passed to the text field to handle
-                        // expanding/collapsing the menu on click. A read-only text field has
-                        // the anchor type `PrimaryNotEditable`.
-                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable)
-                            .fillMaxWidth(),
+                    TextFieldDropBox(
                         value = state.style,
-                        onValueChange = {},
-                        readOnly = true,
-                        singleLine = true,
-                        // label = { Text(stringResource(id = R.string.nrs_style)) },
-                        // leadingIcon = { StyleImage(state.styleImageURL) },
-                        trailingIcon = {
-                            Row() {
-                                StyleImage(state.styleImageURL)
-                                ExposedDropdownMenuDefaults.TrailingIcon(
-                                    modifier = Modifier.padding(top = 10.dp, start = 5.dp),
-                                    expanded = expanded
-                                )
-                            }
-
-                        },
-                        colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                        styleImageURL = state.styleImageURL,
+                        expanded = expanded,
+                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable)
                     )
                     ExposedDropdownMenu(
                         expanded = expanded,
@@ -175,10 +139,7 @@ fun NewRequestView(
                         state.stylesList.forEach { style ->
                             DropdownMenuItem(
                                 text = {
-                                    Text(
-                                        style.name,
-                                        style = MaterialTheme.typography.bodyLarge
-                                    )
+                                    TextDropBox(style.name)
                                 },
                                 onClick = {
                                     onEvent(NewRequestScreenEvent.StyleUpdate(style.name)) {}
@@ -195,28 +156,16 @@ fun NewRequestView(
             Spacer(modifier = Modifier.padding(8.dp))
 
             // Негативный промпт
-            Text(
-                text = stringResource(id = R.string.nrs_negativeprompt),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            TextField(
-                maxLines = 4,
-                minLines = 4,
+            TextH2(text = stringResource(id = R.string.nrs_negativeprompt))
+            TextFieldPrompt(
                 value = state.negativePrompt,
-                onValueChange = { onEvent(NewRequestScreenEvent.NegativePromptUpdate(it)) {} },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-                    .verticalScroll(rememberScrollState()),
+                onValueChange = { onEvent(NewRequestScreenEvent.NegativePromptUpdate(it)) {} }
             )
 
             Spacer(modifier = Modifier.padding(8.dp))
 
             // кнопки - выполнить
-            Text(
-                text = stringResource(id = R.string.nrs_qw),
-                style = MaterialTheme.typography.bodyLarge
-            )
+            TextH2(text = stringResource(id = R.string.nrs_qw))
             Row(
                 modifier = Modifier
                     .align(Alignment.Start)
