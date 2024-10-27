@@ -78,7 +78,8 @@ class NewRequestScreenViewModel @Inject constructor(
                 state = state.copy(
                     prompt = randomPrompt.prompt,
                     style = randomPrompt.style,
-                    negativePrompt = randomPrompt.negativePrompt
+                    negativePrompt = randomPrompt.negativePrompt,
+                    styleImageURL = getStyleURL(randomPrompt.style, state.stylesList)
                 )
 
             }
