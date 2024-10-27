@@ -1,4 +1,4 @@
-package bat.konst.kandinskyclient.worker
+package bat.konst.kandinskyclient.logic.worker
 
 import android.content.Context
 import bat.konst.kandinskyclient.app.AppState

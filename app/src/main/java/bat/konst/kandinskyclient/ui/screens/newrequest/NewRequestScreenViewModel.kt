@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import bat.konst.kandinskyclient.data.kandinskyApi.KandinskyApiRepository
 import bat.konst.kandinskyclient.data.kandinskyApi.models.Styles
 import bat.konst.kandinskyclient.data.room.FbdataRepository
-import bat.konst.kandinskyclient.worker.startImagesGeneratorWorker
+import bat.konst.kandinskyclient.logic.worker.startImagesGeneratorWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
