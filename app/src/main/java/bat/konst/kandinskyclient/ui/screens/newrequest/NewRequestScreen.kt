@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.ui.navigation.Route
 import bat.konst.kandinskyclient.R
+import bat.konst.kandinskyclient.app.AppState
 import bat.konst.kandinskyclient.app.REQUEST_MIN_LENGTH
 import bat.konst.kandinskyclient.ui.styles.textfields.TextFieldDropBox
 import bat.konst.kandinskyclient.ui.styles.textfields.TextFieldPrompt
@@ -150,7 +151,7 @@ fun NewRequestView(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
                     ) {
-                        state.stylesList.forEach { style ->
+                        AppState.stylesList.forEach { style ->
                             DropdownMenuItem(
                                 text = {
                                     TextDropBox(style.name)

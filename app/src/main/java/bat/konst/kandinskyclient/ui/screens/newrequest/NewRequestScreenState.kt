@@ -15,6 +15,5 @@ data class NewRequestScreenState(
     val style: String = "DEFAULT",
     val prompt: String = "",
     val negativePrompt: String = "",
-    val stylesList: Styles = Styles(), // список стилей
     val styleImageURL: String = "", // URL картинки стиля
 )

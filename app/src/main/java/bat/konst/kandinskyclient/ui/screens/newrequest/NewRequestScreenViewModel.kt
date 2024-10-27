@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import bat.konst.kandinskyclient.app.AppState
 import bat.konst.kandinskyclient.data.kandinskyApi.KandinskyApiRepository
 import bat.konst.kandinskyclient.data.kandinskyApi.models.Styles
 import bat.konst.kandinskyclient.data.room.FbdataRepository
@@ -34,7 +35,7 @@ class NewRequestScreenViewModel @Inject constructor(
             is NewRequestScreenEvent.StyleUpdate -> {
                 this.state = state.copy(
                     style = event.newStyle,
-                    styleImageURL = getStyleURL(event.newStyle, state.stylesList)
+                    styleImageURL = getStyleURL(event.newStyle, AppState.stylesList)
                 )
             }
 
@@ -57,17 +58,18 @@ class NewRequestScreenViewModel @Inject constructor(
                     // Получение данных по запросу если ключ (md5) задан
                     val request = fbdataRepository.getRequest(event.md5)
                     // обновление StylesList
-                    val styleList = kandinskyApiRepository.getStyles()
+                    if (AppState.stylesList.size < 2) {
+                        AppState.stylesList = kandinskyApiRepository.getStyles()
+                    }
                     var style = request.style
                     if (style == "") { // это новый запрос -- поэтому стиль первый из списка всех доступных
-                        style = if (styleList.isEmpty()) "" else styleList[0].name
+                        style = if (AppState.stylesList.isEmpty()) "" else AppState.stylesList[0].name
                     }
                     state = state.copy(
                         prompt = request.prompt,
                         negativePrompt = request.negativePrompt,
-                        stylesList = styleList,
                         style = style,
-                        styleImageURL = getStyleURL(style, styleList)
+                        styleImageURL = getStyleURL(style, AppState.stylesList)
                     )
                 }
             }
@@ -79,7 +81,7 @@ class NewRequestScreenViewModel @Inject constructor(
                     prompt = randomPrompt.prompt,
                     style = randomPrompt.style,
                     negativePrompt = randomPrompt.negativePrompt,
-                    styleImageURL = getStyleURL(randomPrompt.style, state.stylesList)
+                    styleImageURL = getStyleURL(randomPrompt.style, AppState.stylesList)
                 )
 
             }
