@@ -6,12 +6,13 @@ const val CONFIG_XSECRET = "xsecret"
 const val CONFIG_DEFAULT_VALUE = ""
 
 // kandinsky
-const val KANDINSKY_MODEL_ID = "4"
+const val KANDINSKY_MODEL_ID = "4" // TODO: make request for get model_id
 const val KANDINSKY_GENERATE_RESULT_FAIL = "FAIL"
 const val KANDINSKY_GENERATE_RESULT_DONE = "DONE"
 const val KANDINSKY_GENERATE_RESULT_INITIAL = "INITIAL"
 const val KANDINSKY_QUEUE_MAX = 5
 const val KANDINSKY_REQUEST_UNTERVAL_SEC: Long = 10
+const val KANDINSKY_STYLE_DEFAULT = "DEFAULT"
 
 // file storage
 const val FILE_IMAGE_THUMB_HEIGHT = 250

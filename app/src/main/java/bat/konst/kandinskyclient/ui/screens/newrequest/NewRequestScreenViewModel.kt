@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import bat.konst.kandinskyclient.data.kandinskyApi.KandinskyApiRepository
 import bat.konst.kandinskyclient.data.kandinskyApi.models.Styles
 import bat.konst.kandinskyclient.data.room.FbdataRepository
+import bat.konst.kandinskyclient.logic.promptdice.getRandomPrompt
 import bat.konst.kandinskyclient.logic.worker.startImagesGeneratorWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -73,11 +74,11 @@ class NewRequestScreenViewModel @Inject constructor(
 
             is NewRequestScreenEvent.RollRequest -> {
                 // заполнение полей запроса случайным пропмптом
-                // TODO: добавить запросов
+                val randomPrompt = getRandomPrompt()
                 state = state.copy(
-                    prompt = "красивый пушистый милый котик в пижаме с принтом авокадо,  пьет капучино, сидит на подоконнике веселый, яркое солнышко, детализация высокая, дымчато-розовые тона, пепел, oil Illustrations, насыщенность, прорисовка деталей",
-                    style = "DEFAULT",
-                    negativePrompt = "тёмные тона"
+                    prompt = randomPrompt.prompt,
+                    style = randomPrompt.style,
+                    negativePrompt = randomPrompt.negativePrompt
                 )
 
             }
