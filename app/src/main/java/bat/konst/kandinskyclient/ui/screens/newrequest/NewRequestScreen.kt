@@ -51,6 +51,7 @@ import bat.konst.kandinskyclient.ui.styles.text.TextDropBox
 import bat.konst.kandinskyclient.ui.styles.text.TextH1
 import bat.konst.kandinskyclient.ui.styles.text.TextH2
 import coil.compose.rememberAsyncImagePainter
+import drawable.Dices
 
 @ExperimentalMaterial3Api
 @Composable
@@ -106,9 +107,10 @@ fun NewRequestView(
             ) {
                 TextH1(text = stringResource(id = R.string.nrs_add_request))
                 Icon(
-                    imageVector = Icons.Default.Refresh,
+                    imageVector = Dices,
                     contentDescription = null,
                     modifier = Modifier
+                        .padding(top = 8.dp)
                         .clickable { onEvent(NewRequestScreenEvent.RollRequest){} }
                 )
             }
