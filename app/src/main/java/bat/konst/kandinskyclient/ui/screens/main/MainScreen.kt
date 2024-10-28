@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
@@ -46,9 +45,9 @@ import bat.konst.kandinskyclient.app.AppState
 import bat.konst.kandinskyclient.app.CONFIG_DEFAULT_VALUE
 import bat.konst.kandinskyclient.data.room.entity.RequestJoinImage
 import bat.konst.kandinskyclient.ui.components.confirmdialog.ConfirmDialog
+import bat.konst.kandinskyclient.ui.components.generatingmessage.GeneratingMessage
 import bat.konst.kandinskyclient.ui.components.requestcard.RequestCard
 import bat.konst.kandinskyclient.ui.components.swipeaction.SwipeAction
-import bat.konst.kandinskyclient.ui.styles.text.TextH1
 import bat.konst.kandinskyclient.ui.styles.text.TextH2
 
 
@@ -96,7 +95,9 @@ fun MainView(
 
     Scaffold (
         bottomBar = {
-            BottomAppBar(modifier = Modifier.height(0.dp)) {  }
+            //BottomAppBar(modifier = Modifier.height(0.dp)) {  }
+            // bar c Box и сообщением "Идёт генерация изображений"
+            GeneratingMessage(text = stringResource(R.string.ms_generating))
         },
         topBar = {
             Row(
@@ -161,7 +162,6 @@ fun MainView(
             }
             return@Scaffold
         }
-
 
         // Список запросов когда запросы есть
         var md5DeleteConfirm by remember { mutableStateOf("") } // md5 запроса на удаление

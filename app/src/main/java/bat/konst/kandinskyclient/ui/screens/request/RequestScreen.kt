@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,6 +36,7 @@ import bat.konst.kandinskyclient.R
 import bat.konst.kandinskyclient.app.AppState
 import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.ui.components.thumbinal.Thumbinal
+import bat.konst.kandinskyclient.ui.components.generatingmessage.GeneratingMessage
 import bat.konst.kandinskyclient.ui.navigation.Route
 
 @Composable
@@ -62,81 +65,88 @@ fun RequestView(
         onEvent(RequestScreenEvent.ScreenUpdate(route.md5))
     }
 
-    Column {
-
-        Row (
-            Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .clickable { onNavigateTo(Route.NewRequest(state.md5)) }
-        ) {
-            // Конопка "Повторить"
-            IconButton(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .size(50.dp),
-                onClick = { onNavigateTo(Route.NewRequest(state.md5)) }
+    Scaffold (
+        bottomBar = {
+            //BottomAppBar(modifier = Modifier.height(0.dp)) {  }
+            // bar c Box и сообщением "Идёт генерация изображений"
+            GeneratingMessage(text = stringResource(R.string.ms_generating))
+        },
+        topBar = {
+            Row (
+                Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.primaryContainer)
+                    .clickable { onNavigateTo(Route.NewRequest(state.md5)) }
             ) {
-                Icon(
-                    modifier = Modifier.size(40.dp),
-                    tint = MaterialTheme.colorScheme.primary,
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(id = R.string.rs_repeat)
-                )
-            }
-
-            Column (
-                modifier = Modifier
-                    .padding(horizontal = 3.dp, vertical = 5.dp)
-            ) {
-                // Стиль
-                Row {
-                    Text(
-                        text = stringResource(id = R.string.ms_style),
-                        color = MaterialTheme.colorScheme.primary,
-                        lineHeight = 14.sp,
-                        fontWeight = FontWeight.Light,
-                        fontSize = 13.sp
-                    )
-                    Text(
-                        text = state.style,
-                        Modifier.padding(horizontal = 4.dp),
-                        color = MaterialTheme.colorScheme.primary,
-                        lineHeight = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 13.sp
+                // Конопка "Повторить"
+                IconButton(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .size(50.dp),
+                    onClick = { onNavigateTo(Route.NewRequest(state.md5)) }
+                ) {
+                    Icon(
+                        modifier = Modifier.size(40.dp),
+                        tint = MaterialTheme.colorScheme.primary,
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(id = R.string.rs_repeat)
                     )
                 }
 
-                // Промпт
-                Text(
-                    text = state.prompt,
-                    color = MaterialTheme.colorScheme.primary,
-                    lineHeight = 14.sp,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Light,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Column (
+                    modifier = Modifier
+                        .padding(horizontal = 3.dp, vertical = 5.dp)
+                ) {
+                    // Стиль
+                    Row {
+                        Text(
+                            text = stringResource(id = R.string.ms_style),
+                            color = MaterialTheme.colorScheme.primary,
+                            lineHeight = 14.sp,
+                            fontWeight = FontWeight.Light,
+                            fontSize = 13.sp
+                        )
+                        Text(
+                            text = state.style,
+                            Modifier.padding(horizontal = 4.dp),
+                            color = MaterialTheme.colorScheme.primary,
+                            lineHeight = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 13.sp
+                        )
+                    }
 
-                // Отрицательный промпт
-                Text(
-                    color = Color.Red,
-                    text = state.negativePrompt,
-                    lineHeight = 14.sp,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Light,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                    // Промпт
+                    Text(
+                        text = state.prompt,
+                        color = MaterialTheme.colorScheme.primary,
+                        lineHeight = 14.sp,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Light,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                    // Отрицательный промпт
+                    Text(
+                        color = Color.Red,
+                        text = state.negativePrompt,
+                        lineHeight = 14.sp,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Light,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
             }
-
-        }
-
-
-
+        },
+    ) { innerPadding ->
         // images grid
         LazyVerticalGrid(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
             columns = GridCells.Adaptive(90.dp)
         ) {
             items(state.images) { image ->
@@ -151,8 +161,8 @@ fun RequestView(
                 )
             }
         }
-
     }
+
 }
 
 

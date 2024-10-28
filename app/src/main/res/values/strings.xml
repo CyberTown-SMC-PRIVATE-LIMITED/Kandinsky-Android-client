@@ -15,6 +15,7 @@
     <string name="ms_confirm_delete">Подтвердите удаление</string>
     <string name="ms_banner_no_request">Пока нет ни одного запроса. Начните создавать изображения!</string>
     <string name="ms_banner_config_error">Вы не указали ключ и секрет. Перейдите в настройки приложения!</string>
+    <string name="ms_generating">Генерируем изображения...</string>
 
     <string name="cs_save_config">Сохранить конфигурацию</string>
     <string name="cs_key">Ключ</string>
