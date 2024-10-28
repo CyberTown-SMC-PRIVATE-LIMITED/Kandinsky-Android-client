@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Kandinsky Client</string>
 
-    <string name="nrs_prompt">Промпт запроса:</string>
-    <string name="nrs_negativeprompt">Отрицательный промпт:</string>
+    <string name="nrs_prompt">Текст запроса:</string>
+    <string name="nrs_negativeprompt">Отрицательный запрос:</string>
     <string name="nrs_style">Стиль изображения:</string>
     <string name="nrs_generate">Выполнить:</string>
     <string name="nrs_add_request">Добавить запрос</string>
