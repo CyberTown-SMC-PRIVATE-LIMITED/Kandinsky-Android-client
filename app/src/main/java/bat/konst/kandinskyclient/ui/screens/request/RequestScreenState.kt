@@ -11,5 +11,6 @@ data class RequestScreenState(
     val prompt: String = "",
     val negativePrompt: String = "",
     val style: String = "",
-    val images: List<Image> = emptyList()
+    val images: List<Image> = emptyList(),
+    val hasQueuedImages: Boolean = false
 )

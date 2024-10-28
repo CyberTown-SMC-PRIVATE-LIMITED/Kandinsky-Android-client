@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -67,9 +68,12 @@ fun RequestView(
 
     Scaffold (
         bottomBar = {
-            //BottomAppBar(modifier = Modifier.height(0.dp)) {  }
             // bar c Box и сообщением "Идёт генерация изображений"
-            GeneratingMessage(text = stringResource(R.string.ms_generating))
+            if (state.hasQueuedImages) {
+                GeneratingMessage(text = stringResource(R.string.ms_generating))
+            } else {
+                BottomAppBar(modifier = Modifier.height(0.dp)) { }
+            }
         },
         topBar = {
             Row (

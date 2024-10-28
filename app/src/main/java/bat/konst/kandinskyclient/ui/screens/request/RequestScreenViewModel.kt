@@ -31,7 +31,8 @@ class RequestScreenViewModel @Inject constructor(private val fbdataRepository: F
                         prompt = request.prompt,
                         negativePrompt = request.negativePrompt,
                         style = request.style,
-                        images = images
+                        images = images,
+                        hasQueuedImages = fbdataRepository.hasQueuedImages()
                     )
                 }
             }

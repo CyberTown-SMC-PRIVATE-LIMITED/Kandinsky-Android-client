@@ -36,7 +36,8 @@ class MainScreenViewModel @Inject constructor(
                     state = state.copy(
                         key = fbdataRepository.getConfigByName(CONFIG_XKEY),
                         secret = fbdataRepository.getConfigByName(CONFIG_XSECRET),
-                        requests = fbdataRepository.getAllRequestJoinImages()
+                        requests = fbdataRepository.getAllRequestJoinImages(),
+                        hasQueuedImages = fbdataRepository.hasQueuedImages()
                     )
                     // если что-то есть на генерацию -- отправим сигнал воркеру
                     if (fbdataRepository.hasQueuedImages()) {
@@ -48,7 +49,11 @@ class MainScreenViewModel @Inject constructor(
             is MainScreenEvent.RequestDelete -> {
                 coroutineScope.launch(Dispatchers.Main) {
                     fbdataRepository.markDeletedRequest(event.md5)
-                    state = state.copy(requests = fbdataRepository.getAllRequestJoinImages())
+                    state = state.copy(
+                        requests = fbdataRepository.getAllRequestJoinImages(),
+                        hasQueuedImages = fbdataRepository.hasQueuedImages()
+                    )
+                    startImagesGeneratorWorker(context)  // запустим Worker чтобы удалить помеченные данные из БД
                 }
             }
 

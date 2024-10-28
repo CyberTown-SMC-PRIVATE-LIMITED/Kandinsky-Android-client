@@ -24,6 +24,10 @@ import java.lang.Thread.sleep
 class ImagesGenerator {
 
     suspend fun fusionBrainGo(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository, context: Context) {
+        // сразу удалим из базы если есть что-то помеченное для удаления
+        if (deleteMarkerRequests(fbdataRepository)) {
+            sendSygnalOnDataChange(context) // что-то удалили -- обновим экран
+        }
         // если нечего отправлять на генерацию - выходим
         if (!fbdataRepository.hasQueuedImages()) {
             return
@@ -46,10 +50,10 @@ class ImagesGenerator {
             }
 
             // 2. удаление помеченных requests
-            deleteMarkerRequests(fbdataRepository)
+            var isDataChanged = deleteMarkerRequests(fbdataRepository)
 
             // 3. проверяем готовность изображений и получаем их
-            var isDataChanged = recieveGeneratedImages(fbdataRepository, kandinskyApiRepository, key, secret)
+            isDataChanged = isDataChanged || recieveGeneratedImages(fbdataRepository, kandinskyApiRepository, key, secret)
 
             // 4. Если очередь пуста, отправляем запрос на новую генерацию
             if (isImagesQueueFree(fbdataRepository)) {
@@ -212,7 +216,8 @@ class ImagesGenerator {
     }
 
 
-    private suspend fun deleteMarkerRequests(fbdataRepository: FbdataRepository) {
+    private suspend fun deleteMarkerRequests(fbdataRepository: FbdataRepository): Boolean {
+        var isDataChanged = false
         // удаляем помеченные запросы
         // 1. список запросов помеченных к удалению
         val requestsToDelete = fbdataRepository.getAllMarketToDeleteRequests()
@@ -221,8 +226,10 @@ class ImagesGenerator {
             for (image in imagesToDelete) {
                 deleteImageAndThumbinal(image.id)
                 fbdataRepository.deleteImage(image)
+                isDataChanged = true
             }
             fbdataRepository.deleteRequest(request)
         }
+        return isDataChanged
     }
 }

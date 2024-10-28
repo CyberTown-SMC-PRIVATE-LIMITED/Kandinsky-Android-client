@@ -11,4 +11,5 @@ data class MainScreenState(
     val requests: List<RequestJoinImage> = emptyList<RequestJoinImage>(),
     val key: String = "-", // ключи доступа к API Кандинского
     val secret: String = "-",
+    val hasQueuedImages: Boolean = false
 )
