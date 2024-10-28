@@ -122,6 +122,7 @@ fun ConfigView(
             // Кнопка сохранить конфигурацию
             val scope = rememberCoroutineScope() // для snackbar - всплывающего сообщения
             val snackbarHostState = remember { SnackbarHostState() }
+            val saveErrorString = stringResource(id = R.string.cs_keys_save_error)
             SnackbarHost(hostState = snackbarHostState)
             Button(
                 modifier = Modifier
@@ -135,7 +136,7 @@ fun ConfigView(
                         { onNavigateTo(Route.GoBack) }, // onSuccess
                         {  // onError
                             scope.launch {
-                                snackbarHostState.showSnackbar("Failed to save config")
+                                snackbarHostState.showSnackbar(message = saveErrorString)
                             }
                         }
                     )

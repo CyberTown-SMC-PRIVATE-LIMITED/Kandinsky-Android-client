@@ -24,6 +24,7 @@
     <string name="cs_kandinsky_keys_where_url">https://fusionbrain.ai/</string>
     <string name="cs_kandinsky_keys_how">Как взять ключи?</string>
     <string name="cs_kandinsky_keys_how_url">https://fusionbrain.ai/docs/doc/poshagovaya-instrukciya-po-upravleniu-api-kluchami/</string>
+    <string name="cs_keys_save_error">Введённые ключи не приняты сервисом генерации изображений (Ключи некорректны или сервер недоступен)</string>
 
     <string name="rs_repeat">Повторить</string>
 
