@@ -22,9 +22,6 @@ interface FbdataDao {
     @Delete
     fun deleteRequest(request: Request)
 
-    @Query("SELECT * FROM requests ORDER BY date_update DESC")
-    fun getAllRequests(): List<Request>
-
     @Query("SELECT * FROM requests WHERE md5 = :md5")
     fun getRequest(md5: String): Request?
 
