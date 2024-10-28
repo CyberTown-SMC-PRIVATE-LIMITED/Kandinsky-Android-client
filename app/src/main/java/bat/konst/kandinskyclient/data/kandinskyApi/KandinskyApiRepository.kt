@@ -2,6 +2,7 @@ package bat.konst.kandinskyclient.data.kandinskyApi
 
 import android.util.Log
 import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_FAIL
+import bat.konst.kandinskyclient.app.KANDINSKY_MODEL_ID_UNDEFINED
 import bat.konst.kandinskyclient.data.kandinskyApi.models.GenerateParams
 import bat.konst.kandinskyclient.data.kandinskyApi.models.GenerateRequest
 import bat.konst.kandinskyclient.data.kandinskyApi.models.GenerateResult
@@ -11,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
@@ -45,7 +45,32 @@ class KandinskyApiRepository @Inject constructor(private val apiService: Kandins
     }
 
 
-    suspend fun sendGgenerateImageRequest(key: String, secret: String, prompt: String, negativePrompt: String, style: String, modelId: String): GenerateResult? {
+    suspend fun getModelVersionId(key: String, secret: String): String {
+        // возвращает id максимальной версии модели
+        var versionId = KANDINSKY_MODEL_ID_UNDEFINED
+        withContext(Dispatchers.IO) {
+            try {
+                apiService.getModels(key = key, secret = secret).let {
+                    if (it.isSuccessful) {
+                        // находим максимальную версию из полученного списка
+                        var version: Double = -1.0
+                        for (versionsItem in it.body()!!) {
+                            if (version < versionsItem.version) {
+                                version = versionsItem.version
+                                versionId = versionsItem.id.toString()
+                            }
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d("KandinskyApiRepository", e.toString())
+            }
+        }
+        return versionId
+    }
+
+
+    suspend fun sendGenerateImageRequest(key: String, secret: String, prompt: String, negativePrompt: String, style: String, modelId: String): GenerateResult? {
         var generateResult: GenerateResult? = null
         withContext(Dispatchers.IO) {
             try {

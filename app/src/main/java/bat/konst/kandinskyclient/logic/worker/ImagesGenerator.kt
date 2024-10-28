@@ -7,7 +7,7 @@ import bat.konst.kandinskyclient.app.CONFIG_XSECRET
 import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_DONE
 import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_FAIL
 import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_INITIAL
-import bat.konst.kandinskyclient.app.KANDINSKY_MODEL_ID
+import bat.konst.kandinskyclient.app.KANDINSKY_MODEL_ID_UNDEFINED
 import bat.konst.kandinskyclient.app.KANDINSKY_QUEUE_MAX
 import bat.konst.kandinskyclient.app.KANDINSKY_REQUEST_UNTERVAL_SEC
 import bat.konst.kandinskyclient.data.fileStorage.deleteImageAndThumbinal
@@ -24,27 +24,39 @@ import java.lang.Thread.sleep
 class ImagesGenerator {
 
     suspend fun fusionBrainGo(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository, context: Context) {
+        // если нечего отправлять на генерацию - выходим
+        if (!hasProcessingImages(fbdataRepository) && !hasNewImages(fbdataRepository)) {
+            return
+        }
 
-        // TODO: проверка -- ключи неверны, сервис лежит - выход из воркера
+        // 0 параметры для запросов к API Fusion Brain
+        val key = "Key " + fbdataRepository.getConfigByName(CONFIG_XKEY)
+        val secret = "Secret " + fbdataRepository.getConfigByName(CONFIG_XSECRET)
+        // 0.1. Проверка наличия / или возможности получения номера версии - этим же проверяем -- лежит ли сервис
+        val fusionBrainModelVersionId: String = kandinskyApiRepository.getModelVersionId(key, secret)
+        if (fusionBrainModelVersionId == KANDINSKY_MODEL_ID_UNDEFINED) {
+            // версия не найдена или сервис лежит
+            return
+        }
+
         while (hasProcessingImages(fbdataRepository) || hasNewImages(fbdataRepository)) {
-
-            // 0. Подождем интервал между запросами
+            // 1. Подождем интервал между запросами
             withContext(Dispatchers.IO) {
                 sleep(KANDINSKY_REQUEST_UNTERVAL_SEC * 1000)
             }
 
-            // 1. удаление помеченных requests
+            // 2. удаление помеченных requests
             deleteMarkerRequests(fbdataRepository)
 
-            // 2. проверяем готовность изображений и получаем их
-            var isDataChanged = recieveGeneratedImages(fbdataRepository, kandinskyApiRepository)
+            // 3. проверяем готовность изображений и получаем их
+            var isDataChanged = recieveGeneratedImages(fbdataRepository, kandinskyApiRepository, key, secret)
 
-            // 3. Если очередь пуста, отправляем запрос на новую генерацию
+            // 4. Если очередь пуста, отправляем запрос на новую генерацию
             if (isImagesQueueFree(fbdataRepository)) {
-                isDataChanged = isDataChanged ||  sendImageToGenerate(fbdataRepository, kandinskyApiRepository)
+                isDataChanged = isDataChanged ||  sendImageToGenerate(fbdataRepository, kandinskyApiRepository, key, secret, fusionBrainModelVersionId)
             }
 
-            // 4. Если были изменения данных - посылаем уведомление
+            // 5. Если были изменения данных - посылаем уведомление
             if (isDataChanged) {
                 sendSygnalOnDataChange(context)
             }
@@ -74,14 +86,16 @@ class ImagesGenerator {
         return fbdataRepository.getImagesByStatus(StatusTypes.NEW.value).isNotEmpty()
     }
 
-    private suspend fun recieveGeneratedImages(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository): Boolean {
+    private suspend fun recieveGeneratedImages(
+        fbdataRepository: FbdataRepository,
+        kandinskyApiRepository: KandinskyApiRepository,
+        key: String,
+        secret: String
+    ): Boolean {
         /*
             Получает список изображений-заданий из БД, отправляет их на генерацию и сохраняет результирующие изображения
             Возвращает true, если были изменения данных
         */
-        // 0. Key и Secret
-        val key = "Key " + fbdataRepository.getConfigByName(CONFIG_XKEY)
-        val secret = "Secret " + fbdataRepository.getConfigByName(CONFIG_XSECRET)
         var isDataChanged = false
 
         // 1. Получаем список уже отправленных на генерацию изображений
@@ -152,17 +166,17 @@ class ImagesGenerator {
 
     }
 
-    private suspend fun sendImageToGenerate(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository): Boolean {
+    private suspend fun sendImageToGenerate(
+        fbdataRepository: FbdataRepository,
+        kandinskyApiRepository: KandinskyApiRepository,
+        key: String,
+        secret: String,
+        fusionBrainModelVersionId: String
+    ): Boolean {
         /*
             Отправляет первое изображение из очереди на генерацию
             Возвращает true, если были изменения данных
         */
-
-        // 0. Key и Secret
-        val key = "Key " + fbdataRepository.getConfigByName(CONFIG_XKEY)
-        val secret = "Secret " + fbdataRepository.getConfigByName(CONFIG_XSECRET)
-
-
         // 1. Получаем первое изображение из очереди - если таких нет - выход
         val image = fbdataRepository.getFirstImageByStatus(StatusTypes.NEW.value) ?: return false
         // 1.a если для задания нет запроса - изменяем статус на ошибку - и выход
@@ -184,7 +198,7 @@ class ImagesGenerator {
 
         // 2. Отправляем на генерацию
         val imageResult =
-            kandinskyApiRepository.sendGgenerateImageRequest(key, secret, request.prompt, request.negativePrompt, request.style, KANDINSKY_MODEL_ID)
+            kandinskyApiRepository.sendGenerateImageRequest(key, secret, request.prompt, request.negativePrompt, request.style, fusionBrainModelVersionId)
 
         // 3. Обновляем статус
         if (imageResult != null && imageResult.status == KANDINSKY_GENERATE_RESULT_INITIAL) {

@@ -24,7 +24,6 @@ interface KandinskyApiService {
 
 
     // получение списка версий модели
-    // TODO: добавить выбор версии на форму генерации
     @GET("key/api/v1/models")
     suspend fun getModels(
         @Header("X-Key") key: String,

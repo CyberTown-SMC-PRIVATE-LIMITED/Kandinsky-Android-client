@@ -6,7 +6,7 @@ const val CONFIG_XSECRET = "xsecret"
 const val CONFIG_DEFAULT_VALUE = ""
 
 // kandinsky
-const val KANDINSKY_MODEL_ID = "4" // TODO: make request for get model_id
+const val KANDINSKY_MODEL_ID_UNDEFINED = ""
 const val KANDINSKY_GENERATE_RESULT_FAIL = "FAIL"
 const val KANDINSKY_GENERATE_RESULT_DONE = "DONE"
 const val KANDINSKY_GENERATE_RESULT_INITIAL = "INITIAL"
