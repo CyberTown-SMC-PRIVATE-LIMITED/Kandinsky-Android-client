@@ -1,5 +1,6 @@
 package bat.konst.kandinskyclient.ui.screens.main
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,7 +9,9 @@ import bat.konst.kandinskyclient.app.CONFIG_DEFAULT_VALUE
 import bat.konst.kandinskyclient.app.CONFIG_XKEY
 import bat.konst.kandinskyclient.app.CONFIG_XSECRET
 import bat.konst.kandinskyclient.data.room.FbdataRepository
+import bat.konst.kandinskyclient.logic.worker.startImagesGeneratorWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
-    private val fbdataRepository: FbdataRepository
+    private val fbdataRepository: FbdataRepository,
+    @ApplicationContext private val context: Context
 ): ViewModel() {
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -34,6 +38,10 @@ class MainScreenViewModel @Inject constructor(
                         secret = fbdataRepository.getConfigByName(CONFIG_XSECRET),
                         requests = fbdataRepository.getAllRequestJoinImages()
                     )
+                    // если что-то есть на генерацию -- отправим сигнал воркеру
+                    if (fbdataRepository.hasQueuedImages()) {
+                        startImagesGeneratorWorker(context)
+                    }
                 }
             }
 

@@ -1,6 +1,7 @@
 package bat.konst.kandinskyclient.data.room
 
 import bat.konst.kandinskyclient.app.CONFIG_DEFAULT_VALUE
+import bat.konst.kandinskyclient.app.KANDINSKY_QUEUE_MAX
 import bat.konst.kandinskyclient.data.room.entity.Config
 import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.data.room.entity.Request
@@ -161,6 +162,13 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
         withContext(Dispatchers.IO) {
             fbdataDao.deleteImage(image)
         }
+    }
+
+    suspend fun hasQueuedImages(): Boolean {
+        // проверяем -- есть ли что-то на генерации
+        if (getImagesByStatus(StatusTypes.PROCESSING.value).isNotEmpty()) //  Проверяем -- осталось ли что-то на генерации
+            return true
+        return getImagesByStatus(StatusTypes.NEW.value).isNotEmpty() //  Проверяем -- ожидает ли что-то генерации
     }
 
     // ------------------ config

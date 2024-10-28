@@ -25,7 +25,7 @@ class ImagesGenerator {
 
     suspend fun fusionBrainGo(fbdataRepository: FbdataRepository, kandinskyApiRepository: KandinskyApiRepository, context: Context) {
         // если нечего отправлять на генерацию - выходим
-        if (!hasProcessingImages(fbdataRepository) && !hasNewImages(fbdataRepository)) {
+        if (!fbdataRepository.hasQueuedImages()) {
             return
         }
 
@@ -39,7 +39,7 @@ class ImagesGenerator {
             return
         }
 
-        while (hasProcessingImages(fbdataRepository) || hasNewImages(fbdataRepository)) {
+        while (fbdataRepository.hasQueuedImages()) {
             // 1. Подождем интервал между запросами
             withContext(Dispatchers.IO) {
                 sleep(KANDINSKY_REQUEST_UNTERVAL_SEC * 1000)
@@ -71,21 +71,12 @@ class ImagesGenerator {
 
 
     // -------- проверки и изменения статусов
-    private suspend fun hasProcessingImages(fbdataRepository: FbdataRepository): Boolean {
-        //  Проверяем -- осталось ли что-то на генерации
-        return fbdataRepository.getImagesByStatus(StatusTypes.PROCESSING.value).isNotEmpty()
-    }
-
     private suspend fun isImagesQueueFree(fbdataRepository: FbdataRepository): Boolean {
         //  Проверяем -- можно ли добавлять задания на генерацию
         return fbdataRepository.getImagesByStatus(StatusTypes.PROCESSING.value).size < KANDINSKY_QUEUE_MAX
     }
 
-    private suspend fun hasNewImages(fbdataRepository: FbdataRepository): Boolean {
-        //  Проверяем -- ожидает ли что-то генерации
-        return fbdataRepository.getImagesByStatus(StatusTypes.NEW.value).isNotEmpty()
-    }
-
+    // -------- работа с очередью запросов
     private suspend fun recieveGeneratedImages(
         fbdataRepository: FbdataRepository,
         kandinskyApiRepository: KandinskyApiRepository,
