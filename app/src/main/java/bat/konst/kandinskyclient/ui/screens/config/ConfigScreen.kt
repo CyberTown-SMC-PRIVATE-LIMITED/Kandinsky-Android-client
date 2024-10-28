@@ -15,12 +15,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -34,6 +38,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import bat.konst.kandinskyclient.ui.navigation.Route
 import bat.konst.kandinskyclient.R
+import kotlinx.coroutines.launch
 
 @Composable
 fun ConfigScreen(
@@ -51,7 +56,7 @@ fun ConfigScreen(
 fun ConfigView(
     onNavigateTo: (Route) -> Unit = {},
     state: ConfigScreenState = ConfigScreenState(),
-    onEvent: (ConfigScreenEvent, onSuccess: () -> Unit) -> Unit = { _, _ -> },
+    onEvent: (ConfigScreenEvent, onSuccess: () -> Unit, onError: () -> Unit) -> Unit = { _, _, _ -> },
 ) {
     val context = LocalContext.current
 
@@ -60,7 +65,7 @@ fun ConfigView(
     if (!initialApiCalled) {
         LaunchedEffect(Unit) {
             initialApiCalled = true
-            onEvent(ConfigScreenEvent.LoadConfig){}
+            onEvent(ConfigScreenEvent.LoadConfig, {}, {})
         }
     }
 
@@ -78,7 +83,6 @@ fun ConfigView(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             // horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Text(
                 text = stringResource(id = R.string.cs_kandinsky_keys),
                 fontWeight = FontWeight.Bold,
@@ -95,7 +99,7 @@ fun ConfigView(
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = state.key,
-                onValueChange = { onEvent(ConfigScreenEvent.KeyUpdate(it)) {} },
+                onValueChange = { onEvent(ConfigScreenEvent.KeyUpdate(it), {}, {}) },
                 placeholder = { Text(text = stringResource(id = R.string.cs_key_like)) },
             )
 
@@ -109,13 +113,16 @@ fun ConfigView(
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = state.secret,
-                onValueChange = { onEvent(ConfigScreenEvent.SecretUpdate(it)) {} },
+                onValueChange = { onEvent(ConfigScreenEvent.SecretUpdate(it), {}, {}) },
                 placeholder = { Text(text = stringResource(id = R.string.cs_secret_like)) },
             )
 
             Spacer(modifier = Modifier.padding(8.dp))
 
             // Кнопка сохранить конфигурацию
+            val scope = rememberCoroutineScope() // для snackbar - всплывающего сообщения
+            val snackbarHostState = remember { SnackbarHostState() }
+            SnackbarHost(hostState = snackbarHostState)
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -123,9 +130,15 @@ fun ConfigView(
                     .align(Alignment.CenterHorizontally),
                 enabled = state.secret.trim() != "" && state.key.trim() != "",
                 onClick = {
-                    onEvent(ConfigScreenEvent.SaveConfig) {
-                        onNavigateTo(Route.GoBack)
-                    }
+                    onEvent(
+                        ConfigScreenEvent.SaveConfig,
+                        { onNavigateTo(Route.GoBack) }, // onSuccess
+                        {  // onError
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Failed to save config")
+                            }
+                        }
+                    )
                 },
             ) {
                 Text(text = stringResource(id = R.string.cs_save_config))
