@@ -6,7 +6,9 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -35,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.core.content.ContextCompat.startActivity
 import androidx.compose.ui.platform.LocalContext
@@ -45,6 +48,8 @@ import bat.konst.kandinskyclient.data.room.entity.RequestJoinImage
 import bat.konst.kandinskyclient.ui.components.confirmdialog.ConfirmDialog
 import bat.konst.kandinskyclient.ui.components.requestcard.RequestCard
 import bat.konst.kandinskyclient.ui.components.swipeaction.SwipeAction
+import bat.konst.kandinskyclient.ui.styles.text.TextH1
+import bat.konst.kandinskyclient.ui.styles.text.TextH2
 
 
 @Composable
@@ -134,7 +139,31 @@ fun MainView(
 
     ) { innerPadding ->
 
-        // Список запросов
+        // по центру экрана текст, если запросов нет или не заполненны ключи
+        var bannerMessge = ""
+        if (state.key == CONFIG_DEFAULT_VALUE || state.secret == CONFIG_DEFAULT_VALUE) {
+            bannerMessge = stringResource(R.string.ms_banner_config_error)
+        } else if (state.requests.isEmpty()) {
+            bannerMessge = stringResource(R.string.ms_banner_no_request)
+        }
+        if (bannerMessge != "") {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                TextH2(
+                    modifier = Modifier.padding(40.dp),
+                    text = bannerMessge
+                )
+            }
+            return@Scaffold
+        }
+
+
+        // Список запросов когда запросы есть
         var md5DeleteConfirm by remember { mutableStateOf("") } // md5 запроса на удаление
         var promptDeleteConfirm by remember { mutableStateOf("") } // промт запроса на удаление
         LazyColumn(
