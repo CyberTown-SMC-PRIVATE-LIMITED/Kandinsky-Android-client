@@ -6,6 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import bat.konst.kandinskyclient.app.AppState
+import bat.konst.kandinskyclient.app.CONFIG_THEME
+import bat.konst.kandinskyclient.app.CONFIG_THEME_DARK
+import bat.konst.kandinskyclient.app.CONFIG_THEME_LIGHT
 import bat.konst.kandinskyclient.app.CONFIG_XKEY
 import bat.konst.kandinskyclient.app.CONFIG_XSECRET
 import bat.konst.kandinskyclient.data.room.FbdataRepository
@@ -22,6 +25,12 @@ class MainScreenViewModel @Inject constructor(
     private val fbdataRepository: FbdataRepository,
     @ApplicationContext private val context: Context
 ): ViewModel() {
+    init {
+        // загружаем тему на главном экране
+        CoroutineScope(Dispatchers.Main).launch {
+            AppState.isDatkTheme = fbdataRepository.getConfigByName(CONFIG_THEME) == CONFIG_THEME_DARK
+        }
+    }
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -32,7 +41,15 @@ class MainScreenViewModel @Inject constructor(
         when (event) {
 
             is MainScreenEvent.ChangeTheme -> {
+                // меняем тему приложения
                 AppState.isDatkTheme = !AppState.isDatkTheme
+                // и сохраняем её в БД
+                coroutineScope.launch(Dispatchers.Main) {
+                    fbdataRepository.setConfig(
+                        CONFIG_THEME,
+                        if (AppState.isDatkTheme) CONFIG_THEME_DARK else CONFIG_THEME_LIGHT
+                    )
+                }
             }
 
             is MainScreenEvent.ScreenUpdate -> {

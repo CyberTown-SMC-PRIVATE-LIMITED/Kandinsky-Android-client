@@ -4,6 +4,10 @@ package bat.konst.kandinskyclient.app
 const val CONFIG_XKEY = "xkey"
 const val CONFIG_XSECRET = "xsecret"
 const val CONFIG_DEFAULT_VALUE = ""
+// config - app-theme
+const val CONFIG_THEME = "theme"
+const val CONFIG_THEME_LIGHT = "light"
+const val CONFIG_THEME_DARK = "dark"
 
 // kandinsky
 const val KANDINSKY_MODEL_ID_UNDEFINED = ""
