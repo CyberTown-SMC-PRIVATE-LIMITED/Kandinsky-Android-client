@@ -44,7 +44,7 @@ class NewRequestScreenViewModel @Inject constructor(
             is NewRequestScreenEvent.NegativePromptUpdate -> this.state = state.copy(negativePrompt = event.newNegativePrompt)
 
             is NewRequestScreenEvent.AddRequest -> {
-                coroutineScope.launch(Dispatchers.Main) {
+                coroutineScope.launch {
                     fbdataRepository.addRequest(event.prompt, event.negativePrompt, event.style, event.qw) {
                         // Запускаем Worker - поскольку у нас появились задания на генерацию
                         startImagesGeneratorWorker(context)
@@ -54,7 +54,7 @@ class NewRequestScreenViewModel @Inject constructor(
             }
 
             is NewRequestScreenEvent.ScreenUpdate -> {
-                coroutineScope.launch(Dispatchers.Main) {
+                coroutineScope.launch {
                     // Получение данных по запросу если ключ (md5) задан
                     val request = fbdataRepository.getRequest(event.md5)
                     // обновление StylesList
@@ -75,7 +75,7 @@ class NewRequestScreenViewModel @Inject constructor(
             }
 
             is NewRequestScreenEvent.RollRequest -> {
-                // заполнение полей запроса случайным пропмптом
+                // заполнение полей запроса случайным промптом
                 val randomPrompt = getRandomPrompt()
                 state = state.copy(
                     prompt = randomPrompt.prompt,

@@ -34,7 +34,7 @@ class ConfigScreenViewModel @Inject constructor(
             is ConfigScreenEvent.SecretUpdate -> state = state.copy(secret = event.newSecret)
 
             is ConfigScreenEvent.SaveConfig -> {
-                coroutineScope.launch(Dispatchers.Main) {
+                coroutineScope.launch {
                     // 1. Проверяем корректность ключей - для этого пробуем запросить текущую версию модели FusionBrain
                     val fusionBrainModelVersionId: String = kandinskyApiRepository.getModelVersionId("Key " + state.key, "Secret " + state.secret)
                     if (fusionBrainModelVersionId == KANDINSKY_MODEL_ID_UNDEFINED) {
@@ -43,7 +43,7 @@ class ConfigScreenViewModel @Inject constructor(
                     }
                     // 2. Сохраняем конфиг
                     fbdataRepository.setConfig(CONFIG_XKEY, state.key) {
-                        coroutineScope.launch(Dispatchers.Main) {
+                        coroutineScope.launch {
                             fbdataRepository.setConfig(CONFIG_XSECRET, state.secret) {
                                 onSuccess()
                             }
@@ -53,7 +53,7 @@ class ConfigScreenViewModel @Inject constructor(
             }
 
             is ConfigScreenEvent.LoadConfig -> {
-                coroutineScope.launch(Dispatchers.Main) {
+                coroutineScope.launch {
                     state = state.copy(
                         key = fbdataRepository.getConfigByName(CONFIG_XKEY),
                         secret = fbdataRepository.getConfigByName(CONFIG_XSECRET)

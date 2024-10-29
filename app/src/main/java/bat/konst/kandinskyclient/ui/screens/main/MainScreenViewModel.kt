@@ -38,7 +38,7 @@ class MainScreenViewModel @Inject constructor(
                 // меняем тему приложения
                 AppState.isDatkTheme = !AppState.isDatkTheme
                 // и сохраняем её в БД
-                coroutineScope.launch(Dispatchers.Main) {
+                coroutineScope.launch {
                     fbdataRepository.setConfig(
                         CONFIG_THEME,
                         if (AppState.isDatkTheme) CONFIG_THEME_DARK else CONFIG_THEME_LIGHT
@@ -47,7 +47,7 @@ class MainScreenViewModel @Inject constructor(
             }
 
             is MainScreenEvent.ScreenUpdate -> {
-                coroutineScope.launch(Dispatchers.Main) {
+                coroutineScope.launch {
                     state = state.copy(
                         key = fbdataRepository.getConfigByName(CONFIG_XKEY),
                         secret = fbdataRepository.getConfigByName(CONFIG_XSECRET),
@@ -62,7 +62,7 @@ class MainScreenViewModel @Inject constructor(
             }
 
             is MainScreenEvent.RequestDelete -> {
-                coroutineScope.launch(Dispatchers.Main) {
+                coroutineScope.launch {
                     fbdataRepository.markDeletedRequest(event.md5)
                     state = state.copy(
                         requests = fbdataRepository.getAllRequestJoinImages(),

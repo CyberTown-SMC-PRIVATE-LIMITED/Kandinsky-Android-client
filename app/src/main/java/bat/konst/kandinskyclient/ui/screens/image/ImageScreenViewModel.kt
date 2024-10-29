@@ -22,7 +22,7 @@ class ImageScreenViewModel @Inject constructor(private val fbdataRepository: Fbd
         when (event) {
 
             is ImageScreenEvent.ScreenUpdate -> {
-                coroutineScope.launch(Dispatchers.Main) {
+                coroutineScope.launch {
                     val image = fbdataRepository.getImage(event.id)
                     state = state.copy(
                         id = image.id,

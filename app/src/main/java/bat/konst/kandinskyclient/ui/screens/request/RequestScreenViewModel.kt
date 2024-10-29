@@ -13,6 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RequestScreenViewModel @Inject constructor(private val fbdataRepository: FbdataRepository): ViewModel() {
+
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     var state by mutableStateOf(RequestScreenState())
@@ -23,7 +24,7 @@ class RequestScreenViewModel @Inject constructor(private val fbdataRepository: F
 
             is RequestScreenEvent.ScreenUpdate -> {
                 // обновление данных
-                coroutineScope.launch(Dispatchers.Main) {
+                coroutineScope.launch {
                     val request = fbdataRepository.getRequest(event.md5)
                     val images = fbdataRepository.getImages(event.md5)
                     state = state.copy(
