@@ -50,6 +50,7 @@ import bat.konst.kandinskyclient.ui.components.generatingmessage.GeneratingMessa
 import bat.konst.kandinskyclient.ui.components.requestcard.RequestCard
 import bat.konst.kandinskyclient.ui.components.swipeaction.SwipeAction
 import bat.konst.kandinskyclient.ui.styles.text.TextH2
+import bat.konst.kandinskyclient.ui.styles.text.TextH3
 
 
 @Composable
@@ -159,7 +160,7 @@ fun MainView(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                TextH2(
+                TextH3(
                     modifier = Modifier.padding(40.dp),
                     text = bannerMessge
                 )
