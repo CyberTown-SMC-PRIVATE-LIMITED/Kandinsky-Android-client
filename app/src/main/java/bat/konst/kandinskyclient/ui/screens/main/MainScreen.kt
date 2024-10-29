@@ -185,7 +185,10 @@ fun MainView(
         var md5DeleteConfirm by remember { mutableStateOf("") } // md5 запроса на удаление
         var promptDeleteConfirm by remember { mutableStateOf("") } // промт запроса на удаление
         LazyColumn(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                // почему-то при использовании .padding(innerPadding) с правой строны от Scafold content
+                // в lanscape, появляется пустое поле. Поэтому пока выкручиваемся так
+                .padding(top = innerPadding.calculateTopPadding(), bottom = innerPadding.calculateBottomPadding())
         ) {
             items(state.requests) { request ->
                 SwipeAction(

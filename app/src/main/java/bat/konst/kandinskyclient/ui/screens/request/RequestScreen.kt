@@ -149,7 +149,9 @@ fun RequestView(
         // images grid
         LazyVerticalGrid(
             modifier = Modifier
-                .padding(innerPadding)
+                // почему-то при использовании .padding(innerPadding) с правой строны от Scafold content
+                // в lanscape, появляется пустое поле. Поэтому пока выкручиваемся так
+                .padding(top = innerPadding.calculateTopPadding(), bottom = innerPadding.calculateBottomPadding())
                 .fillMaxSize(),
             columns = GridCells.Adaptive(90.dp)
         ) {
