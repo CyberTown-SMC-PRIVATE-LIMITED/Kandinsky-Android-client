@@ -25,12 +25,6 @@ class MainScreenViewModel @Inject constructor(
     private val fbdataRepository: FbdataRepository,
     @ApplicationContext private val context: Context
 ): ViewModel() {
-    init {
-        // загружаем тему на главном экране
-        CoroutineScope(Dispatchers.Main).launch {
-            AppState.isDatkTheme = fbdataRepository.getConfigByName(CONFIG_THEME) == CONFIG_THEME_DARK
-        }
-    }
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
