@@ -11,23 +11,10 @@ import bat.konst.kandinskyclient.di.FbdataModule
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
-// https://vtsen.hashnode.dev/simple-example-to-use-workmanager-and-notification
-// https://dev.to/vtsen/simple-example-to-use-workmanager-and-notification-il9
-// https://readmedium.com/android-workmanager-in-clean-architecture-393ce4f27ef5
-// hilt example - https://www.droidcon.com/2022/06/14/when-jetpacks-glance-met-his-fellow-worker-work-manager/
-@HiltWorker
-class ImagesGeneratorWorker @AssistedInject constructor(
-    @Assisted private val context: Context,
-    @Assisted workerParameters: WorkerParameters
-    // private val fbdataRepository: FbdataRepository,
-    // private val kandinskyApiRepository: KandinskyApiRepository
-): CoroutineWorker(context, workerParameters) { // m.b. CoroutineWorker
-    /*
-        Использование:
-        startImagesGeneratorWorker(context)
-     */
-    //@Inject lateinit var kandinskyApiRepository: KandinskyApiRepository
-    //@Inject lateinit var fbdataRepository: FbdataRepository
+class ImagesGeneratorWorker(
+    private val context: Context,
+    workerParameters: WorkerParameters
+): CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
         doKandinskyRequests()
@@ -35,8 +22,7 @@ class ImagesGeneratorWorker @AssistedInject constructor(
     }
 
     private suspend fun doKandinskyRequests() {
-        // забираем репозитории. Почему-то через Inject падает
-        // TODO: разаобраться почему и переделать
+        // получаем репозитории
         val bu = bat.konst.kandinskyclient.di.KandinskyApiModule.baseUrl()
         val kd = bat.konst.kandinskyclient.di.KandinskyApiModule.provideRetrofit(bu)
         val kandinskyApiRepository = bat.konst.kandinskyclient.di.KandinskyApiModule.provideKandinskyApiRepository(kd)

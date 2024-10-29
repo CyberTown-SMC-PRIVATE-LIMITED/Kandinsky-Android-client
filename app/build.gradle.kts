@@ -90,5 +90,5 @@ dependencies {
     implementation(libs.apache.codec)
     // workers
     implementation(libs.workers)
-    implementation(libs.hilt.workers)
+    // implementation(libs.hilt.workers)
 }
