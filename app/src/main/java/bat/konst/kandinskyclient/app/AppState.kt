@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 
 object AppState {
+    // тема приложения
+    var isDatkTheme by mutableStateOf(false)
     // Используется дла обновления экрана
     // Изменяется при изменении данных DB в Worker
     var RoomDataChaged = MutableStateFlow(0L)

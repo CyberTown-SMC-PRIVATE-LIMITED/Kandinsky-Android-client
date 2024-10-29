@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import bat.konst.kandinskyclient.app.CONFIG_DEFAULT_VALUE
+import bat.konst.kandinskyclient.app.AppState
 import bat.konst.kandinskyclient.app.CONFIG_XKEY
 import bat.konst.kandinskyclient.app.CONFIG_XSECRET
 import bat.konst.kandinskyclient.data.room.FbdataRepository
@@ -30,6 +30,10 @@ class MainScreenViewModel @Inject constructor(
 
     fun onEvent(event: MainScreenEvent)  {
         when (event) {
+
+            is MainScreenEvent.ChangeTheme -> {
+                AppState.isDatkTheme = !AppState.isDatkTheme
+            }
 
             is MainScreenEvent.ScreenUpdate -> {
                 coroutineScope.launch(Dispatchers.Main) {

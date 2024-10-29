@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import bat.konst.kandinskyclient.app.AppState
 import bat.konst.kandinskyclient.ui.navigation.MainNavigation
 import bat.konst.kandinskyclient.ui.theme.KandinskyClientTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            KandinskyClientTheme {
+            KandinskyClientTheme(darkTheme = AppState.isDatkTheme) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     ContentNavigation(
                         modifier = Modifier.padding(innerPadding)

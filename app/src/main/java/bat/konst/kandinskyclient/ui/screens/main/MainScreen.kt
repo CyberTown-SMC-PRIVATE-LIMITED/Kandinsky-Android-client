@@ -49,7 +49,8 @@ import bat.konst.kandinskyclient.ui.components.confirmdialog.ConfirmDialog
 import bat.konst.kandinskyclient.ui.components.generatingmessage.GeneratingMessage
 import bat.konst.kandinskyclient.ui.components.requestcard.RequestCard
 import bat.konst.kandinskyclient.ui.components.swipeaction.SwipeAction
-import bat.konst.kandinskyclient.ui.styles.text.TextH2
+import bat.konst.kandinskyclient.ui.styles.icons.DarkMode
+import bat.konst.kandinskyclient.ui.styles.icons.LightMode
 import bat.konst.kandinskyclient.ui.styles.text.TextH3
 
 
@@ -112,14 +113,26 @@ fun MainView(
                     .padding(horizontal = 20.dp, vertical = 3.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = stringResource(R.string.app_name),
-                    color = MaterialTheme.colorScheme.primary
-                )
+                Row {
+                    Text(
+                        text = stringResource(R.string.app_name),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    // кнопка смены темы
+                    val themeVector = if (AppState.isDatkTheme) DarkMode else LightMode
+                    Icon(
+                        imageVector = themeVector,
+                        contentDescription = stringResource(id = R.string.ms_settings),
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .padding(start = 20.dp)
+                            .clickable { onEvent(MainScreenEvent.ChangeTheme) }
+                    )
+                }
 
                 // Кнопка "Настройки"
                 Icon(
-                    imageVector = androidx.compose.material.icons.Icons.Filled.Settings,
+                    imageVector = Icons.Filled.Settings,
                     contentDescription = stringResource(id = R.string.ms_settings),
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
