@@ -24,7 +24,6 @@ fun TextFieldPrompt(
         minLines = 4,
         value = value,
         textStyle = TextStyle(
-            // color = Color(0xFF636067),
             fontFamily = FontFamily.SansSerif, // Roboto Font
             fontSize = 16.sp,
             fontWeight = FontWeight(600),

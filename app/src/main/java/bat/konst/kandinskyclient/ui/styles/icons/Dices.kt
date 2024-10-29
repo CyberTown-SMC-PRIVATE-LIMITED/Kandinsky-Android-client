@@ -1,4 +1,4 @@
-package drawable
+package bat.konst.kandinskyclient.ui.styles.icons
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
