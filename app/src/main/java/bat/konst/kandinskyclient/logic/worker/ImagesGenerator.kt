@@ -106,14 +106,8 @@ class ImagesGenerator {
             // запрос не прошёл цензуру
             if (imageResult.censored) {
                 fbdataRepository.updateImage(
-                    Image(
-                        id = image.id,
-                        md5 = image.md5,
-                        kandinskyId = image.kandinskyId,
-                        status = StatusTypes.CENCORED.value,
-                        dateCreated = image.dateCreated,
-                        imageBase64 = "",
-                        imageThumbnailBase64 = ""
+                    image.copy(
+                        status = StatusTypes.CENCORED.value
                     )
                 )
                 isDataChanged = true
@@ -125,12 +119,8 @@ class ImagesGenerator {
                 val imageFile = saveImageFile(imageResult.images[0], image.id)
                 val thumbFile = saveImageThumbinal(image.id)
                 fbdataRepository.updateImage(
-                    Image(
-                        id = image.id,
-                        md5 = image.md5,
-                        kandinskyId = image.kandinskyId,
+                    image.copy(
                         status = StatusTypes.DONE.value,
-                        dateCreated = image.dateCreated,
                         imageBase64 = imageFile,
                         imageThumbnailBase64 = thumbFile
                     )
@@ -142,14 +132,8 @@ class ImagesGenerator {
             if (imageResult.status == KANDINSKY_GENERATE_RESULT_FAIL) {
                 // изображение сгенерировать не удалось - сохраняем (ошибка 404 или ошибка авторизации)
                 fbdataRepository.updateImage(
-                    Image(
-                        id = image.id,
-                        md5 = image.md5,
-                        kandinskyId = image.kandinskyId,
+                    image.copy(
                         status = StatusTypes.ERROR.value,
-                        dateCreated = image.dateCreated,
-                        imageBase64 = "",
-                        imageThumbnailBase64 = ""
                     )
                 )
                 isDataChanged = true
@@ -178,39 +162,38 @@ class ImagesGenerator {
         val request = fbdataRepository.getRequest(image.md5)
         if (request.md5 == "") {
             fbdataRepository.updateImage(
-                Image(
-                    id = image.id,
-                    md5 = image.md5,
-                    kandinskyId = image.kandinskyId,
-                    status = StatusTypes.ERROR.value,
-                    dateCreated = image.dateCreated,
-                    imageBase64 = "",
-                    imageThumbnailBase64 = ""
+                image.copy(
+                    status = StatusTypes.ERROR.value
                 )
             )
             return true
         }
 
-        // 2. Отправляем на генерацию
+        // 2. Если уже было несколько попыток запроса для данного Image - помечаем его как ошибочное и выходим
+        if (image.remoteApiTryCount >= 3) {
+            fbdataRepository.updateImage(
+                image.copy(
+                    status = StatusTypes.ERROR.value
+                )
+            )
+            return true
+        }
+
+        // 3. Отправляем на генерацию
         val imageResult =
             kandinskyApiRepository.sendGenerateImageRequest(key, secret, request.prompt, request.negativePrompt, request.style, fusionBrainModelVersionId)
 
-        // 3. Обновляем статус
+        // 4. Обновляем статус
         if (imageResult != null && imageResult.status == KANDINSKY_GENERATE_RESULT_INITIAL) {
             fbdataRepository.updateImage(
-                Image(
-                    id = image.id,
-                    md5 = image.md5,
+                image.copy(
                     kandinskyId = imageResult.uuid,
                     status = StatusTypes.PROCESSING.value,
-                    dateCreated = image.dateCreated,
-                    imageBase64 = "",
-                    imageThumbnailBase64 = ""
+                    remoteApiTryCount = image.remoteApiTryCount + 1
                 )
             )
             return true
         }
-        // TODO: проверка статусов с ошибками (неверный ключ, данные некорректны, сервис лежит)
 
         return false
     }

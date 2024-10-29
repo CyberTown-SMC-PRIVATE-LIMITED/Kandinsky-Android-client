@@ -5,6 +5,7 @@ import androidx.room.Room
 import bat.konst.kandinskyclient.data.room.FbdataDao
 import bat.konst.kandinskyclient.data.room.FbdataDatabase
 import bat.konst.kandinskyclient.data.room.FbdataRepository
+import bat.konst.kandinskyclient.data.room.migrations.MIGRATION_008_009
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -24,7 +25,9 @@ object FbdataModule {
                     context,
                     FbdataDatabase::class.java,
                     "fbdata_database"
-                ).fallbackToDestructiveMigration()  // TODO: Remove migration after testing
+                )
+                 // .fallbackToDestructiveMigration()  // destructive migrations disabled
+                 .addMigrations(MIGRATION_008_009)
                  .build()
     }
 

@@ -47,6 +47,9 @@ data class Image (
     val imageBase64: String,
 
     @ColumnInfo(name = "image_thumbnail_base64")
-    val imageThumbnailBase64: String
+    val imageThumbnailBase64: String,
+
+    @ColumnInfo(name = "remote_api_try_count")  // количество попыток отправить запрос на сервер
+    val remoteApiTryCount: Int
 
 )

@@ -6,7 +6,7 @@ import bat.konst.kandinskyclient.data.room.entity.Config
 import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.data.room.entity.Request
 
-@Database(entities = [Request::class, Image::class, Config::class], version = 8)
+@Database(entities = [Request::class, Image::class, Config::class], version = 9)
 abstract class FbdataDatabase: RoomDatabase() {
 
     abstract fun getFbdataDao(): FbdataDao

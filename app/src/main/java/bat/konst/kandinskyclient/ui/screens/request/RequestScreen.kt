@@ -186,7 +186,8 @@ fun RequestScreenPreview() {
                     status = 0,
                     dateCreated = 0,
                     imageBase64 = "",
-                    imageThumbnailBase64 = ""
+                    imageThumbnailBase64 = "",
+                    remoteApiTryCount = 0
                 ),
                 Image(
                     id=2,
@@ -195,7 +196,8 @@ fun RequestScreenPreview() {
                     status = 0,
                     dateCreated = 0,
                     imageBase64 = "",
-                    imageThumbnailBase64 = ""
+                    imageThumbnailBase64 = "",
+                    remoteApiTryCount = 0
                 )
             )
         )

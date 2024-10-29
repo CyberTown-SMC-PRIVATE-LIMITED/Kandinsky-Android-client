@@ -1,7 +1,6 @@
 package bat.konst.kandinskyclient.data.room
 
 import bat.konst.kandinskyclient.app.CONFIG_DEFAULT_VALUE
-import bat.konst.kandinskyclient.app.KANDINSKY_QUEUE_MAX
 import bat.konst.kandinskyclient.data.room.entity.Config
 import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.data.room.entity.Request
@@ -53,7 +52,8 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
                     status = StatusTypes.NEW.value,
                     dateCreated = currentDate,
                     imageBase64 = "",
-                    imageThumbnailBase64 = ""
+                    imageThumbnailBase64 = "",
+                    remoteApiTryCount = 0
                 )
                 fbdataDao.addImage(image)
             }
@@ -131,7 +131,15 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
             image = fbdataDao.getImage(id)
         }
         if (image == null) {
-            return Image(id = 0, md5 = "", kandinskyId = "", status = 0, dateCreated = 0, imageBase64 = "", imageThumbnailBase64 = "")
+            return Image(
+                id = 0,
+                md5 = "",
+                kandinskyId = "",
+                status = 0,
+                dateCreated = 0,
+                imageBase64 = "",
+                imageThumbnailBase64 = "",
+                remoteApiTryCount = 0)
         }
         return image!!
     }
