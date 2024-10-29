@@ -10,6 +10,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -49,6 +50,18 @@ fun KandinskyClientTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+
+    // To change system elements colors
+    // https://kotlinfan.hashnode.dev/change-statusbar-and-navigation-bar-color-in-compose
+    val systemUiController = rememberSystemUiController()
+    if(darkTheme){
+        systemUiController.setSystemBarsColor(color = colorScheme.background,darkIcons = false)
+        systemUiController.setNavigationBarColor( color = colorScheme.background,darkIcons = false)
+    }else{
+        systemUiController.setSystemBarsColor(color =colorScheme.background,darkIcons = true)
+        systemUiController.setNavigationBarColor( color =colorScheme.background,darkIcons = true)
+    }
+    // ./ To change system elements colors
 
     MaterialTheme(
         colorScheme = colorScheme,

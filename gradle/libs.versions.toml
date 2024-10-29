@@ -26,8 +26,10 @@ coil = "2.7.0"
 apache-codec = "1.17.1"
 # Workers
 workers = "2.9.1"
-hiltWorkers = "1.2.0"
 hiltCommon = "1.2.0"
+# accompanist-systemuicontroller - change system elements by theme
+# https://github.com/google/accompanist/
+accompanist-systemuicontroller = "0.36.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -65,8 +67,9 @@ coil = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 apache-codec = { group = "commons-codec", name="commons-codec", version.ref = "apache-codec" }
 # workers
 workers = { group = "androidx.work", name="work-runtime-ktx", version.ref = "workers" }
-hilt-workers = { group = "androidx.hilt", name="hilt-work", version.ref = "hiltWorkers" }
 androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "hiltCommon" }
+# accompanist-systemuicontroller - change system elements by theme
+accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist-systemuicontroller" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

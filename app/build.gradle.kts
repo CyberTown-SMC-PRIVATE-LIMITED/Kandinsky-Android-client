@@ -90,5 +90,8 @@ dependencies {
     implementation(libs.apache.codec)
     // workers
     implementation(libs.workers)
-    // implementation(libs.hilt.workers)
+    // accompanist-systemuicontroller - change system elements by theme
+    // https://github.com/google/accompanist/
+    implementation(libs.accompanist.systemuicontroller)
+
 }
