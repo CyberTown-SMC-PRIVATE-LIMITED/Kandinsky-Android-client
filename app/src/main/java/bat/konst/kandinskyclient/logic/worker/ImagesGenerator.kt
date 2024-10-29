@@ -10,12 +10,12 @@ import bat.konst.kandinskyclient.app.KANDINSKY_GENERATE_RESULT_INITIAL
 import bat.konst.kandinskyclient.app.KANDINSKY_MODEL_ID_UNDEFINED
 import bat.konst.kandinskyclient.app.KANDINSKY_QUEUE_MAX
 import bat.konst.kandinskyclient.app.KANDINSKY_REQUEST_UNTERVAL_SEC
+import bat.konst.kandinskyclient.app.KANDINSKY_TRY_COUNT_MAX
 import bat.konst.kandinskyclient.data.fileStorage.deleteImageAndThumbinal
 import bat.konst.kandinskyclient.data.fileStorage.saveImageFile
 import bat.konst.kandinskyclient.data.fileStorage.saveImageThumbinal
 import bat.konst.kandinskyclient.data.kandinskyApi.KandinskyApiRepository
 import bat.konst.kandinskyclient.data.room.FbdataRepository
-import bat.konst.kandinskyclient.data.room.entity.Image
 import bat.konst.kandinskyclient.data.room.entity.StatusTypes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -88,7 +88,8 @@ class ImagesGenerator {
         secret: String
     ): Boolean {
         /*
-            Получает список изображений-заданий из БД, отправляет их на генерацию и сохраняет результирующие изображения
+            Получает список изображений-заданий из БД уже отправленных на генерацию и сохраняет результирующие изображения
+            если генерация завершена
             Возвращает true, если были изменения данных
         */
         var isDataChanged = false
@@ -100,7 +101,7 @@ class ImagesGenerator {
         for (image in imagesForGeneration) {
 
             val imageResult = kandinskyApiRepository.getRequesrtStatusOrImage(key, secret, image.kandinskyId)
-                ?: // изображение сгенерировать не удалось - пропускаем (сетевая ошибка)
+                ?: // изображение получить не удалось - пропускаем (сетевая ошибка)
                 continue
 
             // запрос не прошёл цензуру
@@ -158,7 +159,7 @@ class ImagesGenerator {
         */
         // 1. Получаем первое изображение из очереди - если таких нет - выход
         val image = fbdataRepository.getFirstImageByStatus(StatusTypes.NEW.value) ?: return false
-        // 1.a если для задания нет запроса - изменяем статус на ошибку - и выход
+        // 1.a если для задания нет запроса - изменяем статус на ошибку - и выход (удален Request но почему-то осталось Image)
         val request = fbdataRepository.getRequest(image.md5)
         if (request.md5 == "") {
             fbdataRepository.updateImage(
@@ -170,7 +171,7 @@ class ImagesGenerator {
         }
 
         // 2. Если уже было несколько попыток запроса для данного Image - помечаем его как ошибочное и выходим
-        if (image.remoteApiTryCount >= 3) {
+        if (image.remoteApiTryCount >= KANDINSKY_TRY_COUNT_MAX) {
             fbdataRepository.updateImage(
                 image.copy(
                     status = StatusTypes.ERROR.value
@@ -183,8 +184,9 @@ class ImagesGenerator {
         val imageResult =
             kandinskyApiRepository.sendGenerateImageRequest(key, secret, request.prompt, request.negativePrompt, request.style, fusionBrainModelVersionId)
 
-        // 4. Обновляем статус
+        // 4. Обновляем статус - если успешно отправлено на генерацию
         if (imageResult != null && imageResult.status == KANDINSKY_GENERATE_RESULT_INITIAL) {
+            //
             fbdataRepository.updateImage(
                 image.copy(
                     kandinskyId = imageResult.uuid,
@@ -195,6 +197,13 @@ class ImagesGenerator {
             return true
         }
 
+        // 5. Ошибка при отправке на генерацию - просто увеличиваем счетчик попыток
+        fbdataRepository.updateImage(
+            image.copy(
+                remoteApiTryCount = image.remoteApiTryCount + 1
+            )
+        )
+
         return false
     }
 
@@ -203,7 +212,7 @@ class ImagesGenerator {
         var isDataChanged = false
         // удаляем помеченные запросы
         // 1. список запросов помеченных к удалению
-        val requestsToDelete = fbdataRepository.getAllMarketToDeleteRequests()
+        val requestsToDelete = fbdataRepository.getAllMarkedToDeleteRequests()
         for (request in requestsToDelete) {
             val imagesToDelete = fbdataRepository.getImages(request.md5)
             for (image in imagesToDelete) {

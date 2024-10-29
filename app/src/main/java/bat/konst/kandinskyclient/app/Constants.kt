@@ -11,6 +11,7 @@ const val KANDINSKY_GENERATE_RESULT_FAIL = "FAIL"
 const val KANDINSKY_GENERATE_RESULT_DONE = "DONE"
 const val KANDINSKY_GENERATE_RESULT_INITIAL = "INITIAL"
 const val KANDINSKY_QUEUE_MAX = 5
+const val KANDINSKY_TRY_COUNT_MAX = 3 // максимальное количество попыток для отправки запроса на генерацию изображения
 const val KANDINSKY_REQUEST_UNTERVAL_SEC: Long = 10
 const val KANDINSKY_STYLE_DEFAULT = "DEFAULT"
 

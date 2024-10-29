@@ -86,7 +86,7 @@ class FbdataRepository @Inject constructor(private val fbdataDao: FbdataDao) {
         }
     }
 
-    suspend fun getAllMarketToDeleteRequests(): List<Request> {
+    suspend fun getAllMarkedToDeleteRequests(): List<Request> {
         val rqs: List<Request>
         withContext(Dispatchers.IO) {
             rqs = fbdataDao.getAllMarketToDeleteRequests()
