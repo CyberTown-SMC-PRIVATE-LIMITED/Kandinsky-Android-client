@@ -62,7 +62,9 @@ fun MainScreen(
     MainView (
         onNavigateTo = onNavigateTo,
         state = viewModel.state,
-        onEvent = viewModel::onEvent
+        onEvent = viewModel::onEvent,
+        appState = AppState
+
     )
 }
 
@@ -71,19 +73,20 @@ fun MainScreen(
 fun MainView(
     onNavigateTo: (Route) -> Unit = {},
     state: MainScreenState = MainScreenState(),
-    onEvent: (MainScreenEvent) -> Unit = {}
+    onEvent: (MainScreenEvent) -> Unit = {},
+    appState: AppState = AppState,
 ) {
 
     // Событие на вход в экран и изменение в БД
-    LaunchedEffect(key1 = AppState.RoomDataChaged.collectAsState().value) {
+    LaunchedEffect(key1 = appState.RoomDataChaged.collectAsState().value) {
         onEvent(MainScreenEvent.ScreenUpdate)
     }
 
     // Если ключи доступа к KandinskyAPI пустые -- переход на экран конфигурации
     // делается это один раз
-    if (AppState.needCheckConfig) {
+    if (appState.needCheckConfig) {
         if (state.key == CONFIG_DEFAULT_VALUE || state.secret == CONFIG_DEFAULT_VALUE) {
-            AppState.needCheckConfig = false
+            appState.needCheckConfig = false
             onNavigateTo(Route.Config)
         }
     }
@@ -119,7 +122,7 @@ fun MainView(
                         color = MaterialTheme.colorScheme.primary
                     )
                     // кнопка смены темы
-                    val themeVector = if (AppState.isDatkTheme) DarkMode else LightMode
+                    val themeVector = if (appState.isDatkTheme) DarkMode else LightMode
                     Icon(
                         imageVector = themeVector,
                         contentDescription = stringResource(id = R.string.ms_settings),
@@ -232,7 +235,8 @@ fun MainView(
 @Composable
 @Preview(showBackground = true)
 fun MainScreenPreview() {
-    MainView(state = MainScreenState(
+    MainView(
+        state = MainScreenState(
         requests = listOf(
             RequestJoinImage(
                 md5 = "",
